@@ -28,3 +28,8 @@ class DeleteButtonState extends MainStateManager{}
 class DietRequirements extends MainStateManager{}
 
 class DropDownState extends MainStateManager{}
+
+class PieChartState extends MainStateManager{
+  int index;
+  PieChartState({required this.index});
+}

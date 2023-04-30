@@ -1,5 +1,5 @@
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
-import 'package:final_packet_trainer/pages/login_signup/login_signup.dart';
+import '../../login_signup/login_signup.dart';
 import 'package:final_packet_trainer/pages/profile/premiumPlans.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';

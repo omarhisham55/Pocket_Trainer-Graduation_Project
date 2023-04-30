@@ -384,4 +384,14 @@ class CubitManager extends Cubit<MainStateManager> {
     value = selectedValue;
     emit(DropDownState());
   }
+  int pieChart(event,pieTouchResponse, touchedIndex){
+    if (!event.isInterestedForInteractions
+        || pieTouchResponse == null
+        || pieTouchResponse.touchedSection == null
+    ) {
+      touchedIndex = -1;
+    }
+    touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+    return touchedIndex;
+  }
 }

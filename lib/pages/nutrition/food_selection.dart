@@ -84,14 +84,11 @@ class ChooseFood extends StatelessWidget {
                                           context,
                                           FoodDetails(
                                             title: snapshot.data![index].name,
-                                            calories:
-                                                snapshot.data![index].calories,
+                                            calories: snapshot.data![index].calories,
                                             carbs: snapshot.data![index].carbs,
                                             fats: snapshot.data![index].fats,
-                                            protein:
-                                                snapshot.data![index].protein,
-                                            quantity:
-                                                snapshot.data![index].quantity,
+                                            protein: snapshot.data![index].protein,
+                                            quantity: snapshot.data![index].quantity,
                                             image: snapshot.data![index].image,
                                           ));
                                     },

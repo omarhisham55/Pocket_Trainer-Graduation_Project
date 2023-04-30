@@ -1,11 +1,14 @@
+import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
+import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/colors.dart';
 import '../../shared/styles/images.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 
-class FoodDetails extends StatefulWidget {
+class FoodDetails extends StatelessWidget {
   final String? title;
   final String? quantity;
   final String? calories;
@@ -14,115 +17,109 @@ class FoodDetails extends StatefulWidget {
   final String? fats;
   final String? image;
   const FoodDetails({Key? key, this.title, this.image, this.quantity, this.calories, this.protein, this.carbs, this.fats}) : super(key: key);
-
-  @override
-  State<FoodDetails> createState() => _FoodDetailsState();
-}
-
-class _FoodDetailsState extends State<FoodDetails> {
-  int touchedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Navigator.pop(context);
-            }
-        ),
-      ),
-      body: Stack(
-          children: [
-            Image.network(
-                widget.image ?? FoodImages.nutritionBg,
-                width: double.infinity,
-                fit: BoxFit.fitWidth
-            ),
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(top: 200),
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(30))
+    int touchedIndex = 0;
+    return BlocProvider(
+      create: (_) => CubitManager(),
+      child: BlocConsumer<CubitManager, MainStateManager>(
+        listener: (_, s) {},
+        builder: (_, s){
+          CubitManager nutrition = CubitManager.get(_);
+          return Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    SizedBox(
+            ),
+            body: Stack(
+                children: [
+                  Image.network(
+                      image ?? FoodImages.nutritionBg,
                       width: double.infinity,
-                      child: Column(
-                        children: [
-                          subTitleText(text: widget.title ?? " ",
-                              color: TextColors.blackText,
-                              fontWeight: FontWeight.w700),
-                          const SizedBox(height: 30),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    subTitleText(text: "Quantity", color: TextColors.blackText),
-                                    const Spacer(),
-                                    subTitleText(text: "${widget.quantity} gram", color: TextColors.blackText)
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    subTitleText(text: "Calories", color: TextColors.blackText),
-                                    const Spacer(),
-                                    subTitleText(text: "${widget.calories} Kcal", color: TextColors.blackText)
-                                  ],
-                                ),
-                                const SizedBox(height: 50),
-                                AspectRatio(
-                                  aspectRatio: 1.8,
-                                  child: PieChart(
-                                    PieChartData(
-                                      pieTouchData: PieTouchData(
-                                        touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                                          setState(() {
-                                            if (!event.isInterestedForInteractions ||
-                                                pieTouchResponse == null ||
-                                                pieTouchResponse.touchedSection == null) {
-                                              touchedIndex = -1;
-                                              return;
-                                            }
-                                            touchedIndex =
-                                                pieTouchResponse.touchedSection!.touchedSectionIndex;
-                                          });
-                                        },
-                                      ),
-                                      borderData: FlBorderData(
-                                        show: false,
-                                      ),
-                                      sectionsSpace: 0,
-                                      centerSpaceRadius: 0,
-                                      sections: showingSections(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ]
+                      fit: BoxFit.fitWidth
+                  ),
+                  Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(top: 200),
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(30))
                       ),
-                    )
-                  ]
-                )
-              )
-            )
-          ]
-        ),
+                      child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Column(
+                                      children: [
+                                        subTitleText(text: title ?? " ",
+                                            color: TextColors.blackText,
+                                            fontWeight: FontWeight.w700),
+                                        const SizedBox(height: 30),
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  subTitleText(text: "Quantity", color: TextColors.blackText),
+                                                  const Spacer(),
+                                                  subTitleText(text: "$quantity gram", color: TextColors.blackText)
+                                                ],
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  subTitleText(text: "Calories", color: TextColors.blackText),
+                                                  const Spacer(),
+                                                  subTitleText(text: "$calories Kcal", color: TextColors.blackText)
+                                                ],
+                                              ),
+                                              const SizedBox(height: 50),
+                                              AspectRatio(
+                                                aspectRatio: 1.8,
+                                                child: PieChart(
+                                                  PieChartData(
+                                                    pieTouchData: PieTouchData(
+                                                      touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                                                        nutrition.pieChart(event, pieTouchResponse, touchedIndex);
+                                                      },
+                                                    ),
+                                                    borderData: FlBorderData(
+                                                      show: false,
+                                                    ),
+                                                    sectionsSpace: 0,
+                                                    centerSpaceRadius: 0,
+                                                    sections: showingSections(touchedIndex),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ]
+                                  ),
+                                )
+                              ]
+                          )
+                      )
+                  )
+                ]
+            ),
+          );
+        },
+      ),
     );
   }
-  List<PieChartSectionData> showingSections() {
+  List<PieChartSectionData> showingSections(touchedIndex) {
     return List.generate(4, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 20.0 : 16.0;
@@ -134,7 +131,7 @@ class _FoodDetailsState extends State<FoodDetails> {
           return PieChartSectionData(
             color: const Color(0xff0293ee),
             value: 40,
-            title: '${widget.fats}',
+            title: '$fats',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -149,7 +146,7 @@ class _FoodDetailsState extends State<FoodDetails> {
           return PieChartSectionData(
             color: const Color(0xfff8b250),
             value: 30,
-            title: "${widget.protein}",
+            title: "$protein",
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -164,7 +161,7 @@ class _FoodDetailsState extends State<FoodDetails> {
           return PieChartSectionData(
             color: const Color(0xff845bef),
             value: 16,
-            title: "${widget.carbs}",
+            title: "$carbs",
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
