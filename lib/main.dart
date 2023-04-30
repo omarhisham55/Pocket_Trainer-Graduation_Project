@@ -29,7 +29,7 @@ void main() {
       print("Check internet connection or change IP address");
     }
     if(e.toString().toLowerCase() == "Connection timed out"){
-      print("NodeJs not connected");
+      print("NodeJs not connected $e");
     }
     print("App will not open");
   });
