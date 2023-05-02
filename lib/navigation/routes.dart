@@ -3,11 +3,12 @@
 
 import 'package:flutter/material.dart';
 
+import '../login_signup/login_signup.dart';
 import 'navigation.dart';
 
 Map<String, WidgetBuilder> routes = {
   "/": (_) => const Navigation(),
-  // "/login": (_) => const Login(),
+  "/login": (_) => Login(),
   // "/notification": (_) => const Notifications(),
   // "/PremiumPlans": (_) => const PremiumPlans(),
   // "/PaymentMethod": (_) => const PaymentMethod(),

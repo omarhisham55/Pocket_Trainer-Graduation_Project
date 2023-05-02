@@ -366,7 +366,9 @@ class CubitManager extends Cubit<MainStateManager> {
   }
 
   bool deleteButtonFood = false;
+  //panel to add meals
   PanelController addMealController = PanelController();
+  //panel to show list of selected meals
   PanelController foodListPanel = PanelController();
   int addNumber = 0;
   String selectedValue = "Breakfast";
@@ -394,4 +396,13 @@ class CubitManager extends Cubit<MainStateManager> {
     touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
     return touchedIndex;
   }
+
+  void slidingPanel(controller){
+    controller.isPanelOpen
+        ? controller.close()
+        : controller.open();
+    emit(HandleSlidingPanelState());
+  }
+  //recommended
+  PanelState defaultStatePanel = PanelState.CLOSED;
 }

@@ -1,3 +1,4 @@
+import 'package:final_packet_trainer/data/nutritionData.dart';
 import 'package:flutter/material.dart';
 import '../../data/nutrition_dialog_data.dart';
 import '../../navigation/cubit/cubit.dart';
@@ -38,7 +39,9 @@ class Nutrition extends StatelessWidget {
                   preferredSize: const Size.fromHeight(110.0),
                   child: Padding(
                     padding: const EdgeInsets.all(9.0),
-                    child: buildDaysOfWeek(),
+                    child: buildDaysOfWeek((date){
+
+                    }),
                   ),
                 ) : null,
               ),

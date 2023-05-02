@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
+import 'package:final_packet_trainer/pages/nutrition/diet_recommended_plan.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
@@ -275,6 +276,7 @@ Widget openDialogHealthConditions(BuildContext context, nutrition)=> defaultDial
             // dietNumbersListCount.add();
             isDietTaken = true;
             nutrition.dietRequirements(isDietTaken);
+            pageNavigator(context, RecommendedProgramNutritionInfo());
           },
           borderRadius: 30,
           text: "save"

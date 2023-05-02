@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:circle_button/circle_button.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import '../../notification/notification.dart';
 import '../styles/colors.dart';
 import 'constants.dart';
 
-PreferredSizeWidget notificationAppBar(context, String title) => AppBar(
+PreferredSizeWidget notificationAppBar(context, String title) =>
+    AppBar(
       backgroundColor: BackgroundColors.dialogBG,
       title: titleText(text: title),
       actions: [
@@ -18,14 +21,16 @@ PreferredSizeWidget notificationAppBar(context, String title) => AppBar(
     );
 
 PreferredSizeWidget defaultAppBar(
-    {required BuildContext context, required String title, List<Widget>? actions}) => AppBar(
+    {required BuildContext context, required String title, List<
+        Widget>? actions}) =>
+    AppBar(
       backgroundColor: BackgroundColors.dialogBG,
       title: titleText(text: title),
       actions: actions,
     );
 
 PreferredSizeWidget changeableAppBar({
-        context, required String title, required bool isRequirementsTaken, required Widget replace, PreferredSizeWidget? bottom}) =>
+  context, required String title, required bool isRequirementsTaken, required Widget replace, PreferredSizeWidget? bottom}) =>
     AppBar(
       backgroundColor: BackgroundColors.dialogBG,
       title: titleText(text: title),
@@ -33,16 +38,16 @@ PreferredSizeWidget changeableAppBar({
       actions: [
         (isRequirementsTaken == false)
             ? MaterialButton(
-                onPressed: () {
-                  notificationNavigator(context, const Notifications());
-                },
-                child: const Icon(Icons.notifications,
-                    color: Colors.white, size: 30),
-              )
+          onPressed: () {
+            notificationNavigator(context, const Notifications());
+          },
+          child: const Icon(Icons.notifications,
+              color: Colors.white, size: 30),
+        )
             : Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: replace,
-              )
+          padding: const EdgeInsets.only(right: 20.0),
+          child: replace,
+        )
       ],
       bottom: bottom,
     );
@@ -73,10 +78,10 @@ Widget defaultTextFormField({
             keyboardType: (hint == "Username")
                 ? TextInputType.text
                 : (hint == "Password" || hint == "ConfirmPassword")
-                    ? TextInputType.visiblePassword
-                    : (hint == "Email")
-                        ? TextInputType.emailAddress
-                        : textInputType,
+                ? TextInputType.visiblePassword
+                : (hint == "Email")
+                ? TextInputType.emailAddress
+                : textInputType,
             style: TextStyle(color: textStyle ?? TextColors.whiteText),
             textAlign: textAlign ?? TextAlign.center,
             obscureText: isPassword!,
@@ -102,9 +107,9 @@ Widget defaultTextFormField({
                   onPressed: suffixPressed,
                   icon: isPassword
                       ? const Icon(Icons.remove_red_eye_outlined,
-                          color: BackgroundColors.whiteBG)
+                      color: BackgroundColors.whiteBG)
                       : const Icon(Icons.visibility_off_outlined,
-                          color: BackgroundColors.whiteBG)))
+                      color: BackgroundColors.whiteBG)))
         ],
       ),
     );
@@ -122,14 +127,13 @@ Widget titleText({
       style: TextStyle(fontSize: size, fontWeight: fontWeight, color: color),
     );
 
-Widget subTitleText(
-        {required String text,
-        double? size = 20,
-        FontWeight? fontWeight = FontWeight.w500,
-        Color? color = TextColors.whiteText,
-        TextAlign? textAlign = TextAlign.center,
-        int? maxLines = 2,
-        TextOverflow? textOverflow}) =>
+Widget subTitleText({required String text,
+  double? size = 20,
+  FontWeight? fontWeight = FontWeight.w500,
+  Color? color = TextColors.whiteText,
+  TextAlign? textAlign = TextAlign.center,
+  int? maxLines = 2,
+  TextOverflow? textOverflow}) =>
     Text(
       text,
       textAlign: textAlign,
@@ -142,14 +146,13 @@ Widget subTitleText(
       overflow: textOverflow,
     );
 
-Widget paragraphText(
-        {required String text,
-        double? size = 15.0,
-        FontWeight? fontWeight = FontWeight.w400,
-        Color? color = TextColors.whiteText,
-        TextAlign? textAlign = TextAlign.center,
-        int? maxLines = 2,
-        TextOverflow? textOverflow}) =>
+Widget paragraphText({required String text,
+  double? size = 15.0,
+  FontWeight? fontWeight = FontWeight.w400,
+  Color? color = TextColors.whiteText,
+  TextAlign? textAlign = TextAlign.center,
+  int? maxLines = 2,
+  TextOverflow? textOverflow}) =>
     Text(
       text,
       textAlign: textAlign,
@@ -213,7 +216,7 @@ Widget defaultInkWell({
                   children: [
                     Container(
                       padding: const EdgeInsets.all(10.0),
-                      width: 100,
+                      width: 120,
                       child: Image.network(image, fit: BoxFit.cover),
                     ),
                     Padding(
@@ -221,7 +224,14 @@ Widget defaultInkWell({
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          subTitleText(text: title),
+                          SizedBox(
+                            width: 220,
+                            child: subTitleText(
+                                text: title,
+                                textAlign: TextAlign.left,
+                                textOverflow: TextOverflow.ellipsis,
+                                maxLines: 1),
+                          ),
                           const SizedBox(height: 10),
                           subtitle,
                           const SizedBox(height: 8),
@@ -248,12 +258,12 @@ Widget defaultInkWell({
           child: Visibility(
               visible: (isReplace ?? false) ? true : false,
               child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                          Icons.repeat,
-                          color: iconColor ?? TextColors.whiteText
-                      )
+                  onPressed: () {},
+                  icon: Icon(
+                      Icons.repeat,
+                      color: iconColor ?? TextColors.whiteText
                   )
+              )
           ),
         ),
         Padding(
@@ -261,7 +271,7 @@ Widget defaultInkWell({
           child: Visibility(
               visible: (remove ?? false) ? true : false,
               child: CircleButton(
-                onTap: removeFunction ?? (){},
+                onTap: removeFunction ?? () {},
                 backgroundColor: Colors.red,
                 width: 30,
                 child: const Padding(
@@ -355,14 +365,13 @@ Widget defaultDialog({
       ],
     );
 
-Widget dialogButton(
-        {required String buttonTitle,
-        required Function() function,
-        double? borderRadius,
-        double? borderWidth,
-        Color? borderColor,
-        double? elevation,
-        String? buttonContent}) =>
+Widget dialogButton({required String buttonTitle,
+  required Function() function,
+  double? borderRadius,
+  double? borderWidth,
+  Color? borderColor,
+  double? elevation,
+  String? buttonContent}) =>
     MaterialButton(
       color: Colors.transparent,
       onPressed: function,
@@ -397,18 +406,17 @@ class DefaultButton extends StatefulWidget {
   Color? borderColor;
   bool? bigButton;
 
-  DefaultButton(
-      {super.key,
-      required this.function,
-      required this.text,
-      this.textColor,
-      this.borderRadius,
-      this.height,
-      this.width,
-      this.backgroundColor,
-      this.borderWidth,
-      this.borderColor,
-      this.bigButton});
+  DefaultButton({super.key,
+    required this.function,
+    required this.text,
+    this.textColor,
+    this.borderRadius,
+    this.height,
+    this.width,
+    this.backgroundColor,
+    this.borderWidth,
+    this.borderColor,
+    this.bigButton});
 
   @override
   State<DefaultButton> createState() => _ButtonState();
@@ -418,8 +426,14 @@ class _ButtonState extends State<DefaultButton> {
   @override
   Widget build(BuildContext context) {
     //if values = null set default value
-    widget.height ??= MediaQuery.of(context).size.height * .06;
-    widget.width ??= MediaQuery.of(context).size.width * .4;
+    widget.height ??= MediaQuery
+        .of(context)
+        .size
+        .height * .06;
+    widget.width ??= MediaQuery
+        .of(context)
+        .size
+        .width * .4;
     widget.backgroundColor ??= BackgroundColors.button;
     widget.borderRadius ??= 0;
     widget.borderWidth ??= 0;
@@ -445,16 +459,15 @@ class _ButtonState extends State<DefaultButton> {
   }
 }
 
-Widget exerciseCard(
-        {required Function() function,
-        required String image,
-        required String title,
-        double? borderRadius,
-        double? width,
-        double? imageHeight,
-        bool? addCardButton,
-        Function()? addFunction,
-        Color? titleColor}) =>
+Widget exerciseCard({required Function() function,
+  required String image,
+  required String title,
+  double? borderRadius,
+  double? width,
+  double? imageHeight,
+  bool? addCardButton,
+  Function()? addFunction,
+  Color? titleColor}) =>
     Stack(
       alignment: Alignment.topRight,
       children: [
@@ -499,4 +512,28 @@ Widget exerciseCard(
           ),
         )
       ],
+    );
+
+void toastError({
+  required BuildContext context,
+  required String text
+}) =>
+    MotionToast.error(
+      title: paragraphText(text: "Error!"),
+      description: paragraphText(text: text),
+      position: MotionToastPosition.top,
+      barrierColor: Colors.black.withOpacity(0.3),
+      width: 300,
+      height: 80,
+      dismissable: false,
+    ).show(context);
+
+void toastSuccess({
+  required String text
+}) => MotionToast.success(
+      title: paragraphText(text: "Success!"),
+      description: paragraphText(text: text),
+      layoutOrientation: ToastOrientation.rtl,
+      animationType: AnimationType.fromRight,
+      dismissable: true,
     );

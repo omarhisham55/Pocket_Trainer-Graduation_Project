@@ -87,7 +87,9 @@ class Login extends StatelessWidget {
                       isPassword: signUpLoginChangeable.isConfirmPassword,
                       suffix: true,
                       validator: (value) {
-                        if (passController != confirmPassController) {
+                        if (passController.text != confirmPassController.text) {
+                          print('pass cont = ${passController.text}');
+                          print('confirm pass cont = ${confirmPassController.text}');
                           return "Passwords doesn't match";
                         }
                         return null;
@@ -153,12 +155,17 @@ class Login extends StatelessWidget {
                     children: [
                       DefaultButton(
                         function: () {
-                          if (signUpLoginChangeable.signupKey.currentState!
-                              .validate()) {
+                          if (signUpLoginChangeable.signupKey.currentState!.validate()) {
+                            signUp(username: userController.text, email: emailController.text, password: passController.text, context: context);
+                            //     .then((value) {
+                            //   homeNavigator(context, const Navigation());
+                            //   toastSuccess(text: "signUp successful welcome ${userController.text}");
+                            // }).catchError((e) {
+                            //   toastError(text: "signUp failed try again after few seconds", context: context);
+                            // }).timeout(const Duration(seconds: 10));
                             // Navigator.of(context).push(HomeAnimation(page: Navigation()));
-                            homeNavigator(context, const Navigation());
-                            signUpLoginChangeable.signupKey.currentState!
-                                .save();
+                            // signUpLoginChangeable.signupKey.currentState!
+                            //     .save();
                             // Perform action (e.g. send data to a server)
                           }
                         },
@@ -235,14 +242,14 @@ class Login extends StatelessWidget {
                         DefaultButton(
                           function: () {
                             if (signUpLoginChangeable.loginKey.currentState!.validate()) {
-                              login(username: userController.text, password: passController.text).then((value){
-                                print("success");
-                                print(value);
-                              }).catchError((e){
-                                print("post data fail $e");
-                              });
+                              login(username: userController.text, password: passController.text, context: context);
+                              //     .then((value){
+                              //   homeNavigator(context, const Navigation());
+                              //   toastSuccess(text: "signUp successful welcome ${userController.text}");
+                              // }).catchError((e) {
+                              //   toastError(context: context, text: "signUp failed try again after few seconds");
+                              // }).timeout(const Duration(seconds: 10));
                               // Navigator.of(context).push(HomeAnimation(page: Navigation()));
-                              // homeNavigator(context, const Navigation());
                               signUpLoginChangeable.loginKey.currentState!.save();
                               // Perform action (e.g. send data to a server)
                             }

@@ -46,7 +46,7 @@ class Exercise {
   }
 }
 
-String ipConnectionAddress = "10.0.2.15";
+String ipConnectionAddress = "192.168.1.5";
 Future<String> ipConnectionAddress2 = getIPAddress();
 
 //get exercises
@@ -467,11 +467,11 @@ class GetGymPageContent {
 
 List<int> generateRandomNumber(int count, int min, int max) {
   Random random = Random();
-  List<int> number = [];
+  Set<int> number = {};
 
   for (int i = 0; i < count; i++) {
     int randomNumber = min + random.nextInt(max - min + 1);
     number.add(randomNumber);
   }
-  return number;
+  return number.toList();
 }

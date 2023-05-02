@@ -54,3 +54,4 @@ double width(context, double? newWidth){
 double height(context, double? newHeight){
   return MediaQuery.of(context).size.height * newHeight!;
 }
+

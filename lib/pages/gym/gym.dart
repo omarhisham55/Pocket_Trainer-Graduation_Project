@@ -19,24 +19,18 @@ class Gym extends StatefulWidget {
 List<String> months = [
   "January","February","March","April","May","June","July","August","September","October","November","December"
 ];
-Widget buildDaysOfWeek() {
+Widget buildDaysOfWeek(void Function(DateTime) function) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
-      paragraphText(text: months[DateTime.now().month-1]),
-      const SizedBox(height: 10),
+      // paragraphText(text: months[DateTime.now().month-1]),
+      // const SizedBox(height: 10),
       CalenderPicker(
         DateTime.now(),
         initialSelectedDate: DateTime.now(),
         selectionColor: Colors.black,
         daysCount: 6,
-        onDateChange: (date) {
-          print(date);
-          // New date selected
-          // setState(() {
-          //   _selectedValue = date;
-          // });
-        },
+        onDateChange: function,
       ),
     ],
   );
@@ -55,7 +49,7 @@ class _GymState extends State<Gym> {
           preferredSize: const Size.fromHeight(110.0),
           child: Padding(
             padding: const EdgeInsets.all(9.0),
-            child: buildDaysOfWeek(),
+            child: buildDaysOfWeek((date){}),
           ),
         ),
       ),

@@ -33,3 +33,8 @@ class PieChartState extends MainStateManager{
   int index;
   PieChartState({required this.index});
 }
+
+class HandleSlidingPanelState extends MainStateManager{}
+
+class HandleAmPmState extends MainStateManager{}
+

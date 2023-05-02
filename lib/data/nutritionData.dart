@@ -38,9 +38,47 @@ Future<List> getMeals() async {
   if(meals.statusCode == 200){
     var data = json.decode(meals.body);
     var mealsDataList = data.map((json) => NutritionData.fromJson(json)).toList();
-    print(mealsDataList);
     return mealsDataList;
   } else{
     throw Exception("Failed to load data");
   }
+}
+
+Map<String, Future<List>> nutritionPageContent = {
+  "breakfast": getBreakfast(),
+  "snack": getBreakfast(),
+  "lunch": getBreakfast(),
+  "dinner": getBreakfast(),
+};
+
+Future<List> getBreakfast()async{
+  List breakfast = await Future.value([]);
+  getMeals().then((value) {
+    List random = generateRandomNumber(3, 1, value.length-1);
+    for(var element in random){
+      breakfast.add(value[element]);
+    }
+    // for(int i=0; i<random.length; i++){
+    //   breakfast.add(value[random[i]]);
+    //   print("breakfast ${breakfast.indexOf(value[random[i]])}");
+    //   print("random index ${random}");
+    // }
+  }).catchError((e){print(e);});
+  print("object $breakfast");
+  return breakfast;
+}
+Map<String, List> nutritionPageContentCheck = {};
+
+Future<List> getNutritionHomeDataMapValues() async{
+  List listValues = [];
+   for(var keys in nutritionPageContent.keys){
+     nutritionPageContentCheck[keys] = await nutritionPageContent[keys]!;
+   }
+   print("original map content $nutritionPageContent");
+   print("new map content $nutritionPageContentCheck");
+   for(var keys in nutritionPageContentCheck.keys){
+     listValues.addAll([nutritionPageContentCheck[keys]]);
+   }
+   print("list values $listValues");
+   return listValues;
 }

@@ -9,14 +9,15 @@ import 'shared/blocObserver.dart';
 
 void main() {
   Bloc.observer = MyBlocObserver();
-  ipConnectionAddress2.then((value) {
-    print(value);
-  });
+  // ipConnectionAddress2.then((value) {
+  //   print(value);
+  // });
+    runApp(const MyApp());
   getDataMapValues().then((value) {
     print("successful exercise data from $value");
-    getMeals().timeout(const Duration(seconds: 10));
-    login();
-    runApp(const MyApp());
+    // getMeals().timeout(const Duration(seconds: 10));
+    // login();
+    // getIPAddress();
     // getStretchesValues().then((value) {
     //   print("successful stretches data from $value");
     // }).catchError((e){
