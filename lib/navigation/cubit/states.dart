@@ -1,3 +1,5 @@
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+
 abstract class MainStateManager{}
 
 class InitialState extends MainStateManager{}
@@ -10,11 +12,13 @@ class IsGoldClickedState extends MainStateManager{}
 
 class RadioButtonPaymentState extends MainStateManager{}
 
+class RadioButtonAddMealState extends MainStateManager{}
+
 class SignUpState extends MainStateManager{}
 
 class LoginState extends MainStateManager{}
 
-class HomePageState extends MainStateManager{}
+class GymBodyState extends MainStateManager{}
 
 class ChangeSearchState extends MainStateManager{
   List filteredList;
@@ -27,7 +31,10 @@ class DeleteButtonState extends MainStateManager{}
 
 class DietRequirements extends MainStateManager{}
 
-class DropDownState extends MainStateManager{}
+class DropDownState extends MainStateManager{
+  String selectedValue;
+  DropDownState({required this.selectedValue});
+}
 
 class PieChartState extends MainStateManager{
   int index;
@@ -36,5 +43,10 @@ class PieChartState extends MainStateManager{
 
 class HandleSlidingPanelState extends MainStateManager{}
 
-class HandleAmPmState extends MainStateManager{}
+class RemoveMealState extends MainStateManager{}
+
+class AddExerciseState extends MainStateManager{}
+
+class FilterState extends MainStateManager{}
+
 

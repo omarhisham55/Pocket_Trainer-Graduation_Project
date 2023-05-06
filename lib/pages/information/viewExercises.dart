@@ -13,10 +13,9 @@ import '../../data/exerciseData.dart';
 
 class InformationDetails extends StatelessWidget {
   final String exerciseType;
-  InformationDetails({Key? key, required this.exerciseType}) : super(key: key);
+  const InformationDetails({Key? key, required this.exerciseType}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    List searchImage = [];
     List searchList = [];
     getDataMapValues(key: exerciseType, allValues: false).then((value) {
       searchList = value;
@@ -69,9 +68,14 @@ class InformationDetails extends StatelessWidget {
                   body: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: FutureBuilder(
-                        future: getDataMapValues(key: exerciseType),
-                        builder: (_, snapshot) {
-                            return AlignedGridView.count(
+                      future: getDataMapValues(key: exerciseType),
+                      builder: (_, snapshot) {
+                        if (snapshot.hasData) {
+                          return (snapshot.data!.isEmpty)
+                              ? Center(
+                            child: titleText(text: "No meals found"),
+                          )
+                              : AlignedGridView.count(
                               itemCount: searchList.length, //$exercise number
                               physics: const AlwaysScrollableScrollPhysics(),
                               shrinkWrap: true,
@@ -80,27 +84,34 @@ class InformationDetails extends StatelessWidget {
                               crossAxisSpacing: 5,
                               itemBuilder: (_, i) {
                                 return exerciseCard(
-                                  function: () {
-                                    pageNavigator(
-                                        context,
-                                        ExerciseDetails(
-                                          exerciseName: snapshot.data![i].exerciseName,
-                                          exerciseInfo: snapshot.data![i].exerciseDescription,
-                                          exerciseImage: snapshot.data![i].exerciseImage,
-                                          exerciseType: snapshot.data![i].exerciseType,
-                                          exerciseTarget: snapshot.data![i].exerciseTarget,
-                                          exerciseTips: snapshot.data![i].exerciseTips,
-                                          // exerciseRepetition: snapshot.data![i].exerciseRepetition,
-                                          // exerciseSets: snapshot.data![i].exerciseSets,
-                                        ));
-                                  },
-                                  image: searchList[i]!.exerciseImage,
-                                  title: searchList[i].exerciseName, //$exercise name
-                                  width: width(context, .5)
+                                    function: () {
+                                      pageNavigator(
+                                          context,
+                                          ExerciseDetails(
+                                            exerciseName: searchList[i].exerciseName,
+                                            exerciseInfo: searchList[i].exerciseDescription,
+                                            exerciseImage: searchList[i].exerciseImage,
+                                            exerciseType: searchList[i].exerciseType,
+                                            exerciseTarget: searchList[i].exerciseTarget,
+                                            exerciseTips: searchList[i].exerciseTips,
+                                            exerciseRepetition: searchList[i].exerciseRepetition,
+                                            exerciseSets: searchList[i].exerciseSets,
+                                          ));
+                                    },
+                                    image: searchList[i].exerciseImage,
+                                    title: searchList[i].exerciseName, //$exercise name
+                                    width: width(context, .5)
                                 );
                               }
-                            );
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: titleText(
+                                  text: "Error fetching data ${snapshot.error}"));
+                        } else {
+                          return const Center(child: CircularProgressIndicator());
                         }
+                      }
                     ),
                   )
               ),

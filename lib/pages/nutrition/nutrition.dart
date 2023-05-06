@@ -26,27 +26,26 @@ class Nutrition extends StatelessWidget {
         builder: (_, s){
           CubitManager nutrition = CubitManager.get(_);
           return Scaffold(
-              appBar: changeableAppBar(
-                context: context,
-                title: "Nutrition Home",
-                isRequirementsTaken: isDietTaken,
-                replace: QudsPopupButton(
-                    tooltip: 'open',
-                    items: nutrition.getMenuFoodItems(context),
-                    child:
-                    const Icon(Icons.more_vert, color: Colors.white, size: 30)),
-                bottom: (isDietTaken) ? PreferredSize(
-                  preferredSize: const Size.fromHeight(110.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(9.0),
-                    child: buildDaysOfWeek((date){
-
-                    }),
-                  ),
-                ) : null,
-              ),
+              // appBar: changeableAppBar(
+              //   context: context,
+              //   title: "Nutrition Home",
+              //   isRequirementsTaken: true,
+              //   replace: QudsPopupButton(
+              //       tooltip: 'open',
+              //       items: nutrition.getMenuFoodItems(context),
+              //       child: const Icon(Icons.more_vert, color: Colors.white, size: 30)),
+              //   bottom: (isDietTaken) ? PreferredSize(
+              //     preferredSize: const Size.fromHeight(110.0),
+              //     child: Padding(
+              //       padding: const EdgeInsets.all(9.0),
+              //       child: buildDaysOfWeek((date){
+              //
+              //       }),
+              //     ),
+              //   ) : null,
+              // ),
               backgroundColor: BackgroundColors.background,
-              body: (isDietTaken == false) ? SafeArea(
+              body: (isDietTaken == true) ? SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20, bottom: 100, right: 40, left: 40),
                   child: Column(
@@ -101,7 +100,7 @@ class Nutrition extends StatelessWidget {
                   ),
                 ),
               )
-                  : const NutritionHome()
+                  : NutritionHome()
           );
         },
       ),

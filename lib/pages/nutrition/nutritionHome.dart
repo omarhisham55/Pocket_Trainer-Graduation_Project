@@ -6,147 +6,227 @@ import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../navigation/animationNavigation.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/images.dart';
+import '../gym/gym.dart';
+import 'diet_recommended_plan.dart';
 import 'food_details.dart';
 import 'food_selection.dart';
 
 class NutritionHome extends StatelessWidget {
-  const NutritionHome({Key? key}) : super(key: key);
-
+  NutritionHome({Key? key}) : super(key: key);
+  List<String> selectedMeals = [];
+  String selectedValue = "select meal time";
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (_) => CubitManager(),
         child: BlocConsumer<CubitManager, MainStateManager>(
-          listener: (_, s) {},
+          listener: (_, s) {
+            if(s is DropDownState){
+              selectedValue = s.selectedValue;
+            }
+          },
           builder: (_, s) {
             CubitManager nutrition = CubitManager.get(_);
+            List<QudsPopupMenuBase> getMenuFoodItems(context) {
+              return [
+                QudsPopupMenuItem(
+                    leading: const Icon(Icons.add),
+                    title: const Text('Add meal'),
+                    onPressed: () {
+                      // nutrition.addMealController.isPanelOpen ? nutrition.addMealController.close() : nutrition.addMealController.open();
+                      nutrition.slidingPanel(nutrition.addMealController);
+                      // setState(() {
+                      //   deleteFoodButton = false;
+                      // });
+                    }),
+                QudsPopupMenuDivider(),
+                QudsPopupMenuItem(
+                    leading: const Icon(Icons.delete_outline),
+                    title: const Text('Delete meal'),
+                    onPressed: () {
+                      // setState((){
+                      //   panelController.close();
+                      //   foodPanelController.close();
+                      //   deleteFoodButton = true;
+                      // });
+                    }),
+                QudsPopupMenuDivider(),
+                QudsPopupMenuItem(
+                    leading: const Icon(Icons.info_outline),
+                    title: const Text('Diet info'),
+                    onPressed: () {
+                      Navigator.of(context).push(PremiumAnimation(
+                          page: RecommendedProgramNutritionInfo(fromHome: true)));
+                    }),
+                QudsPopupMenuDivider(),
+                QudsPopupMenuItem(
+                    leading: const Icon(Icons.language_outlined),
+                    title: const Text('Change language'),
+                    onPressed: () {
+                      // showToast('Feedback Pressed!');
+                      // print(containerFoodList);
+                    }),
+              ];
+            }
             return Scaffold(
+              appBar: changeableAppBar(
+                context: context,
+                title: "Nutrition Home",
+                isRequirementsTaken: true,
+                replace: QudsPopupButton(
+                    tooltip: 'open',
+                    items: getMenuFoodItems(context),
+                    child: const Icon(Icons.more_vert, color: Colors.white, size: 30)),
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(110.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(9.0),
+                    child: buildDaysOfWeek((date){
+
+                    }),
+                  ),
+                ),
+              ),
               backgroundColor: BackgroundColors.background,
               body: SlidingUpPanel(
                 controller: nutrition.addMealController,
                 maxHeight: height(context, .4),
                 minHeight: 0.0,
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(30)),
+                onPanelClosed: (){
+                  print("add Meals $selectedMeals");
+                },
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
                 //SlideUp panel for show food list when blue button appears
                 panelBuilder: (scrollController) => SlidingUpPanel(
                     controller: nutrition.foodListPanel,
                     maxHeight: height(context, .3),
                     minHeight: 0.0,
-                    body: Stack(alignment: Alignment.topRight, children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: double.infinity,
-                            child: InkWell(
-                              onTap: () => nutrition.foodListPanel.close(),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 30.0, left: 20.0),
-                                child: titleText(
-                                    text: "Add Meal",
-                                    color: TextColors.blackText,
-                                    textAlign: TextAlign.start),
-                              ),
-                            ),
-                          ),
+                    onPanelClosed: (){nutrition.addMealController.open();},
+                    body: FutureBuilder(
+                      future: getNutritionHomeDataMapValues(),
+                      builder: (_, snapshot) {
+                        List<String> titles = [];
+                        for(int i=0; i<snapshot.data!.length; i++){
+                          titles.add(snapshot.data![i][0]);
+                        }
+                        return Stack(
+                          alignment: Alignment.topRight,
+                          children: [
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1, color: Colors.black54)),
+                              SizedBox(
+                                width: double.infinity,
+                                child: InkWell(
+                                  onTap: () => nutrition.foodListPanel.close(),
                                   child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: defaultDropDownMenu(
-                                          content: [],
-                                          hintValue: nutrition.selectedValue,
-                                          function: (value) {
-                                            nutrition.dropDownSelect(
-                                                value, nutrition.selectedValue);
-                                          })),
+                                    padding: const EdgeInsets.only(
+                                        top: 30.0, left: 20.0),
+                                    child: titleText(
+                                        text: "Add Meal",
+                                        color: TextColors.blackText,
+                                        textAlign: TextAlign.start),
+                                  ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0),
-                                //select meal button
-                                child: DefaultButton(
-                                    function: () async {
-                                      // navNavigator(context, ChooseFood(addedFood: addNumber, addedFoodList: addFood));
-                                      // final result = await Navigator.of(context).push(
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => ChooseFood(
-                                      //         addedFood: nutrition.addNumber,
-                                      //         addedFoodList: []),
-                                      //   ),
-                                      // );
-                                      // setState(() {
-                                      //   addFood = result;
-                                      //   addNumber = addFood.length;
-                                      // });
-                                    },
-                                    backgroundColor: BackgroundColors.whiteBG,
-                                    width: MediaQuery.of(context).size.width,
-                                    borderWidth: 1,
-                                    borderColor: Colors.black54,
-                                    text: "Select meal",
-                                    textColor: TextColors.blackText),
-                              ),
-                              const SizedBox(height: 40),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 20.0),
-                                //final add button
-                                child: DefaultButton(
-                                  function: () {
-                                    // print('add number $addNumber $addFood');
-                                    // print(containerFoodList.food);
-                                    // int listIndex = random.nextInt(4);
-                                    // setState(() {
-                                    //   containerFoodList[0].add(containerFoodList.food);
-                                    // });
-                                  },
-                                  borderRadius: 30,
-                                  text: 'Add',
-                                ),
+                              Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 1, color: Colors.black54)),
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: defaultDropDownMenu(
+                                              content: titles,
+                                              hintColor: TextColors.blackText,
+                                              hintValue: selectedValue,
+                                              function: (value) {
+                                                print('object $value');
+                                                nutrition.dropDownSelect(value, selectedValue);
+                                              })),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    //select meal button
+                                    child: DefaultButton(
+                                      function: () async {
+                                        navNavigator(context, ChooseFood(selectedMeals: selectedMeals));
+                                      },
+                                      backgroundColor: BackgroundColors.whiteBG,
+                                      width: MediaQuery.of(context).size.width,
+                                      borderWidth: 1,
+                                      borderColor: Colors.black54,
+                                      text: "Select meal",
+                                      textColor: TextColors.blackText
+                                    ),
+                                  ),
+                                  const SizedBox(height: 40),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 20.0),
+                                    //final add button
+                                    child: DefaultButton(
+                                      function: () {
+                                        if(selectedValue != "select meal time"){
+                                          if(selectedMeals.isNotEmpty){
+                                            toastSuccess(text: "Meals $selectedMeals added to $selectedValue");
+                                            showSnackBar(context: context, text: "Meals $selectedMeals added to $selectedValue");
+                                            print('Meals $selectedMeals added to $selectedValue');
+                                          }else{
+                                            showSnackBar(context: context, text: "select meals");
+                                            print("select meals");
+                                          }
+                                        }else{
+                                          showSnackBar(context: context, text: "select meal time");
+                                          print("select meal time");
+                                        }
+                                        // print('add number $addNumber $addFood');
+                                        // print(containerFoodList.food);
+                                        // int listIndex = random.nextInt(4);
+                                        // setState(() {
+                                        //   containerFoodList[0].add(containerFoodList.food);
+                                        // });
+                                      },
+                                      borderRadius: 30,
+                                      text: 'Add',
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                      Visibility(
-                          visible: (nutrition.addNumber == 0) ? false : true,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(top: 20.0, right: 20.0),
-                            child: CircleButton(
-                              onTap: () {
-                                nutrition.foodListPanel.isPanelOpen
-                                    ? nutrition.foodListPanel.close()
-                                    : nutrition.foodListPanel.open();
-                              },
-                              backgroundColor: BackgroundColors.extraButton,
-                              child: paragraphText(
-                                  text: "+ ${nutrition.addNumber}",
-                                  color: TextColors.blackText),
-                            ),
-                          ))
-                    ]),
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(30)),
-                    panelBuilder: (scrollController) =>
-                        // addFood.isEmpty
-                        //     ? Center(
-                        //     child: titleText(
-                        //         text: "Empty List", color: TextColors.blackText))
-                        //     :
+                            Padding(
+                              padding:
+                              const EdgeInsets.only(top: 20.0, right: 20.0),
+                              child: CircleButton(
+                                onTap: () {
+                                  nutrition.slidingPanel(nutrition.foodListPanel);
+                                },
+                                backgroundColor: BackgroundColors.extraButton,
+                                child: const Icon(FontAwesomeIcons.bowlFood)
+                              ),
+                            )
+                        ]
+                        );
+                      }
+                    ),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                    panelBuilder: (scrollController) => selectedMeals.isEmpty
+                            ? Center(
+                            child: titleText(
+                                text: "Empty List", color: TextColors.blackText))
+                            :
                         //list of selected food
                         ListView.separated(
                             itemBuilder: (context, index) => Padding(
@@ -154,50 +234,51 @@ class NutritionHome extends StatelessWidget {
                                       left: 10.0, top: (index == 0) ? 10 : 0),
                                   child: Row(
                                     children: [
-                                      subTitleText(
-                                          text: "addFood[index]",
-                                          color: TextColors.blackText),
+                                      SizedBox(
+                                        width: width(context, .7),
+                                        child: subTitleText(
+                                          text: selectedMeals[index],
+                                          color: TextColors.blackText,
+                                          textAlign: TextAlign.left
+                                        ),
+                                      ),
                                       const Spacer(),
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             right: 20.0, bottom: 10),
                                         child: CircleButton(
                                             onTap: () {
-                                              // setState(() {
-                                              //   addFood.removeAt(index);
-                                              //   addNumber = addFood.length;
-                                              // });
+                                              nutrition.removeMeal(selectedMeals, index);
                                             },
                                             borderWidth: 0,
                                             borderColor: Colors.transparent,
                                             child: const Icon(
-                                                Icons.minimize_sharp)),
+                                                Icons.minimize_sharp)
+                                        ),
                                       )
                                     ],
                                   ),
                                 ),
-                            separatorBuilder: (context, index) =>
-                                const Divider(thickness: 2),
-                            itemCount: 2)),
+                            separatorBuilder: (context, index) => const Divider(thickness: 2),
+                            itemCount: selectedMeals.length
+                        )
+                ),
                 body: FutureBuilder(
                   future: getNutritionHomeDataMapValues(),
                   builder: (_, snapshot) {
                     if (snapshot.hasData) {
                       print(snapshot.data);
-                      var breakfastData = snapshot.data![0];
-                      var snackData = snapshot.data![1];
-                      var lunchData = snapshot.data![2];
-                      var dinnerData = snapshot.data![3];
+                      var snapshotData = snapshot.data!;
+                      print("snapshotData = ${snapshot.data}");
                       return Padding(
                         padding:
                             const EdgeInsets.only(bottom: 250.0, top: 10.0),
-                        child: ListView(
+                        child: ListView.separated(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           physics: const BouncingScrollPhysics(),
                           shrinkWrap: true,
-                          children: [
-                            //breakfast
-                            Column(
+                          itemBuilder: (_, iTitle) {
+                            return Column(
                               children: [
                                 //green circle, title
                                 Row(
@@ -207,68 +288,78 @@ class NutritionHome extends StatelessWidget {
                                       backgroundColor: Colors.green,
                                     ),
                                     const SizedBox(width: 7),
-                                    paragraphText(text: "Breakfast")
+                                    paragraphText(text: snapshotData[iTitle][0])
                                   ],
                                 ),
                                 Container(
                                     decoration: BoxDecoration(
                                         color: BackgroundColors.inkWellBG,
                                         borderRadius:
-                                            BorderRadius.circular(20)),
+                                        BorderRadius.circular(20)),
                                     child: ListView.separated(
                                         physics: const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
-                                        itemBuilder: (_, i) => defaultInkWell(
-                                            isReplace: true,
-                                            image: breakfastData[i].image,
-                                            title: breakfastData[i].name,
-                                            subtitle: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                paragraphText(
-                                                    text:
-                                                        "Protein: ${breakfastData[i].protein}"),
-                                                const SizedBox(width: 10.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Carbs ${breakfastData[i].carbs}"),
-                                                const SizedBox(width: 10.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Fats ${breakfastData[i].fats}"),
-                                              ],
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                CircleAvatar(
-                                                  backgroundColor: Colors.red,
-                                                  child: paragraphText(
-                                                      text: breakfastData[i].quantity,
-                                                      color: Colors.white),
-                                                ),
-                                                const SizedBox(width: 15.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Calories: ${breakfastData[i].calories}"),
-                                              ],
-                                            ),
-                                            function: () {
-                                              // nutrition.slidingPanel();
-                                              navNavigator(context,
-                                                  FoodDetails(
-                                                    title: breakfastData[i].name,
-                                                    image: breakfastData[i].image,
-                                                    quantity: breakfastData[i].quantity,
-                                                    protein: breakfastData[i].protein,
-                                                    fats: breakfastData[i].fats,
-                                                    carbs: breakfastData[i].carbs,
-                                                    calories: breakfastData[i].calories,
-                                                  ));
-                                            }),
-                                        separatorBuilder: (_, i) => Padding(
+                                        itemBuilder: (_, i) {
+                                          return defaultInkWell(
+                                              isReplace: true,
+                                              image: snapshotData[iTitle][1][i].image,
+                                              title: snapshotData[iTitle][1][i].name,
+                                              subtitle: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  paragraphText(
+                                                      text:
+                                                      "Protein: ${snapshotData[iTitle][1][i].protein}"),
+                                                  const SizedBox(width: 10.0),
+                                                  paragraphText(
+                                                      text:
+                                                      "Carbs ${snapshotData[iTitle][1][i].carbs}"),
+                                                  const SizedBox(width: 10.0),
+                                                  paragraphText(
+                                                      text:
+                                                      "Fats ${snapshotData[iTitle][1][i].fats}"),
+                                                ],
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor: Colors.red,
+                                                    child: paragraphText(
+                                                        text: snapshotData[iTitle][1][i].quantity,
+                                                        color: Colors.white),
+                                                  ),
+                                                  const SizedBox(width: 15.0),
+                                                  paragraphText(
+                                                      text:
+                                                      "Calories: ${snapshotData[iTitle][1][i].calories}"),
+                                                ],
+                                              ),
+                                              function: () {
+                                                // nutrition.slidingPanel();
+                                                navNavigator(context,
+                                                    FoodDetails(
+                                                      title: snapshotData[iTitle][1][i]
+                                                          .name,
+                                                      image: snapshotData[iTitle][1][i]
+                                                          .image,
+                                                      quantity: snapshotData[iTitle][1][i]
+                                                          .quantity,
+                                                      protein: snapshotData[iTitle][1][i]
+                                                          .protein,
+                                                      fats: snapshotData[iTitle][1][i]
+                                                          .fats,
+                                                      carbs: snapshotData[iTitle][1][i]
+                                                          .carbs,
+                                                      calories: snapshotData[iTitle][1][i]
+                                                          .calories,
+                                                    ));
+                                              });
+                                        },
+                                        separatorBuilder: (_, i) =>
+                                            Padding(
                                               padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 20),
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 20),
                                               child: Container(
                                                 decoration: BoxDecoration(
                                                     border: Border.all(
@@ -277,271 +368,12 @@ class NutritionHome extends StatelessWidget {
                                                             .background)),
                                               ),
                                             ),
-                                        itemCount: breakfastData.length))
+                                        itemCount: 2))
                               ],
-                            ),
-                            const SizedBox(height: 15),
-                            //Snack
-                            Column(
-                              children: [
-                                //green circle, title
-                                Row(
-                                  children: [
-                                    const CircleAvatar(
-                                      radius: 5,
-                                      backgroundColor: Colors.green,
-                                    ),
-                                    const SizedBox(width: 7),
-                                    paragraphText(text: "Snack")
-                                  ],
-                                ),
-                                Container(
-                                    decoration: BoxDecoration(
-                                        color: BackgroundColors.inkWellBG,
-                                        borderRadius: BorderRadius.circular(20)),
-                                    child: ListView.separated(
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemBuilder: (_, i) => defaultInkWell(
-                                            isReplace: true,
-                                            image: snackData[i].image,
-                                            title: snackData[i].name,
-                                            subtitle: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                paragraphText(
-                                                    text:
-                                                        "Protein: ${snackData[i].protein}"),
-                                                const SizedBox(width: 10.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Carbs ${snackData[i].carbs}"),
-                                                const SizedBox(width: 10.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Fats ${snackData[i].fats}"),
-                                              ],
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                CircleAvatar(
-                                                  backgroundColor: Colors.red,
-                                                  child: paragraphText(
-                                                      text: snackData[i].quantity),
-                                                ),
-                                                const SizedBox(width: 15.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Calories: ${snackData[i].calories}"),
-                                              ],
-                                            ),
-                                            function: () {
-                                              // nutrition.slidingPanel();
-                                              navNavigator(
-                                                  context,
-                                                  FoodDetails(
-                                                    title: snackData[i].name,
-                                                    image: snackData[i].image,
-                                                    quantity: snackData[i].quantity,
-                                                    protein: snackData[i].protein,
-                                                    fats: snackData[i].fats,
-                                                    carbs: snackData[i].carbs,
-                                                    calories: snackData[i].calories,
-                                                  ));
-                                            }),
-                                        separatorBuilder: (_, i) => Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 20),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color: BackgroundColors
-                                                            .background)),
-                                              ),
-                                            ),
-                                        itemCount: snackData.length))
-                              ],
-                            ),
-                            const SizedBox(height: 15),
-                            //Lunch
-                            Column(
-                              children: [
-                                //green circle, title
-                                Row(
-                                  children: [
-                                    const CircleAvatar(
-                                      radius: 5,
-                                      backgroundColor: Colors.green,
-                                    ),
-                                    const SizedBox(width: 7),
-                                    paragraphText(text: "Lunch")
-                                  ],
-                                ),
-                                Container(
-                                    decoration: BoxDecoration(
-                                        color: BackgroundColors.inkWellBG,
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: ListView.separated(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemBuilder: (_, i) => defaultInkWell(
-                                            isReplace: true,
-                                            image: lunchData[i].image,
-                                            title: lunchData[i].name,
-                                            subtitle: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                paragraphText(
-                                                    text:
-                                                        "Protein: ${lunchData[i].protein}"),
-                                                const SizedBox(width: 10.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Carbs ${lunchData[i].carbs}"),
-                                                const SizedBox(width: 10.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Fats ${lunchData[i].fats}"),
-                                              ],
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                CircleAvatar(
-                                                  backgroundColor: Colors.red,
-                                                  child: paragraphText(
-                                                      text: lunchData[i].quantity),
-                                                ),
-                                                const SizedBox(width: 15.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Calories: ${lunchData[i].calories}"),
-                                              ],
-                                            ),
-                                            function: () {
-                                              // nutrition.slidingPanel();
-                                              navNavigator(
-                                                  context,
-                                                  FoodDetails(
-                                                    title: lunchData[i].name,
-                                                    image: lunchData[i].image,
-                                                    quantity: lunchData[i].quantity,
-                                                    protein: lunchData[i].protein,
-                                                    fats: lunchData[i].fats,
-                                                    carbs: lunchData[i].carbs,
-                                                    calories: lunchData[i].calories,
-                                                  ));
-                                            }),
-                                        separatorBuilder: (_, i) => Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 20),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color: BackgroundColors
-                                                            .background)),
-                                              ),
-                                            ),
-                                        itemCount: lunchData.length))
-                              ],
-                            ),
-                            const SizedBox(height: 15),
-                            //Dinner
-                            Column(
-                              children: [
-                                //green circle, title
-                                Row(
-                                  children: [
-                                    const CircleAvatar(
-                                      radius: 5,
-                                      backgroundColor: Colors.green,
-                                    ),
-                                    const SizedBox(width: 7),
-                                    paragraphText(text: "Dinner")
-                                  ],
-                                ),
-                                Container(
-                                    decoration: BoxDecoration(
-                                        color: BackgroundColors.inkWellBG,
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: ListView.separated(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemBuilder: (_, i) => defaultInkWell(
-                                            isReplace: true,
-                                            image: dinnerData[i].image,
-                                            title: dinnerData[i].name,
-                                            subtitle: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                paragraphText(
-                                                    text:
-                                                        "Protein: ${dinnerData[i].protein}"),
-                                                const SizedBox(width: 10.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Carbs ${dinnerData[i].carbs}"),
-                                                const SizedBox(width: 10.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Fats ${dinnerData[i].fats}"),
-                                              ],
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                CircleAvatar(
-                                                  backgroundColor: Colors.red,
-                                                  child: paragraphText(
-                                                      text: dinnerData[i].quantity),
-                                                ),
-                                                const SizedBox(width: 15.0),
-                                                paragraphText(
-                                                    text:
-                                                        "Calories: ${dinnerData[i].calories}"),
-                                              ],
-                                            ),
-                                            function: () {
-                                              // nutrition.slidingPanel();
-                                              navNavigator(
-                                                  context,
-                                                  FoodDetails(
-                                                    title: dinnerData[i].name,
-                                                    image: dinnerData[i].image,
-                                                    quantity: dinnerData[i].quantity,
-                                                    protein: dinnerData[i].protein,
-                                                    fats: dinnerData[i].fats,
-                                                    carbs: dinnerData[i].carbs,
-                                                    calories: dinnerData[i].calories,
-                                                  ));
-                                            }),
-                                        separatorBuilder: (_, i) => Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 20),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color: BackgroundColors
-                                                            .background)),
-                                              ),
-                                            ),
-                                        itemCount: dinnerData.length))
-                              ],
-                            ),
-                          ],
+                            );
+                          },
+                          separatorBuilder: (_, iTitle) => const SizedBox(height: 15),
+                          itemCount: snapshotData.length,
                         ),
                       );
                     } else if (snapshot.hasError) {
@@ -556,6 +388,7 @@ class NutritionHome extends StatelessWidget {
               ),
             );
           },
-        ));
+        )
+    );
   }
 }

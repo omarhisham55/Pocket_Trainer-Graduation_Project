@@ -12,45 +12,54 @@ import 'food_details.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
 class ChooseFood extends StatelessWidget {
-  int? addedFood;
-  List? addedFoodList;
-  ChooseFood({super.key, this.addedFood, this.addedFoodList});
+  List<String> selectedMeals;
+
+  ChooseFood({super.key, required this.selectedMeals});
+
+  Set cloneList = {};
 
   @override
   Widget build(BuildContext context) {
     List searchList = [];
     getMeals().then((value) {
       searchList = value;
-      print("first search list $searchList");
+      // print("first search list $searchList");
     }).catchError((e) {});
     return BlocProvider(
       create: (_) => CubitManager(),
       child: BlocConsumer<CubitManager, MainStateManager>(
         listener: (_, s) {
-          if(s is ChangeSearchState){
+          if (s is ChangeSearchState) {
             searchList = s.filteredList;
           }
         },
         builder: (_, s) {
-          CubitManager foodChangeable = CubitManager.get(_);
+          CubitManager nutrition = CubitManager.get(_);
           return Scaffold(
             appBar: AppBar(
+                leading: IconButton(
+                    onPressed: () {
+                      selectedMeals = [];
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back)
+                ),
                 centerTitle: true,
-                title: (foodChangeable.isSearchOpened)
+                title: (nutrition.isSearchOpened)
                     ? TextField(
-                        controller: foodChangeable.searchQuery,
+                        controller: nutrition.searchQuery,
                         style: const TextStyle(
                           color: BackgroundColors.whiteBG,
                         ),
                         decoration: const InputDecoration(
-                          hintText: "Search here..",
-                          hintStyle: TextStyle(color: Colors.white)),
+                            hintText: "Search here..",
+                            hintStyle: TextStyle(color: Colors.white)),
                       )
                     : titleText(text: "Add Food"),
                 backgroundColor: BackgroundColors.dialogBG,
                 actions: <Widget>[
                   IconButton(
-                    icon: (foodChangeable.isSearchOpened)
+                    icon: (nutrition.isSearchOpened)
                         ? const Icon(
                             Icons.close,
                             color: BackgroundColors.whiteBG,
@@ -58,13 +67,14 @@ class ChooseFood extends StatelessWidget {
                         : const Icon(Icons.search,
                             color: BackgroundColors.whiteBG),
                     onPressed: () {
-                      foodChangeable.changeSearchIcon(searchList: searchList);
-                      if (!foodChangeable.isSearchOpened) foodChangeable.searchQuery.clear();
-                      foodChangeable.searchQueryMealListener(searchList);
+                      nutrition.changeSearchIcon(searchList: searchList);
+                      if (!nutrition.isSearchOpened) {
+                        nutrition.searchQuery.clear();
+                      }
+                      nutrition.searchQueryMealListener(searchList);
                     },
                   ),
-                ]
-            ),
+                ]),
             body: Padding(
               padding: const EdgeInsets.all(20.0),
               child: FutureBuilder(
@@ -83,38 +93,46 @@ class ChooseFood extends StatelessWidget {
                                       navNavigator(
                                           context,
                                           FoodDetails(
-                                            title: snapshot.data![index].name,
-                                            calories: snapshot.data![index].calories,
-                                            carbs: snapshot.data![index].carbs,
-                                            fats: snapshot.data![index].fats,
-                                            protein: snapshot.data![index].protein,
-                                            quantity: snapshot.data![index].quantity,
-                                            image: snapshot.data![index].image,
+                                            title: searchList[index].name,
+                                            calories:
+                                                searchList[index].calories,
+                                            carbs: searchList[index].carbs,
+                                            fats: searchList[index].fats,
+                                            protein: searchList[index].protein,
+                                            quantity:
+                                                searchList[index].quantity,
+                                            image: searchList[index].image,
                                           ));
                                     },
                                     child: Row(
                                       children: [
                                         RoundCheckBox(
-                                            onTap: (selected) {
-                                              // (selected!) ? selectedFood.add(foodTitle.elementAt(index))
-                                              //     : selectedFood.remove(foodTitle.elementAt(index));
-                                              // widget.addedFood = selectedFood.length;
-                                              // print(widget.addedFood);
-                                              // print(selectedFood);
-                                            },
-                                            size: 25),
-                                        const SizedBox(width: 20),
+                                          onTap: (selected) {
+                                            if (selected!) {
+                                              selectedMeals.add(searchList[index].name);
+                                            } else {
+                                              selectedMeals.remove(searchList[index].name);
+                                            }
+                                            cloneList = Set<String>.from(selectedMeals);
+                                            print("selectedMeals in time $selectedMeals");
+                                            print("clone Meals in time $cloneList");
+                                          },
+                                          size: 25,
+                                        ),
+                                        const SizedBox(width: 10),
                                         subTitleText(
                                             text: searchList[index].name,
                                             color: Colors.black,
                                             fontWeight: FontWeight.w400,
-                                            maxLines: 2,
+                                            width: width(context, .7),
+                                            textAlign: TextAlign.left,
+                                            maxLines: 1,
                                             textOverflow: TextOverflow.ellipsis)
                                       ],
                                     ),
                                   ),
                               separatorBuilder: (context, index) => const Divider(),
-                              itemCount: searchList.length);
+                          itemCount: searchList.length);
                     } else if (snapshot.hasError) {
                       return Center(
                           child: titleText(
@@ -130,13 +148,13 @@ class ChooseFood extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   DefaultButton(
-                      function: () {
-                        // Navigator.of(context).pop(selectedFood);
-                        // print(selectedFood.length);
-                        // print(selectedFood);
-                      },
-                      borderRadius: 30,
-                      text: "Add"),
+                    function: () {
+                      print("returning ${cloneList.toList()}");
+                      Navigator.of(context).pop(cloneList.toList());
+                    },
+                    borderRadius: 30,
+                    text: "Add",
+                  ),
                 ],
               ),
             ),

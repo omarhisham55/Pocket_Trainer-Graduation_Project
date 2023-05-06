@@ -153,27 +153,25 @@ Map<String, Future<List>> allExercise = {
 };
 Map<String, List<dynamic>> exerciseData = {};
 
-Future<List> getDataMapValues({String? key, bool? allValues}) async {
-  if (key == null) {
-    List keys = [];
-    // Wait for all futures to complete
-    for (String key in allExercise.keys) {
-      keys.add(key);
-    }
-    return keys;
-  } else if (allValues!) {
+Future<List> getDataMapValues({String? key = "", bool? allValues}) async {
+  if (allValues == true && key == "") {
     // Wait for all futures to complete
     for (String key in allExercise.keys) {
       exerciseData[key] = await allExercise[key]!;
     }
     List values = [];
     for (String key in exerciseData.keys) {
-      for (dynamic exercise in exerciseData[key]!) {
-        values.addAll(exercise);
-      }
+      values.addAll(exerciseData[key]!);
     }
     return values;
-  } else if(key.isNotEmpty){
+  } else if (key == "") {
+    List keys = [];
+    // Wait for all futures to complete
+    for (String key in allExercise.keys) {
+      keys.add(key);
+    }
+    return keys;
+  } else if(key != ""){
     // Wait for all futures to complete
     for (String key in allExercise.keys) {
       exerciseData[key] = await allExercise[key]!;
@@ -188,6 +186,7 @@ Future<List> getDataMapValues({String? key, bool? allValues}) async {
         values.add(exerciseData[key]!);
       }
     }
+    print("exercise values $values");
     return values;
   }else{
     throw Exception('Failed to load data');

@@ -64,21 +64,15 @@ Future<List> getBreakfast()async{
     //   print("random index ${random}");
     // }
   }).catchError((e){print(e);});
-  print("object $breakfast");
+  // print("object $breakfast");
   return breakfast;
 }
-Map<String, List> nutritionPageContentCheck = {};
 
 Future<List> getNutritionHomeDataMapValues() async{
   List listValues = [];
-   for(var keys in nutritionPageContent.keys){
-     nutritionPageContentCheck[keys] = await nutritionPageContent[keys]!;
+   for(int i=0; i<nutritionPageContent.keys.length; i++){
+     listValues.add([nutritionPageContent.keys.toList()[i], nutritionPageContent.values.toList()[i]]);
    }
-   print("original map content $nutritionPageContent");
-   print("new map content $nutritionPageContentCheck");
-   for(var keys in nutritionPageContentCheck.keys){
-     listValues.addAll([nutritionPageContentCheck[keys]]);
-   }
-   print("list values $listValues");
+   // print("list values $listValues");
    return listValues;
 }

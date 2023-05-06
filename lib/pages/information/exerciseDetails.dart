@@ -4,23 +4,23 @@ import '../../shared/styles/colors.dart';
 import '../../shared/styles/images.dart';
 
 class ExerciseDetails extends StatelessWidget {
-  final String exerciseName;
-  final String exerciseImage;
-  final String exerciseInfo;
-  final String exerciseType;
-  final String exerciseTarget;
-  final String exerciseTips;
-  // final String exerciseRepetition;
-  // final String exerciseSets;
+  final String? exerciseName;
+  final String? exerciseImage;
+  final String? exerciseInfo;
+  final String? exerciseType;
+  final String? exerciseTarget;
+  final String? exerciseTips;
+  final String? exerciseRepetition;
+  final String? exerciseSets;
   const ExerciseDetails({Key? key,
-    required this.exerciseName,
-    required this.exerciseInfo,
-    required this.exerciseImage,
-    required this.exerciseType,
-    required this.exerciseTarget,
-    required this.exerciseTips,
-    // required this.exerciseRepetition,
-    // required this.exerciseSets,
+    this.exerciseName,
+    this.exerciseInfo,
+    this.exerciseImage,
+    this.exerciseType,
+    this.exerciseTarget,
+    this.exerciseTips,
+    this.exerciseRepetition,
+    this.exerciseSets,
   }) : super(key: key);
 
   @override
@@ -36,38 +36,38 @@ class ExerciseDetails extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.network(
-            exerciseImage,
+            exerciseImage ?? "can't get data",
             width: double.infinity,
             // height: MediaQuery.of(context).size.height*.3,
           ),
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: titleText(text: exerciseName, color: TextColors.blackText), //$exercise name
+            child: titleText(text: exerciseName ?? "can't get data", color: TextColors.blackText), //$exercise name
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: paragraphText(text: exerciseInfo, color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
+            child: paragraphText(text: exerciseInfo ?? "can't get data", color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: paragraphText(text: exerciseType, color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
+            child: paragraphText(text: exerciseType ?? "can't get data", color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: paragraphText(text: exerciseTarget, color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
+            child: paragraphText(text: exerciseTarget ?? "can't get data", color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: paragraphText(text: exerciseTips, color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
+            child: paragraphText(text: exerciseTips ?? "can't get data", color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
           ),
-          // Padding(
-          //   padding: const EdgeInsets.all(15.0),
-          //   child: paragraphText(text: exerciseRepetition, color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.all(15.0),
-          //   child: paragraphText(text: exerciseSets, color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
-          // ),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: paragraphText(text: exerciseRepetition ?? "can't get data", color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: paragraphText(text: exerciseSets ?? "can't get data", color: TextColors.blackText, textAlign: TextAlign.left), //$exercise content
+          ),
         ],
       ),
     );

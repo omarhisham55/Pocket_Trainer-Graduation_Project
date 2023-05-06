@@ -27,44 +27,46 @@ class Navigation extends StatelessWidget {
         listener: (_, state) {},
         builder: (_, state) {
           CubitManager navController = CubitManager.get(_);
-          return WillPopScope(
-            onWillPop: () async {
-              // print("index =  ${controller.index}");
-              //   await showDialog(
-              //     context: context,
-              //     builder: (context) {
-              //       return AlertDialog(
-              //         backgroundColor: BackgroundColors.dialogBG,
-              //         title: subTitleText(text: "Are you sure you want to exit?"),
-              //         actions: [
-              //           Row(
-              //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //             children: [
-              //               DefaultButton(
-              //                 function: (){
-              //                   SystemNavigator.pop();
-              //                 },
-              //                 text: "Yes",
-              //                 width: width(context, .3),
-              //                 backgroundColor: Colors.transparent,
-              //               ),
-              //               DefaultButton(
-              //                 function: (){
-              //                   Navigator.pop(context);
-              //                 },
-              //                 text: "No",
-              //                 width: width(context, .3),
-              //                 backgroundColor: Colors.transparent,
-              //               ),
-              //             ],
-              //           )
-              //         ],
-              //       );
-              //     },
-              //   );
-              return false; // Prevent back navigation
-            },
-            child: PersistentTabView(
+          return
+            // WillPopScope(
+            // onWillPop: () async {
+            //   // print("index =  ${controller.index}");
+            //   //   await showDialog(
+            //   //     context: context,
+            //   //     builder: (context) {
+            //   //       return AlertDialog(
+            //   //         backgroundColor: BackgroundColors.dialogBG,
+            //   //         title: subTitleText(text: "Are you sure you want to exit?"),
+            //   //         actions: [
+            //   //           Row(
+            //   //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   //             children: [
+            //   //               DefaultButton(
+            //   //                 function: (){
+            //   //                   SystemNavigator.pop();
+            //   //                 },
+            //   //                 text: "Yes",
+            //   //                 width: width(context, .3),
+            //   //                 backgroundColor: Colors.transparent,
+            //   //               ),
+            //   //               DefaultButton(
+            //   //                 function: (){
+            //   //                   Navigator.pop(context);
+            //   //                 },
+            //   //                 text: "No",
+            //   //                 width: width(context, .3),
+            //   //                 backgroundColor: Colors.transparent,
+            //   //               ),
+            //   //             ],
+            //   //           )
+            //   //         ],
+            //   //       );
+            //   //     },
+            //   //   );
+            //   // return false; // Prevent back navigation
+            // },
+            // child:
+            PersistentTabView(
               context,
               controller: navController.controller,
               screens: navController.screens(),
@@ -95,8 +97,8 @@ class Navigation extends StatelessWidget {
               ),
               navBarStyle: NavBarStyle
                   .style14, // Choose the nav bar style with this property.
-            ),
-          );
+            );
+          // );
         },
       ),
     );

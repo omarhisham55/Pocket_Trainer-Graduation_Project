@@ -8,7 +8,7 @@ import '../../data/gym_dialog_data.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/images.dart';
 import 'gymHome.dart';
-import 'try/AddExercise.dart';
+import 'AddExercise.dart';
 
 class Gym extends StatefulWidget {
   const Gym({Key? key}) : super(key: key);
@@ -95,7 +95,6 @@ class _GymState extends State<Gym> {
   }
 
   List<QudsPopupMenuBase> getMenuItemsGym() {
-    List<Widget> gymTraining = [];
     return [
       QudsPopupMenuItem(
         leading: const Icon(Icons.add),

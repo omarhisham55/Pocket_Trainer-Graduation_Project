@@ -13,7 +13,7 @@ void main() {
   //   print(value);
   // });
     runApp(const MyApp());
-  getDataMapValues().then((value) {
+  getDataMapValues(allValues: true).then((value) {
     print("successful exercise data from $value");
     // getMeals().timeout(const Duration(seconds: 10));
     // login();
@@ -26,6 +26,7 @@ void main() {
     // });
   }).catchError((e) {
     print("Unsuccessful exercise data at $e");
+    throw e;
     if(e.toString().toLowerCase() == "connection refused"){
       print("Check internet connection or change IP address");
     }

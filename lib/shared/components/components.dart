@@ -129,21 +129,25 @@ Widget titleText({
 
 Widget subTitleText({required String text,
   double? size = 20,
+  double? width,
   FontWeight? fontWeight = FontWeight.w500,
   Color? color = TextColors.whiteText,
   TextAlign? textAlign = TextAlign.center,
   int? maxLines = 2,
   TextOverflow? textOverflow}) =>
-    Text(
-      text,
-      textAlign: textAlign,
-      style: TextStyle(
-        fontSize: size,
-        fontWeight: fontWeight,
-        color: color,
+    SizedBox(
+      width: width,
+      child: Text(
+        text,
+        textAlign: textAlign,
+        style: TextStyle(
+          fontSize: size,
+          fontWeight: fontWeight,
+          color: color,
+        ),
+        maxLines: maxLines,
+        overflow: textOverflow,
       ),
-      maxLines: maxLines,
-      overflow: textOverflow,
     );
 
 Widget paragraphText({required String text,
@@ -173,8 +177,8 @@ Widget defaultDropDownMenu({
         dropdownColor: backgroundColor ?? BackgroundColors.whiteBG,
         underline: Container(),
         isExpanded: true,
-        hint: paragraphText(
-            text: hintValue, color: hintColor ?? TextColors.whiteText),
+        hint: subTitleText(
+            text: hintValue, color: hintColor ?? TextColors.whiteText, fontWeight: FontWeight.w500),
         items: content.map((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -537,3 +541,25 @@ void toastSuccess({
       animationType: AnimationType.fromRight,
       dismissable: true,
     );
+
+void toastInfo({
+  required String text
+}) => MotionToast.info(
+      title: paragraphText(text: "Success!"),
+      description: paragraphText(text: text),
+      layoutOrientation: ToastOrientation.rtl,
+      animationType: AnimationType.fromRight,
+      dismissable: true,
+    );
+
+void showSnackBar({
+  required context,
+  required text,
+  color
+}) => ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: subTitleText(text: text),
+      duration: const Duration(seconds: 2),
+      backgroundColor: color ?? Colors.grey[700],
+    )
+);

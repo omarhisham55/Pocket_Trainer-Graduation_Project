@@ -102,10 +102,10 @@ class CubitManager extends Cubit<MainStateManager> {
 
   List<Widget> screens() {
     return [
-      Information(),
+      const Information(),
       const Gym(),
       const Home(),
-      Nutrition(),
+      const Nutrition(),
       const Profile()
     ];
   }
@@ -151,7 +151,7 @@ class CubitManager extends Cubit<MainStateManager> {
 
   void changeBody() {
     isFrontBody = !isFrontBody;
-    emit(HomePageState());
+    emit(GymBodyState());
   }
 
   //search
@@ -196,7 +196,7 @@ class CubitManager extends Cubit<MainStateManager> {
             }
           }
         print("length after filter ${filteredList.length}");
-        print("meal name filter ${filteredList[0].exerciseName}");
+        print("meal name filter ${filteredList[0].name}");
         emit(ChangeSearchState(filteredList: filteredList));
         return filteredList;
       }
@@ -225,145 +225,6 @@ class CubitManager extends Cubit<MainStateManager> {
   }
 
   //Nutrition
-  List<QudsPopupMenuBase> getMenuFoodItems(context) {
-    return [
-      QudsPopupMenuItem(
-          leading: const Icon(Icons.add),
-          title: const Text('Add meal'),
-          onPressed: () {
-            addMealController.isPanelOpen
-                ? addMealController.close()
-                : addMealController.open();
-            // setState(() {
-            //   deleteFoodButton = false;
-            //   panelController.isPanelOpen ? panelController.close() : panelController.open();
-            // });
-          }),
-      QudsPopupMenuDivider(),
-      QudsPopupMenuItem(
-          leading: const Icon(Icons.delete_outline),
-          title: const Text('Delete meal'),
-          onPressed: () {
-            // setState((){
-            //   panelController.close();
-            //   foodPanelController.close();
-            //   deleteFoodButton = true;
-            // });
-          }),
-      QudsPopupMenuDivider(),
-      QudsPopupMenuItem(
-          leading: const Icon(Icons.info_outline),
-          title: const Text('Diet info'),
-          onPressed: () {
-            Navigator.of(context).push(PremiumAnimation(
-                page: RecommendedProgramNutritionInfo(fromHome: true)));
-          }),
-      QudsPopupMenuDivider(),
-      QudsPopupMenuItem(
-          leading: const Icon(Icons.language_outlined),
-          title: const Text('Change language'),
-          onPressed: () {
-            // showToast('Feedback Pressed!');
-            // print(containerFoodList);
-          }),
-      // QudsPopupMenuSection(
-      //     backgroundColor: Colors.yellow.shade200,
-      //     titleText: 'أبو أسعد الأمير',
-      //     subTitle: const Text('See your profile'),
-      //     leading: const Icon(
-      //       Icons.redeem,
-      //       size: 40,
-      //     ),
-      //     subItems: [
-      //       QudsPopupMenuSection(
-      //           titleText: 'Settings',
-      //           leading: const Icon(Icons.settings),
-      //           subItems: [
-      //             QudsPopupMenuItem(
-      //                 leading: const Icon(Icons.logout),
-      //                 title: const Text('Logout'),
-      //                 onPressed: () {
-      //                   // showToast('Logout Pressed!');
-      //                 })
-      //           ]),
-      //     ]),
-      // QudsPopupMenuDivider(),
-      // QudsPopupMenuSection(
-      //     leading: const Icon(Icons.place),
-      //     titleText: 'Settings & Privacy',
-      //     subItems: [
-      //       QudsPopupMenuItem(
-      //           leading: const Icon(Icons.settings),
-      //           title: const Text('Settings'),
-      //           onPressed: () {
-      //             // showToast('Settings Pressed!');
-      //           }),
-      //       QudsPopupMenuItem(
-      //           leading: const Icon(Icons.lock),
-      //           title: const Text('Privacy Checkup'),
-      //           onPressed: () {
-      //             // showToast('Privacy Checkup Pressed!');
-      //           }),
-      //       QudsPopupMenuItem(
-      //           leading: const Icon(Icons.lock_clock),
-      //           title: const Text('Privacy Shortcuts'),
-      //           onPressed: () {
-      //             // showToast('Privacy Shortcuts Pressed!');
-      //           }),
-      //       QudsPopupMenuItem(
-      //           leading: const Icon(Icons.list),
-      //           title: const Text('Activity Log'),
-      //           onPressed: () {
-      //             // showToast('Activity Log Pressed!');
-      //           }),
-      //       QudsPopupMenuItem(
-      //           leading: const Icon(Icons.card_membership),
-      //           title: const Text('News Feed Preferences'),
-      //           onPressed: () {
-      //             // showToast('News Feed Preferences Pressed!');
-      //           }),
-      //       QudsPopupMenuItem(
-      //           leading: const Icon(Icons.language),
-      //           title: const Text('Language'),
-      //           onPressed: () {
-      //             // showToast('Language Pressed!');
-      //           }),
-      //     ]),
-      // QudsPopupMenuDivider(),
-      // QudsPopupMenuWidget(
-      //     builder: (c) => Container(
-      //         padding: const EdgeInsets.all(10),
-      //         child: IntrinsicHeight(
-      //           child: Row(
-      //             mainAxisAlignment: MainAxisAlignment.center,
-      //             children: [
-      //               IconButton(
-      //                   onPressed: () {
-      //                     // showToast('Favourite Pressed!');
-      //                   },
-      //                   icon: const Icon(
-      //                     Icons.favorite,
-      //                     color: Colors.red,
-      //                   )),
-      //               const VerticalDivider(),
-      //               IconButton(
-      //                   onPressed: () {},
-      //                   icon: const Icon(
-      //                     Icons.music_note,
-      //                     color: Colors.blue,
-      //                   )),
-      //               const VerticalDivider(),
-      //               IconButton(
-      //                   onPressed: () {},
-      //                   icon: const Icon(
-      //                     Icons.umbrella,
-      //                     color: Colors.green,
-      //                   ))
-      //             ],
-      //           ),
-      //         )))
-    ];
-  }
 
   bool deleteButtonFood = false;
   //panel to add meals
@@ -371,8 +232,6 @@ class CubitManager extends Cubit<MainStateManager> {
   //panel to show list of selected meals
   PanelController foodListPanel = PanelController();
   int addNumber = 0;
-  String selectedValue = "Breakfast";
-
 
   void dietRequirements(isDietTaken){
     isDietTaken = true;
@@ -383,8 +242,14 @@ class CubitManager extends Cubit<MainStateManager> {
     emit(DeleteButtonState());
   }
   void dropDownSelect(value, selectedValue){
-    value = selectedValue;
-    emit(DropDownState());
+    selectedValue = value;
+    emit(DropDownState(selectedValue: selectedValue));
+  }
+  bool isChecked = false;
+  bool disableButton(){
+    isChecked = true;
+    emit(RadioButtonAddMealState());
+    return isChecked;
   }
   int pieChart(event,pieTouchResponse, touchedIndex){
     if (!event.isInterestedForInteractions
@@ -403,6 +268,59 @@ class CubitManager extends Cubit<MainStateManager> {
         : controller.open();
     emit(HandleSlidingPanelState());
   }
-  //recommended
-  PanelState defaultStatePanel = PanelState.CLOSED;
+  List<String> removeMeal(List<String> selectedMeal, int index){
+    selectedMeal.removeAt(index);
+    emit(RemoveMealState());
+    return selectedMeal;
+  }
+
+  //Gym
+  String exercisePanelName = "";
+  String exercisePanelType = "";
+  void addExerciseName(name, type){
+    exercisePanelName = name;
+    exercisePanelType = type;
+    emit(AddExerciseState());
+  }
+
+
+  List<QudsPopupMenuBase> getSearchFilterItems() {
+    return List.generate(dropDownFirstLevel.length, (index) {
+      return QudsPopupMenuSection(
+          titleText: dropDownFirstLevel[index],
+          subItems: List.generate(dropDownSecondLevel.length, (i) {
+            return QudsPopupMenuItem(
+                title: Text(dropDownSecondLevel[i]),
+                onPressed: () {
+                    dropDownHint = dropDownFirstLevel[index];
+                    dropDownSubHint = dropDownSecondLevel[i];
+                    //to change number of exercises in grid view according to filter
+                    for (var element in dropDownFirstLevel) {
+                      if (dropDownHint == "All Exercises") {
+                        // searchList = exerciseTitle;
+                      } else if (dropDownHint == element) {
+                        // searchList = getExerciseName(element);
+                      }
+                    }
+                  print(dropDownHint);
+                  print(dropDownSubHint);
+                });
+          }));
+    });
+  }
+
+  List<String> dropDownFirstLevel = [
+    "All Exercises", "Chest", "Back",
+    "Shoulders", "Arms", "Legs"
+  ];
+  List<String> dropDownSecondLevel = [
+    "All techniques", "Cables", "Dumbbells",
+    "Body Weight", "Barbell", "Machines"
+  ];
+  String dropDownHint = "All Exercises";
+  String dropDownSubHint = "All techniques";
+  void changeFilter(){
+
+    emit(FilterState());
+  }
 }
