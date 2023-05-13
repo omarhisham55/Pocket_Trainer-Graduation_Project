@@ -51,8 +51,7 @@ Future<String> ipConnectionAddress2 = getIPAddress();
 
 //get exercises
 Future<List> getChestExercises() async {
-  var chestExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/chest/exercises'));
+  var chestExercises = await http.get(Uri.parse('http://$ipConnectionAddress:3000/chest/exercises'));
   if (chestExercises.statusCode == 200) {
     var data = json.decode(chestExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();

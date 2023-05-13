@@ -533,6 +533,7 @@ void toastError({
     ).show(context);
 
 void toastSuccess({
+  required BuildContext context,
   required String text
 }) => MotionToast.success(
       title: paragraphText(text: "Success!"),
@@ -540,17 +541,40 @@ void toastSuccess({
       layoutOrientation: ToastOrientation.rtl,
       animationType: AnimationType.fromRight,
       dismissable: true,
-    );
+      toastDuration: const Duration(seconds: 2),
+    ).show(context);
+
+void toastWarning({
+  required BuildContext context,
+  required String text
+}) => MotionToast.warning(
+    title: paragraphText(text: "Warning!"),
+    description: paragraphText(text: text),
+    animationCurve: Curves.bounceIn,
+    borderRadius: 0,
+    animationDuration: const Duration(milliseconds: 1000),
+  ).show(context);
+
+void toastDelete({
+  required BuildContext context,
+  required String text
+}) => MotionToast.delete(
+  title: paragraphText(text: "Deleted successfully!"),
+  description: paragraphText(text: text) ,
+  animationType: AnimationType.fromTop,
+  position: MotionToastPosition.top,
+).show(context);
 
 void toastInfo({
+  required BuildContext context,
   required String text
 }) => MotionToast.info(
       title: paragraphText(text: "Success!"),
       description: paragraphText(text: text),
-      layoutOrientation: ToastOrientation.rtl,
+      position: MotionToastPosition.center,
       animationType: AnimationType.fromRight,
       dismissable: true,
-    );
+    ).show(context);
 
 void showSnackBar({
   required context,

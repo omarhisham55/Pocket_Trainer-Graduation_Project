@@ -5,25 +5,24 @@ import '../shared/components/components.dart';
 import 'exerciseData.dart';
 
 class User {
-  String token;
-  String name;
-  String email;
-  String password;
+  String? name;
+  String? email;
+  String? password;
   String? urlPhoto;
   Map<String, dynamic>? nutritionPlan;
   Map<String, dynamic>? workoutPlan;
 
   User({
-    required this.token,
-    required this.name,
-    required this.email,
-    required this.password,
+    this.name,
+    this.email,
+    this.password,
     this.urlPhoto,
     this.workoutPlan,
     this.nutritionPlan,
   });
 
   static User? currentUser;
+  static var token;
 
   static Future<String> signUp({required String username, required String email, required String password, context}) async {
     final response = await http.post(
@@ -36,13 +35,11 @@ class User {
       }),
     );
     if (response.statusCode == 201) {
-      showSnackBar(
-          context: context, text: "SignUp successful welcome $username");
-      toastSuccess(text: "Account created successfully");
+      showSnackBar(context: context, text: "SignUp successful welcome $username");
+      toastSuccess(context: context, text: "Account created successfully");
       return response.body;
     } else if (response.statusCode == 409) {
-      toastError(context: context,
-          text: "Failed to create an account, ${response.body}");
+      toastError(context: context, text: "Failed to create an account, ${response.body}");
       throw Exception('Failed to create account ${response.statusCode}');
     } else {
       throw Exception('Failed to create account ${response.statusCode}');
@@ -60,22 +57,7 @@ class User {
     ).then((value) {
       if (value.statusCode == 200) {
         final user = jsonDecode(value.body);
-        print("fafa $user");
-        currentUser = User(
-          token: user["token"],
-          name: user["name"] ?? "",
-          email: user["email"] ?? "",
-          password: user["password"] ?? "",
-          workoutPlan: user["workoutPlan"] ?? {},
-          nutritionPlan: user["NutritionPlan"] ?? {},
-        );
-        print("current user ${currentUser!.email}");
-        showSnackBar(
-            context: context, text: "Login successful welcome $username");
-        toastSuccess(text: "Login successful welcome");
-        print("nutrition plan of user is ${currentUser!.name}");
-        print("nutrition plan of user is ${currentUser!.nutritionPlan}");
-        print("exercise plan of user is ${currentUser!.workoutPlan}");
+        token = user["token"];
       } else {
         toastError(context: context, text: "Failed to get account");
         throw Exception('Failed to get response: ${value.statusCode}');
@@ -98,17 +80,30 @@ class User {
       throw response.statusCode;
     }
   }
-  // static Future<List> getProfile() async {
-  //   final profile = await http.get(Uri.parse('http://$ipConnectionAddress:3000/profile'),
-  //       headers: {"Authorization": "Bearer ${User.currentUser!.token}"}
-  //   ).then((value) {
-  //     print("value ${value.body}");
-  //   });
-  //   if(profile.statusCode == 200){
-  //     var data = json.decode(profile.body);
-  //     return data;
-  //   } else{
-  //     throw Exception("Failed to load data");
-  //   }
-  // }
+  static Future<List> getProfile() async {
+    final profile = await http.get(Uri.parse('http://$ipConnectionAddress:3000/profile'),
+        headers: {"Authorization": "Bearer ${User.token}"}
+    ).then((value) {
+      print("success get profile ${value.body}");
+    }).catchError((e){
+      print("error get profile $e");
+    });
+    if(profile.statusCode == 200){
+      var user = json.decode(profile.body);
+      currentUser = User(
+        name: user["name"] ?? "",
+        email: user["email"] ?? "",
+        password: user["password"] ?? "",
+        workoutPlan: user["workoutPlan"] ?? {},
+        nutritionPlan: user["NutritionPlan"] ?? {},
+      );
+      print("current user ${currentUser!.email}");
+      print("nutrition plan of user is ${currentUser!.name}");
+      print("nutrition plan of user is ${currentUser!.nutritionPlan}");
+      print("exercise plan of user is ${currentUser!.workoutPlan}");
+      return user;
+    } else{
+      throw Exception("Failed to load data");
+    }
+  }
 }

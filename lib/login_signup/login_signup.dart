@@ -232,7 +232,8 @@ class Login extends StatelessWidget {
                           function: () {
                             if (signUpLoginChangeable.loginKey.currentState!.validate()) {
                               User.login(username: signUpLoginChangeable.userController.text, password: signUpLoginChangeable.passController.text, context: context).then((value){
-                                homeNavigator(context, const Navigation());
+                                  homeNavigator(context, const Navigation());
+                                  toastSuccess(context: context, text: "Login successful welcome");
                               }).catchError((e) {
                                 throw e;
                               });

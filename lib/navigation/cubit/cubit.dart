@@ -275,13 +275,31 @@ class CubitManager extends Cubit<MainStateManager> {
         : controller.open();
     emit(HandleSlidingPanelState());
   }
-  void addMeal(){
-    emit(AddMealState());
+  List selectedMeals = [];
+  String selectedValue = "select meal time";
+  void addMeal(context){
+    // if(selectedValue != "select meal time"){
+      if(selectedMeals.isNotEmpty){
+        toastSuccess(context: context, text: "Meals $selectedMeals added to $selectedValue");
+        for(int i=0; i<selectedMeals.length; i++){
+          addMealController.close();
+          addMeals(mealId: selectedMeals[i].id);
+        }
+        showSnackBar(context: context, text: "Meals $selectedMeals added to $selectedValue");
+        print('Meals $selectedMeals added to $selectedValue');
+        emit(AddMealState());
+      }else{
+        showSnackBar(context: context, text: "select meals");
+        print("select meals");
+      }
+    // }else{
+    //   showSnackBar(context: context, text: "select meal time");
+    //   print("select meal time");
+    // }
   }
-  List removeMeal(List selectedMeal, int index){
+  void removeMeal(List selectedMeal, int index){
     selectedMeal.removeAt(index);
     emit(RemoveMealState());
-    return selectedMeal;
   }
 
   //Gym
