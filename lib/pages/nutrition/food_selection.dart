@@ -12,7 +12,7 @@ import 'food_details.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
 class ChooseFood extends StatelessWidget {
-  List<String> selectedMeals;
+  List selectedMeals;
 
   ChooseFood({super.key, required this.selectedMeals});
 
@@ -109,11 +109,11 @@ class ChooseFood extends StatelessWidget {
                                         RoundCheckBox(
                                           onTap: (selected) {
                                             if (selected!) {
-                                              selectedMeals.add(searchList[index].name);
+                                              selectedMeals.add(searchList[index]);
                                             } else {
-                                              selectedMeals.remove(searchList[index].name);
+                                              selectedMeals.remove(searchList[index]);
                                             }
-                                            cloneList = Set<String>.from(selectedMeals);
+                                            cloneList = Set.from(selectedMeals);
                                             print("selectedMeals in time $selectedMeals");
                                             print("clone Meals in time $cloneList");
                                           },

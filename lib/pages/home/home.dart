@@ -40,8 +40,7 @@ class Home extends StatelessWidget {
                               reverse: false,
                               autoPlay: true,
                               autoPlayInterval: const Duration(seconds: 3),
-                              autoPlayAnimationDuration:
-                                  const Duration(milliseconds: 800),
+                              autoPlayAnimationDuration: const Duration(milliseconds: 800),
                               autoPlayCurve: Curves.fastOutSlowIn,
                               enlargeCenterPage: true,
                               height: MediaQuery.of(context).size.height * 0.18,

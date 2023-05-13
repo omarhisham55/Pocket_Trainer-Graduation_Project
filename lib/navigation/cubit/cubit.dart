@@ -100,6 +100,13 @@ class CubitManager extends Cubit<MainStateManager> {
   late PersistentTabController controller =
       PersistentTabController(initialIndex: currentIndex);
 
+  //login?signUp
+  List<String> title = ["Login", "Sign Up"];
+  TextEditingController userController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+  TextEditingController confirmPassController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
   List<Widget> screens() {
     return [
       const Information(),
@@ -268,7 +275,10 @@ class CubitManager extends Cubit<MainStateManager> {
         : controller.open();
     emit(HandleSlidingPanelState());
   }
-  List<String> removeMeal(List<String> selectedMeal, int index){
+  void addMeal(){
+    emit(AddMealState());
+  }
+  List removeMeal(List selectedMeal, int index){
     selectedMeal.removeAt(index);
     emit(RemoveMealState());
     return selectedMeal;
@@ -283,8 +293,8 @@ class CubitManager extends Cubit<MainStateManager> {
     emit(AddExerciseState());
   }
 
-
-  List<QudsPopupMenuBase> getSearchFilterItems() {
+  String exerciseType = "";
+  List<QudsPopupMenuBase> getSearchFilterItems(searchList) {
     return List.generate(dropDownFirstLevel.length, (index) {
       return QudsPopupMenuSection(
           titleText: dropDownFirstLevel[index],
@@ -292,26 +302,24 @@ class CubitManager extends Cubit<MainStateManager> {
             return QudsPopupMenuItem(
                 title: Text(dropDownSecondLevel[i]),
                 onPressed: () {
-                    dropDownHint = dropDownFirstLevel[index];
-                    dropDownSubHint = dropDownSecondLevel[i];
-                    //to change number of exercises in grid view according to filter
-                    for (var element in dropDownFirstLevel) {
-                      if (dropDownHint == "All Exercises") {
-                        // searchList = exerciseTitle;
-                      } else if (dropDownHint == element) {
-                        // searchList = getExerciseName(element);
-                      }
-                    }
-                  print(dropDownHint);
-                  print(dropDownSubHint);
-                });
-          }));
+                  dropDownHint = dropDownFirstLevel[index];
+                  dropDownSubHint = dropDownSecondLevel[i];
+                  if(dropDownHint == "All Exercises"){
+                    exerciseType = "";
+                  }else{
+                    exerciseType = dropDownHint;
+                  }
+                  emit(FilterState());
+                }
+              );
+          })
+      );
     });
   }
 
   List<String> dropDownFirstLevel = [
     "All Exercises", "Chest", "Back",
-    "Shoulders", "Arms", "Legs"
+    "Shoulders", "Biceps", "Triceps", "Legs"
   ];
   List<String> dropDownSecondLevel = [
     "All techniques", "Cables", "Dumbbells",
@@ -319,8 +327,8 @@ class CubitManager extends Cubit<MainStateManager> {
   ];
   String dropDownHint = "All Exercises";
   String dropDownSubHint = "All techniques";
-  void changeFilter(){
+  // void changeFilter({type, technique}){
+  //   emit(FilterState(exerciseType: type));
+  // }
 
-    emit(FilterState());
-  }
 }

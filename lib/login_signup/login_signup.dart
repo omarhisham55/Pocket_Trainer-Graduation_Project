@@ -10,14 +10,7 @@ import '../../shared/styles/colors.dart';
 
 //Done
 class Login extends StatelessWidget {
-  Login({super.key});
-
-  List<String> title = ["Login", "Sign Up"];
-  TextEditingController userController = TextEditingController();
-  TextEditingController passController = TextEditingController();
-  TextEditingController confirmPassController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-
+  const Login({super.key});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -34,7 +27,7 @@ class Login extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   //SignUp title
-                  Text(title[1],
+                  Text(signUpLoginChangeable.title[1],
                       style: const TextStyle(
                           color: TextColors.whiteText,
                           fontSize: 70,
@@ -42,7 +35,7 @@ class Login extends StatelessWidget {
                   const SizedBox(height: 60),
                   //username
                   defaultTextFormField(
-                      controller: userController,
+                      controller: signUpLoginChangeable.userController,
                       hint: "Username",
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -53,7 +46,7 @@ class Login extends StatelessWidget {
                   const SizedBox(height: 20),
                   //email
                   defaultTextFormField(
-                      controller: emailController,
+                      controller: signUpLoginChangeable.emailController,
                       hint: "Email",
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -66,13 +59,13 @@ class Login extends StatelessWidget {
                   const SizedBox(height: 20),
                   //password
                   defaultTextFormField(
-                      controller: passController,
+                      controller: signUpLoginChangeable.passController,
                       hint: "Password",
                       suffix: true,
                       isPassword: signUpLoginChangeable.isPassword,
                       validator: (value) {
-                        if (value!.isEmpty || value.length < 8) {
-                          return 'Password must be at least 8 characters';
+                        if (value!.isEmpty || value.length < 6) {
+                          return 'Password must be at least 6 characters';
                         }
                         return null;
                       },
@@ -82,14 +75,14 @@ class Login extends StatelessWidget {
                   const SizedBox(height: 20),
                   //confirm password
                   defaultTextFormField(
-                      controller: confirmPassController,
+                      controller: signUpLoginChangeable.confirmPassController,
                       hint: "Confirm Password",
                       isPassword: signUpLoginChangeable.isConfirmPassword,
                       suffix: true,
                       validator: (value) {
-                        if (passController.text != confirmPassController.text) {
-                          print('pass cont = ${passController.text}');
-                          print('confirm pass cont = ${confirmPassController.text}');
+                        if (signUpLoginChangeable.passController.text != signUpLoginChangeable.confirmPassController.text) {
+                          print('pass cont = ${signUpLoginChangeable.passController.text}');
+                          print('confirm pass cont = ${signUpLoginChangeable.confirmPassController.text}');
                           return "Passwords doesn't match";
                         }
                         return null;
@@ -156,16 +149,12 @@ class Login extends StatelessWidget {
                       DefaultButton(
                         function: () {
                           if (signUpLoginChangeable.signupKey.currentState!.validate()) {
-                            signUp(username: userController.text, email: emailController.text, password: passController.text, context: context);
-                            //     .then((value) {
-                            //   homeNavigator(context, const Navigation());
-                            //   toastSuccess(text: "signUp successful welcome ${userController.text}");
-                            // }).catchError((e) {
-                            //   toastError(text: "signUp failed try again after few seconds", context: context);
-                            // }).timeout(const Duration(seconds: 10));
-                            // Navigator.of(context).push(HomeAnimation(page: Navigation()));
-                            // signUpLoginChangeable.signupKey.currentState!
-                            //     .save();
+                            User.signUp(username: signUpLoginChangeable.userController.text, email: signUpLoginChangeable.emailController.text, password: signUpLoginChangeable.passController.text, context: context).then((value) {
+                              signUpLoginChangeable.pushToLogin();
+                            }).catchError((e){
+                              throw e;
+                            });
+                             signUpLoginChangeable.signupKey.currentState!.save();
                             // Perform action (e.g. send data to a server)
                           }
                         },
@@ -197,7 +186,7 @@ class Login extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     //Login title
-                    Text(title[0],
+                    Text(signUpLoginChangeable.title[0],
                         style: const TextStyle(
                             color: TextColors.whiteText,
                             fontSize: 70,
@@ -206,7 +195,7 @@ class Login extends StatelessWidget {
                     ),
                     const SizedBox(height: 60),
                     defaultTextFormField(
-                        controller: userController,
+                        controller: signUpLoginChangeable.userController,
                         isPassword: false,
                         hint: "Username",
                         validator: (value) {
@@ -219,7 +208,7 @@ class Login extends StatelessWidget {
                     const SizedBox(height: 20),
                     //password
                     defaultTextFormField(
-                      controller: passController,
+                      controller: signUpLoginChangeable.passController,
                       hint: "Password",
                       isPassword: signUpLoginChangeable.isPassword,
                       suffix: true,
@@ -228,7 +217,7 @@ class Login extends StatelessWidget {
                       },
                       validator: (value) {
                         if (value!.isEmpty || value.length < 6) {
-                          return 'Password must be at least 8 characters';
+                          return 'Password must be at least 6 characters';
                         }
                         return null;
                       },
@@ -242,13 +231,11 @@ class Login extends StatelessWidget {
                         DefaultButton(
                           function: () {
                             if (signUpLoginChangeable.loginKey.currentState!.validate()) {
-                              login(username: userController.text, password: passController.text, context: context);
-                              //     .then((value){
-                              //   homeNavigator(context, const Navigation());
-                              //   toastSuccess(text: "signUp successful welcome ${userController.text}");
-                              // }).catchError((e) {
-                              //   toastError(context: context, text: "signUp failed try again after few seconds");
-                              // }).timeout(const Duration(seconds: 10));
+                              User.login(username: signUpLoginChangeable.userController.text, password: signUpLoginChangeable.passController.text, context: context).then((value){
+                                homeNavigator(context, const Navigation());
+                              }).catchError((e) {
+                                throw e;
+                              });
                               // Navigator.of(context).push(HomeAnimation(page: Navigation()));
                               signUpLoginChangeable.loginKey.currentState!.save();
                               // Perform action (e.g. send data to a server)
@@ -279,20 +266,25 @@ class Login extends StatelessWidget {
             ),
           ];
           return SafeArea(
-            child: Scaffold(
-              backgroundColor: BackgroundColors.background,
-              resizeToAvoidBottomInset: false,
-              body: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 50.0, vertical: 60.0),
-                child: Center(
-                  child: AnimatedCrossFade(
-                      firstChild: loginSignUpScreens[1],
-                      secondChild: loginSignUpScreens[0],
-                      crossFadeState: signUpLoginChangeable.signup
-                          ? CrossFadeState.showFirst
-                          : CrossFadeState.showSecond,
-                      duration: const Duration(milliseconds: 1000)),
+            child: WillPopScope(
+              onWillPop: () async{
+                return false;
+              },
+              child: Scaffold(
+                backgroundColor: BackgroundColors.background,
+                resizeToAvoidBottomInset: false,
+                body: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50.0, vertical: 60.0),
+                  child: Center(
+                    child: AnimatedCrossFade(
+                        firstChild: loginSignUpScreens[1],
+                        secondChild: loginSignUpScreens[0],
+                        crossFadeState: signUpLoginChangeable.signup
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        duration: const Duration(milliseconds: 1000)),
+                  ),
                 ),
               ),
             ),

@@ -45,6 +45,8 @@ class HandleSlidingPanelState extends MainStateManager{}
 
 class RemoveMealState extends MainStateManager{}
 
+class AddMealState extends MainStateManager{}
+
 class AddExerciseState extends MainStateManager{}
 
 class FilterState extends MainStateManager{}

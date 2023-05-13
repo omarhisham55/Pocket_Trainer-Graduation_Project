@@ -471,8 +471,8 @@ Widget exerciseCard({required Function() function,
   double? imageHeight,
   bool? addCardButton,
   Function()? addFunction,
-  Color? titleColor}) =>
-    Stack(
+  Color? titleColor
+}) => Stack(
       alignment: Alignment.topRight,
       children: [
         InkWell(

@@ -1,5 +1,6 @@
 import 'package:circle_button/circle_button.dart';
 import 'package:final_packet_trainer/data/nutritionData.dart';
+import 'package:final_packet_trainer/data/userData.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
@@ -9,10 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
 import '../../navigation/animationNavigation.dart';
 import '../../shared/components/components.dart';
-import '../../shared/styles/images.dart';
 import '../gym/gym.dart';
 import 'diet_recommended_plan.dart';
 import 'food_details.dart';
@@ -20,7 +19,8 @@ import 'food_selection.dart';
 
 class NutritionHome extends StatelessWidget {
   NutritionHome({Key? key}) : super(key: key);
-  List<String> selectedMeals = [];
+  final user = User.currentUser!.nutritionPlan!.values.toList();
+  List selectedMeals = [];
   String selectedValue = "select meal time";
   @override
   Widget build(BuildContext context) {
@@ -119,93 +119,99 @@ class NutritionHome extends StatelessWidget {
                         return Stack(
                           alignment: Alignment.topRight,
                           children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: double.infinity,
-                                child: InkWell(
-                                  onTap: () => nutrition.foodListPanel.close(),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 30.0, left: 20.0),
-                                    child: titleText(
-                                        text: "Add Meal",
-                                        color: TextColors.blackText,
-                                        textAlign: TextAlign.start),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: InkWell(
+                                    onTap: () => nutrition.foodListPanel.close(),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 30.0, left: 20.0),
+                                      child: titleText(
+                                          text: "Add Meal",
+                                          color: TextColors.blackText,
+                                          textAlign: TextAlign.start),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 1, color: Colors.black54)),
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: defaultDropDownMenu(
-                                              content: titles,
-                                              hintColor: TextColors.blackText,
-                                              hintValue: selectedValue,
-                                              function: (value) {
-                                                print('object $value');
-                                                nutrition.dropDownSelect(value, selectedValue);
-                                              })),
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 1, color: Colors.black54)),
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: defaultDropDownMenu(
+                                                content: titles,
+                                                hintColor: TextColors.blackText,
+                                                hintValue: selectedValue,
+                                                function: (value) {
+                                                  print('object $value');
+                                                  nutrition.dropDownSelect(value, selectedValue);
+                                                })),
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0),
-                                    //select meal button
-                                    child: DefaultButton(
-                                      function: () async {
-                                        navNavigator(context, ChooseFood(selectedMeals: selectedMeals));
-                                      },
-                                      backgroundColor: BackgroundColors.whiteBG,
-                                      width: MediaQuery.of(context).size.width,
-                                      borderWidth: 1,
-                                      borderColor: Colors.black54,
-                                      text: "Select meal",
-                                      textColor: TextColors.blackText
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0),
+                                      //select meal button
+                                      child: DefaultButton(
+                                        function: () async {
+                                          navNavigator(context, ChooseFood(selectedMeals: selectedMeals));
+                                        },
+                                        backgroundColor: BackgroundColors.whiteBG,
+                                        width: MediaQuery.of(context).size.width,
+                                        borderWidth: 1,
+                                        borderColor: Colors.black54,
+                                        text: "Select meal",
+                                        textColor: TextColors.blackText
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 40),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 20.0),
-                                    //final add button
-                                    child: DefaultButton(
-                                      function: () {
-                                        if(selectedValue != "select meal time"){
-                                          if(selectedMeals.isNotEmpty){
-                                            toastSuccess(text: "Meals $selectedMeals added to $selectedValue");
-                                            showSnackBar(context: context, text: "Meals $selectedMeals added to $selectedValue");
-                                            print('Meals $selectedMeals added to $selectedValue');
+                                    const SizedBox(height: 40),
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 20.0),
+                                      //final add button
+                                      child: DefaultButton(
+                                        function: () {
+                                          if(selectedValue != "select meal time"){
+                                            if(selectedMeals.isNotEmpty){
+                                              toastSuccess(text: "Meals $selectedMeals added to $selectedValue");
+                                              for(int i=0; i<selectedMeals.length; i++){
+                                                nutrition.addMeal();
+                                                nutrition.addMealController.close();
+                                                // addMeals(mealId: selectedMeals[i].id);
+                                              }
+                                              addMeals(mealId: selectedMeals[0].id);
+                                              showSnackBar(context: context, text: "Meals $selectedMeals added to $selectedValue");
+                                              print('Meals $selectedMeals added to $selectedValue');
+                                            }else{
+                                              showSnackBar(context: context, text: "select meals");
+                                              print("select meals");
+                                            }
                                           }else{
-                                            showSnackBar(context: context, text: "select meals");
-                                            print("select meals");
+                                            showSnackBar(context: context, text: "select meal time");
+                                            print("select meal time");
                                           }
-                                        }else{
-                                          showSnackBar(context: context, text: "select meal time");
-                                          print("select meal time");
-                                        }
-                                        // print('add number $addNumber $addFood');
-                                        // print(containerFoodList.food);
-                                        // int listIndex = random.nextInt(4);
-                                        // setState(() {
-                                        //   containerFoodList[0].add(containerFoodList.food);
-                                        // });
-                                      },
-                                      borderRadius: 30,
-                                      text: 'Add',
+                                          // print('add number $addNumber $addFood');
+                                          // print(containerFoodList.food);
+                                          // int listIndex = random.nextInt(4);
+                                          // setState(() {
+                                          //   containerFoodList[0].add(containerFoodList.food);
+                                          // });
+                                        },
+                                        borderRadius: 30,
+                                        text: 'Add',
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                  ],
+                                ),
+                              ],
+                            ),
                             Padding(
                               padding:
                               const EdgeInsets.only(top: 20.0, right: 20.0),
@@ -217,7 +223,7 @@ class NutritionHome extends StatelessWidget {
                                 child: const Icon(FontAwesomeIcons.bowlFood)
                               ),
                             )
-                        ]
+                          ]
                         );
                       }
                     ),
@@ -237,7 +243,7 @@ class NutritionHome extends StatelessWidget {
                                       SizedBox(
                                         width: width(context, .7),
                                         child: subTitleText(
-                                          text: selectedMeals[index],
+                                          text: selectedMeals[index].name,
                                           color: TextColors.blackText,
                                           textAlign: TextAlign.left
                                         ),
@@ -264,15 +270,14 @@ class NutritionHome extends StatelessWidget {
                         )
                 ),
                 body: FutureBuilder(
-                  future: getNutritionHomeDataMapValues(),
+                  future: getBreakfast(),
                   builder: (_, snapshot) {
+                    print("oppo ${User.currentUser!.nutritionPlan!}");
                     if (snapshot.hasData) {
-                      print(snapshot.data);
+                      print("lopsa ${snapshot.data}");
                       var snapshotData = snapshot.data!;
-                      print("snapshotData = ${snapshot.data}");
                       return Padding(
-                        padding:
-                            const EdgeInsets.only(bottom: 250.0, top: 10.0),
+                        padding: const EdgeInsets.only(bottom: 250.0, top: 10.0),
                         child: ListView.separated(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           physics: const BouncingScrollPhysics(),
@@ -302,22 +307,22 @@ class NutritionHome extends StatelessWidget {
                                         itemBuilder: (_, i) {
                                           return defaultInkWell(
                                               isReplace: true,
-                                              image: snapshotData[iTitle][1][i].image,
-                                              title: snapshotData[iTitle][1][i].name,
+                                              image: "user[0][i].image",
+                                              title: user[0][i].name,
                                               subtitle: Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   paragraphText(
                                                       text:
-                                                      "Protein: ${snapshotData[iTitle][1][i].protein}"),
+                                                      "Protein: ${user[0][i].protein}"),
                                                   const SizedBox(width: 10.0),
                                                   paragraphText(
                                                       text:
-                                                      "Carbs ${snapshotData[iTitle][1][i].carbs}"),
+                                                      "Carbs ${user[0][i].carbs}"),
                                                   const SizedBox(width: 10.0),
                                                   paragraphText(
                                                       text:
-                                                      "Fats ${snapshotData[iTitle][1][i].fats}"),
+                                                      "Fats ${user[0][i].fats}"),
                                                 ],
                                               ),
                                               child: Row(
@@ -325,32 +330,32 @@ class NutritionHome extends StatelessWidget {
                                                   CircleAvatar(
                                                     backgroundColor: Colors.red,
                                                     child: paragraphText(
-                                                        text: snapshotData[iTitle][1][i].quantity,
+                                                        text: user[0][i].quantity,
                                                         color: Colors.white),
                                                   ),
                                                   const SizedBox(width: 15.0),
                                                   paragraphText(
                                                       text:
-                                                      "Calories: ${snapshotData[iTitle][1][i].calories}"),
+                                                      "Calories: ${user[0][i].calories}"),
                                                 ],
                                               ),
                                               function: () {
                                                 // nutrition.slidingPanel();
                                                 navNavigator(context,
                                                     FoodDetails(
-                                                      title: snapshotData[iTitle][1][i]
+                                                      title: selectedMeals[i]
                                                           .name,
-                                                      image: snapshotData[iTitle][1][i]
+                                                      image: selectedMeals[i]
                                                           .image,
-                                                      quantity: snapshotData[iTitle][1][i]
+                                                      quantity: selectedMeals[i]
                                                           .quantity,
-                                                      protein: snapshotData[iTitle][1][i]
+                                                      protein: selectedMeals[i]
                                                           .protein,
-                                                      fats: snapshotData[iTitle][1][i]
+                                                      fats: selectedMeals[i]
                                                           .fats,
-                                                      carbs: snapshotData[iTitle][1][i]
+                                                      carbs: selectedMeals[i]
                                                           .carbs,
-                                                      calories: snapshotData[iTitle][1][i]
+                                                      calories: selectedMeals[i]
                                                           .calories,
                                                     ));
                                               });
@@ -368,12 +373,12 @@ class NutritionHome extends StatelessWidget {
                                                             .background)),
                                               ),
                                             ),
-                                        itemCount: 2))
+                                        itemCount: user.length))
                               ],
                             );
                           },
                           separatorBuilder: (_, iTitle) => const SizedBox(height: 15),
-                          itemCount: snapshotData.length,
+                          itemCount: 4,
                         ),
                       );
                     } else if (snapshot.hasError) {

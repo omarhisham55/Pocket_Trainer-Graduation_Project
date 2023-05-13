@@ -130,8 +130,7 @@ Future<List> getLegExercises() async {
 }
 
 Future<List> getCoreExercises() async {
-  var legExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/core/exercises'));
+  var legExercises = await http.get(Uri.parse('http://$ipConnectionAddress:3000/core/exercises'));
   if (legExercises.statusCode == 200) {
     var data = json.decode(legExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();

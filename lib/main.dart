@@ -12,30 +12,19 @@ void main() {
   // ipConnectionAddress2.then((value) {
   //   print(value);
   // });
-    runApp(const MyApp());
   getDataMapValues(allValues: true).then((value) {
     print("successful exercise data from $value");
-    // getMeals().timeout(const Duration(seconds: 10));
-    // login();
-    // getIPAddress();
-    // getStretchesValues().then((value) {
-    //   print("successful stretches data from $value");
-    // }).catchError((e){
-    //   print("Unsuccessful stretches data at $e");
-    //   print("App will not open");
-    // });
+    getMeals().then((value) {
+      print("successful meals data from $value");
+      runApp(const MyApp());
+    }).catchError((e){
+      print("Unsuccessful meals data at $e");
+      print("App will not open");
+    });
   }).catchError((e) {
     print("Unsuccessful exercise data at $e");
-    throw e;
-    if(e.toString().toLowerCase() == "connection refused"){
-      print("Check internet connection or change IP address");
-    }
-    if(e.toString().toLowerCase() == "Connection timed out"){
-      print("NodeJs not connected $e");
-    }
     print("App will not open");
   });
-
 }
 
 class MyApp extends StatelessWidget {
@@ -46,7 +35,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: "/",
+      initialRoute: "/login",
       routes: routes,
     );
   }
