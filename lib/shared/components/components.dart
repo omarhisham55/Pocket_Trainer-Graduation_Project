@@ -201,7 +201,6 @@ Widget defaultInkWell({
   double? width,
   Color? iconColor,
   bool? recommended = false,
-  bool? isReplace = false,
   bool? remove = false,
 }) =>
     Stack(
@@ -258,20 +257,7 @@ Widget defaultInkWell({
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Visibility(
-              visible: (isReplace ?? false) ? true : false,
-              child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                      Icons.repeat,
-                      color: iconColor ?? TextColors.whiteText
-                  )
-              )
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(15.0),
           child: Visibility(
               visible: (remove ?? false) ? true : false,
               child: CircleButton(
@@ -534,14 +520,15 @@ void toastError({
 
 void toastSuccess({
   required BuildContext context,
-  required String text
+  required String text,
+  int? duration
 }) => MotionToast.success(
       title: paragraphText(text: "Success!"),
       description: paragraphText(text: text),
       layoutOrientation: ToastOrientation.rtl,
       animationType: AnimationType.fromRight,
       dismissable: true,
-      toastDuration: const Duration(seconds: 2),
+      toastDuration: Duration(seconds: duration ?? 2),
     ).show(context);
 
 void toastWarning({

@@ -13,15 +13,16 @@ import 'package:roundcheckbox/roundcheckbox.dart';
 
 class ChooseFood extends StatelessWidget {
   List selectedMeals;
+  String typeofMeal;
 
-  ChooseFood({super.key, required this.selectedMeals});
+  ChooseFood({super.key, required this.selectedMeals, required this.typeofMeal});
 
   Set cloneList = {};
 
   @override
   Widget build(BuildContext context) {
     List searchList = [];
-    getMeals().then((value) {
+    getNutritionData(key: typeofMeal).then((value) {
       searchList = value;
       // print("first search list $searchList");
     }).catchError((e) {});
@@ -78,14 +79,16 @@ class ChooseFood extends StatelessWidget {
             body: Padding(
               padding: const EdgeInsets.all(20.0),
               child: FutureBuilder(
-                  future: getMeals(),
+                  future: getBreakfast(),
                   builder: (_, snapshot) {
+                    print('nomk ${searchList.length}');
                     if (snapshot.hasData) {
                       return (snapshot.data!.isEmpty)
                           ? Center(
                               child: titleText(text: "No meals found"),
                             )
                           : ListView.separated(
+                              padding: const EdgeInsets.only(bottom: 50.0),
                               // physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemBuilder: (context, index) => TextButton(

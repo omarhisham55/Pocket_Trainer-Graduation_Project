@@ -58,6 +58,7 @@ class User {
       if (value.statusCode == 200) {
         final user = jsonDecode(value.body);
         token = user["token"];
+        getProfile();
       } else {
         toastError(context: context, text: "Failed to get account");
         throw Exception('Failed to get response: ${value.statusCode}');
@@ -80,20 +81,17 @@ class User {
       throw response.statusCode;
     }
   }
-  static Future<List> getProfile() async {
+  static Future<Map<String, dynamic>> getProfile() async {
     final profile = await http.get(Uri.parse('http://$ipConnectionAddress:3000/profile'),
         headers: {"Authorization": "Bearer ${User.token}"}
-    ).then((value) {
-      print("success get profile ${value.body}");
-    }).catchError((e){
-      print("error get profile $e");
-    });
+    );
     if(profile.statusCode == 200){
       var user = json.decode(profile.body);
       currentUser = User(
         name: user["name"] ?? "",
         email: user["email"] ?? "",
         password: user["password"] ?? "",
+        urlPhoto: user["photo"] ?? "",
         workoutPlan: user["workoutPlan"] ?? {},
         nutritionPlan: user["NutritionPlan"] ?? {},
       );

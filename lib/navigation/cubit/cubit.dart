@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/data/nutritionData.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
@@ -12,6 +14,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../data/nutrition_dialog_data.dart';
 import '../../data/offers.dart';
+import '../../data/userData.dart';
 import '../../pages/gym/gym.dart';
 import '../../pages/home/home.dart';
 import '../../pages/information/information.dart';
@@ -277,25 +280,54 @@ class CubitManager extends Cubit<MainStateManager> {
   }
   List selectedMeals = [];
   String selectedValue = "select meal time";
-  void addMeal(context){
-    // if(selectedValue != "select meal time"){
+
+  //add meal to database
+  Future<void> addMeals({required String mealId}) async {
+    final response = await http.post(
+        Uri.parse('http://$ipConnectionAddress:3000/add-meal-to-nutritionPlan/$mealId'),
+        headers: {"Authorization": "Bearer ${User.token}"},
+        body: jsonEncode({
+          "mealId": mealId
+        })
+    );
+    if (response.statusCode == 200) {
+      print('Meal added to Nutrition Plan ${response.body}');
+      print('Meal added to Nutrition Plan ${response.statusCode}');
+    } else {
+      throw Exception('Failed to add meal to Nutrition Plan ${response.statusCode}');
+    }
+    emit(AddMealState());
+  }
+
+  void addMeal(context, selectedValue){
       if(selectedMeals.isNotEmpty){
-        toastSuccess(context: context, text: "Meals $selectedMeals added to $selectedValue");
+        print(selectedMeals);
         for(int i=0; i<selectedMeals.length; i++){
+          addMeals(mealId: selectedMeals[i].id).then((value) => toastSuccess(context: context, text: "Meals added to $selectedValue", duration: 3));
           addMealController.close();
-          addMeals(mealId: selectedMeals[i].id);
         }
-        showSnackBar(context: context, text: "Meals $selectedMeals added to $selectedValue");
-        print('Meals $selectedMeals added to $selectedValue');
         emit(AddMealState());
       }else{
         showSnackBar(context: context, text: "select meals");
         print("select meals");
       }
-    // }else{
-    //   showSnackBar(context: context, text: "select meal time");
-    //   print("select meal time");
-    // }
+  }
+  //delete meal from database
+  Future<void> deleteMeals({required String mealId}) async {
+    final response = await http.post(
+        Uri.parse('http://$ipConnectionAddress:3000/delete-meal-from-nutritionPlan/$mealId'),
+        headers: {"Authorization": "Bearer ${User.token}"},
+        body: jsonEncode({
+          "mealId": mealId
+        })
+    );
+    if (response.statusCode == 200) {
+      print('Meal deleted from Nutrition Plan ${response.body}');
+      print('Meal deleted from Nutrition Plan ${response.statusCode}');
+    } else {
+      throw Exception('Failed to delete meal from Nutrition Plan ${response.statusCode}');
+    }
+    emit(RemoveMealState());
   }
   void removeMeal(List selectedMeal, int index){
     selectedMeal.removeAt(index);

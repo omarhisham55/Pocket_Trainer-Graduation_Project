@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../navigation/cubit/cubit.dart';
 import '../../shared/components/components.dart';
+import '../../shared/styles/images.dart';
 
 class Profile extends StatelessWidget {
   const Profile({Key? key}) : super(key: key);
@@ -21,174 +22,179 @@ class Profile extends StatelessWidget {
         child: BlocConsumer<CubitManager, MainStateManager>(
             listener: (_, s) {},
             builder: (_, s) {
-              final user = User.currentUser!;
-              print("user ${user.name}");
-              print("user ${user.nutritionPlan}");
-              return FutureBuilder(
-                // future: User.getProfile(),
-                builder: (_, snapshot){
+              return Scaffold(
+                backgroundColor: BackgroundColors.background,
+                appBar: notificationAppBar(context, "Profile"),
+                body: FutureBuilder(
+                  future: User.getProfile(),
+                  builder: (_, snapshot){
                   if(snapshot.hasData){
-                    return Scaffold(
-                        backgroundColor: BackgroundColors.background,
-                        appBar: notificationAppBar(context, "Profile"),
-                        body: SafeArea(
-                          child: Column(children: [
-                            //heading section
-                            Container(
-                              width: double.infinity,
-                              decoration: const BoxDecoration(
-                                  color: BackgroundColors.dialogBG,
-                                  borderRadius: BorderRadius.vertical(
-                                      bottom: Radius.circular(30))),
-                              child: SizedBox(
-                                  width: width(context, 1),
-                                  child: Stack(
-                                    alignment: Alignment.topRight,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(40.0),
-                                        child: Center(
-                                          child: Column(
-                                            children: [
-                                              const CircleAvatar(
-                                                radius: 50,
-                                                backgroundImage: NetworkImage(
-                                                    'https://img.search.brave.com/rDyllrwwpvfoJQmRSbGQDH6XvjvF2i9ot7sZp_LPUVU/rs:fit:479:225:1/g:ce/aHR0cHM6Ly90c2Ux/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC4x/a0V0a05fNUhES0RF/YTdPUXJTbEd3SGFI/ViZwaWQ9QXBp'),
-                                              ),
-                                              const SizedBox(height: 10),
-                                              titleText(text: user.name!)
-                                            ],
+                    var user = snapshot.data!;
+                    return SafeArea(
+                      child: Column(children: [
+                        //heading section
+                        Container(
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                              color: BackgroundColors.dialogBG,
+                              borderRadius: BorderRadius.vertical(
+                                  bottom: Radius.circular(30))),
+                          child: SizedBox(
+                              width: width(context, 1),
+                              child: Stack(
+                                alignment: Alignment.topRight,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(40.0),
+                                    child: Center(
+                                      child: Column(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 50,
+                                            backgroundImage: const AssetImage(MainImages.emptyImage),
+                                            foregroundImage: NetworkImage(user['photo'] ?? ""),
                                           ),
-                                        ),
+                                          const SizedBox(height: 10),
+                                          titleText(text: user['name'])
+                                        ],
                                       ),
-                                      Positioned(
-                                          right: 10.0,
-                                          top: 5.0,
-                                          child: Column(
-                                            children: [
-                                              IconButton(
-                                                  onPressed: () {},
-                                                  icon: const Icon(
-                                                    FontAwesomeIcons.edit,
-                                                    color: BackgroundColors.whiteBG,
-                                                  )
-                                              ),
-                                              IconButton(
-                                                  onPressed: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return AlertDialog(
-                                                          backgroundColor: BackgroundColors.dialogBG,
-                                                          title: subTitleText(text: "Are you sure you want to delete your account?"),
-                                                          actions: [
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                                                  child: DefaultButton(
-                                                                    function: () {},
-                                                                    text: "Yes",
-                                                                    backgroundColor: Colors.red,
-                                                                    width: width(context, .3),
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                                                  child: DefaultButton(
-                                                                    function: () {},
-                                                                    text: "No",
-                                                                    backgroundColor:
-                                                                    BackgroundColors.button,
-                                                                    width: width(context, .3),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            )
+                                    ),
+                                  ),
+                                  Positioned(
+                                      right: 10.0,
+                                      top: 5.0,
+                                      child: Column(
+                                        children: [
+                                          IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(
+                                                FontAwesomeIcons.edit,
+                                                color: BackgroundColors.whiteBG,
+                                              )
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      backgroundColor: BackgroundColors.dialogBG,
+                                                      title: subTitleText(text: "Are you sure you want to delete your account?"),
+                                                      actions: [
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                                              child: DefaultButton(
+                                                                function: () {},
+                                                                text: "Yes",
+                                                                backgroundColor: Colors.red,
+                                                                width: width(context, .3),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                                              child: DefaultButton(
+                                                                function: () {},
+                                                                text: "No",
+                                                                backgroundColor:
+                                                                BackgroundColors.button,
+                                                                width: width(context, .3),
+                                                              ),
+                                                            ),
                                                           ],
-                                                        );
-                                                      },
+                                                        )
+                                                      ],
                                                     );
                                                   },
-                                                  icon: const Icon(
-                                                    FontAwesomeIcons.trash,
-                                                    color: BackgroundColors.whiteBG,
-                                                  )),
-                                            ],
-                                          )),
-                                    ],
-                                  )),
-                            ),
-                            const SizedBox(height: 10),
-                            //current program button
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  gradient: BackgroundColors.blueGradient),
-                              child: DefaultButton(
-                                height: 100,
-                                width: MediaQuery.of(context).size.width,
-                                backgroundColor: Colors.transparent,
-                                function: () {},
-                                borderRadius: 30,
-                                text: "Current Program",
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            //premium plans button
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  gradient: BackgroundColors.purpleGradient),
-                              child: DefaultButton(
-                                height: 100,
-                                width: MediaQuery.of(context).size.width,
-                                backgroundColor: Colors.transparent,
-                                function: () {
-                                  noNavNavigator(context, PremiumPlans());
-                                },
-                                borderRadius: 30,
-                                text: "Premium Plans",
-                              ),
-                            ),
-                            const Spacer(),
-                            DefaultButton(
-                              width: MediaQuery.of(context).size.width,
-                              backgroundColor: BackgroundColors.dialogBG,
-                              function: () {},
-                              text: "Contact us",
-                            ),
-                            DefaultButton(
-                              width: MediaQuery.of(context).size.width,
-                              backgroundColor: BackgroundColors.dialogBG,
-                              function: () {},
-                              text: "Terms & Conditions",
-                            ),
-                            DefaultButton(
-                                width: MediaQuery.of(context).size.width,
-                                backgroundColor: BackgroundColors.dialogBG,
-                                function: () {},
-                                text: "Privacy Policy"),
-                            DefaultButton(
-                              width: MediaQuery.of(context).size.width,
-                              backgroundColor: BackgroundColors.dialogBG,
-                              function: () {
-                                User.logout(context: context).then((value) {
-                                  // noNavNavigator(context, const Login());
-                                }).catchError((e) {
-                                  throw e;
-                                });
-                              },
-                              text: "Logout",
-                            )
-                          ]),
-                        ));
-                  }else{
-                    throw Exception("No data");
+                                                );
+                                              },
+                                              icon: const Icon(
+                                                FontAwesomeIcons.trash,
+                                                color: BackgroundColors.whiteBG,
+                                              )),
+                                        ],
+                                      )),
+                                ],
+                              )),
+                        ),
+                        const SizedBox(height: 10),
+                        //current program button
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              gradient: BackgroundColors.blueGradient),
+                          child: DefaultButton(
+                            height: 100,
+                            width: MediaQuery.of(context).size.width,
+                            backgroundColor: Colors.transparent,
+                            function: () {},
+                            borderRadius: 30,
+                            text: "Current Program",
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        //premium plans button
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              gradient: BackgroundColors.purpleGradient),
+                          child: DefaultButton(
+                            height: 100,
+                            width: MediaQuery.of(context).size.width,
+                            backgroundColor: Colors.transparent,
+                            function: () {
+                              noNavNavigator(context, PremiumPlans());
+                            },
+                            borderRadius: 30,
+                            text: "Premium Plans",
+                          ),
+                        ),
+                        const Spacer(),
+                        DefaultButton(
+                          width: MediaQuery.of(context).size.width,
+                          backgroundColor: BackgroundColors.dialogBG,
+                          function: () {},
+                          text: "Contact us",
+                        ),
+                        DefaultButton(
+                          width: MediaQuery.of(context).size.width,
+                          backgroundColor: BackgroundColors.dialogBG,
+                          function: () {},
+                          text: "Terms & Conditions",
+                        ),
+                        DefaultButton(
+                            width: MediaQuery.of(context).size.width,
+                            backgroundColor: BackgroundColors.dialogBG,
+                            function: () {},
+                            text: "Privacy Policy"),
+                        DefaultButton(
+                          width: MediaQuery.of(context).size.width,
+                          backgroundColor: BackgroundColors.dialogBG,
+                          function: () {
+                            User.logout(context: context).then((value) {
+                              // noNavNavigator(context, const Login());
+                            }).catchError((e) {
+                              throw e;
+                            });
+                          },
+                          text: "Logout",
+                        )
+                      ]),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                        child: titleText(
+                            text: "Error fetching data ${snapshot.error}", color: TextColors.blackText));
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
                   }
-                }
+                  }
+                )
               );
-            }));
+            }
+            )
+    );
   }
 }

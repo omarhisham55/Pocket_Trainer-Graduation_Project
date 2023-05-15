@@ -1,4 +1,5 @@
 class MainImages{
+  static const emptyImage = "images/user.webp";
   static const yoga = "images/yoga.png";
   static const newsfeedPost = "images/bg.png";
   static const logo = "images/logo.png";
