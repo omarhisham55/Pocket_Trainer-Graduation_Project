@@ -1,4 +1,4 @@
-import 'package:flutter_qjs/flutter_qjs.dart';
+// import 'package:flutter_qjs/flutter_qjs.dart';
 import 'package:http/http.dart' as http;
 // Future<void> startDetection() async {
 //   final qjs = Qjs();

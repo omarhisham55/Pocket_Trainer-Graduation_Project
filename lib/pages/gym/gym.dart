@@ -1,7 +1,10 @@
+import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
+import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:calender_picker/calender_picker.dart';
 import '../../data/gym_dialog_data.dart';
@@ -10,54 +13,48 @@ import '../../shared/styles/images.dart';
 import 'gymHome.dart';
 import 'AddExercise.dart';
 
-class Gym extends StatefulWidget {
+class Gym extends StatelessWidget {
   const Gym({Key? key}) : super(key: key);
 
   @override
-  State<Gym> createState() => _GymState();
-}
-List<String> months = [
-  "January","February","March","April","May","June","July","August","September","October","November","December"
-];
-Widget buildDaysOfWeek(void Function(DateTime) function) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-      // paragraphText(text: months[DateTime.now().month-1]),
-      // const SizedBox(height: 10),
-      CalenderPicker(
-        DateTime.now(),
-        initialSelectedDate: DateTime.now(),
-        selectionColor: Colors.black,
-        daysCount: 6,
-        onDateChange: function,
-      ),
-    ],
-  );
-}
-
-class _GymState extends State<Gym> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: changeableAppBar(
-        context: context,
-        title: "Gym",
-        isRequirementsTaken: true,
-        replace: QudsPopupButton(tooltip: 'open', items: getMenuItemsGym(), child: const Icon(Icons.more_vert, color: Colors.white, size: 30)),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(110.0),
-          child: Padding(
-            padding: const EdgeInsets.all(9.0),
-            child: buildDaysOfWeek((date){}),
-          ),
+    List<QudsPopupMenuBase> getMenuItemsGym() {
+      return [
+        QudsPopupMenuItem(
+          leading: const Icon(Icons.add),
+          title: const Text('Add Exercise'),
+          onPressed: () {
+            noNavNavigator(context, const AddExercise());
+          },
         ),
-      ),
-      backgroundColor: BackgroundColors.background,
-      //safe area is empty gym page
-      //exercise is full gym page
-      body: (addTraining == -1)
-          ? SafeArea(
+        QudsPopupMenuDivider(),
+        QudsPopupMenuItem(
+            leading: const Icon(Icons.delete_outline),
+            title: const Text('Delete training'),
+            onPressed: () {}),
+        QudsPopupMenuDivider(),
+        QudsPopupMenuItem(
+            leading: const Icon(Icons.info_outline),
+            title: const Text('Training info'),
+            onPressed: () {
+              // showToast('Feedback Pressed!');
+            }),
+      ];
+    }
+
+    return BlocProvider(
+      create: (_) => CubitManager(),
+      child: BlocConsumer<CubitManager, MainStateManager>(
+        listener: (_, snapshot){},
+        builder: (_, snapshot){
+          CubitManager gym = CubitManager.get(_);
+          return Scaffold(
+            appBar: (isExerciseTaken == false) ? notificationAppBar(context, "Gym") : null,
+            backgroundColor: BackgroundColors.background,
+            //safe area is empty gym page
+            //exercise is full gym page
+            body: (isExerciseTaken == false)
+                ? SafeArea(
               child: Padding(
                 padding: const EdgeInsets.only(
                     top: 20, bottom: 100, right: 40, left: 40),
@@ -68,7 +65,7 @@ class _GymState extends State<Gym> {
                     const SizedBox(height: 20),
                     paragraphText(
                       text:
-                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
                       textAlign: TextAlign.center,
                     ),
                     const Spacer(),
@@ -77,9 +74,10 @@ class _GymState extends State<Gym> {
                           showAnimatedDialog(
                             context: context,
                             barrierDismissible: true,
-                            builder: (context) => StatefulBuilder(
-                                builder: (context, StateSetter setState) =>
-                                    openDialogExperience(context)),
+                            builder: (context) =>
+                                StatefulBuilder(
+                                    builder: (context, StateSetter setState) =>
+                                        openDialogExperience(context, gym)),
                             animationType: DialogTransitionType.sizeFade,
                             curve: Curves.fastOutSlowIn,
                             duration: const Duration(seconds: 1),
@@ -90,36 +88,10 @@ class _GymState extends State<Gym> {
                 ),
               ),
             )
-          : const GymHome(),
-    );
-  }
-
-  List<QudsPopupMenuBase> getMenuItemsGym() {
-    return [
-      QudsPopupMenuItem(
-        leading: const Icon(Icons.add),
-        title: const Text('Add Exercise'),
-        onPressed: () {
-          noNavNavigator(context, const AddExercise());
+                : GymHome(),
+          );
         },
       ),
-      QudsPopupMenuDivider(),
-      QudsPopupMenuItem(
-          leading: const Icon(Icons.delete_outline),
-          title: const Text('Delete training'),
-          onPressed: () {
-            setState(() {
-              remove = true;
-              print(remove);
-            });
-          }),
-      QudsPopupMenuDivider(),
-      QudsPopupMenuItem(
-          leading: const Icon(Icons.info_outline),
-          title: const Text('Training info'),
-          onPressed: () {
-            // showToast('Feedback Pressed!');
-          }),
-    ];
+    );
   }
 }

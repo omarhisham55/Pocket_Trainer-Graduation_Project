@@ -54,7 +54,6 @@ dependencies:
   bloc: ^8.1.1
   flutter_bloc: ^8.1.2
   motion_toast: ^2.6.7
-  flutter_qjs: ^0.3.7
 
 dev_dependencies:
   flutter_test:

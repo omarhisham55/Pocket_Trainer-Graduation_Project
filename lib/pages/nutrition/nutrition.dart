@@ -1,6 +1,7 @@
 import 'package:final_packet_trainer/data/nutritionData.dart';
 import 'package:flutter/material.dart';
 import '../../data/nutrition_dialog_data.dart';
+import '../../navigation/animationNavigation.dart';
 import '../../navigation/cubit/cubit.dart';
 import '../../navigation/cubit/states.dart';
 import '../../data/nutrition_dialog_data.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import '../gym/gym.dart';
+import 'diet_recommended_plan.dart';
 import 'nutritionHome.dart';
 
 class Nutrition extends StatelessWidget {
@@ -26,26 +28,9 @@ class Nutrition extends StatelessWidget {
         builder: (_, s){
           CubitManager nutrition = CubitManager.get(_);
           return Scaffold(
-              // appBar: changeableAppBar(
-              //   context: context,
-              //   title: "Nutrition Home",
-              //   isRequirementsTaken: true,
-              //   replace: QudsPopupButton(
-              //       tooltip: 'open',
-              //       items: nutrition.getMenuFoodItems(context),
-              //       child: const Icon(Icons.more_vert, color: Colors.white, size: 30)),
-              //   bottom: (isDietTaken) ? PreferredSize(
-              //     preferredSize: const Size.fromHeight(110.0),
-              //     child: Padding(
-              //       padding: const EdgeInsets.all(9.0),
-              //       child: buildDaysOfWeek((date){
-              //
-              //       }),
-              //     ),
-              //   ) : null,
-              // ),
+              appBar: (isDietTaken == false) ? notificationAppBar(context, "Nutrition") : null,
               backgroundColor: BackgroundColors.background,
-              body: (isDietTaken == true) ? SafeArea(
+              body: (isDietTaken == false) ? SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20, bottom: 100, right: 40, left: 40),
                   child: Column(

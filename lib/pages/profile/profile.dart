@@ -52,7 +52,7 @@ class Profile extends StatelessWidget {
                                           CircleAvatar(
                                             radius: 50,
                                             backgroundImage: const AssetImage(MainImages.emptyImage),
-                                            foregroundImage: NetworkImage(user['photo'] ?? ""),
+                                            // foregroundImage: NetworkImage(user['photo'] ?? ""),
                                           ),
                                           const SizedBox(height: 10),
                                           titleText(text: user['name'])

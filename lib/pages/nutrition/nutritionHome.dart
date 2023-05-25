@@ -58,7 +58,7 @@ class NutritionHome extends StatelessWidget {
                       if(nutrition.foodListPanel.isPanelOpen){
                         nutrition.foodListPanel.close();
                       }
-                        nutrition.deleteButton();
+                      nutrition.deleteButton();
                     }),
                 QudsPopupMenuDivider(),
                 QudsPopupMenuItem(

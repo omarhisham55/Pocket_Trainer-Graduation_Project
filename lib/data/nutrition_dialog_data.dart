@@ -275,7 +275,7 @@ Widget openDialogHealthConditions(BuildContext context, nutrition)=> defaultDial
             foodRequirements.add(healthConditionsSelected);
             // dietNumbersListCount.add();
             isDietTaken = true;
-            nutrition.dietRequirements(isDietTaken);
+            nutrition.requirements(isDietTaken);
             pageNavigator(context, RecommendedProgramNutritionInfo());
           },
           borderRadius: 30,

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -8,7 +10,7 @@ class User {
   String? name;
   String? email;
   String? password;
-  String? urlPhoto;
+  // String? urlPhoto;
   Map<String, dynamic>? nutritionPlan;
   Map<String, dynamic>? workoutPlan;
 
@@ -16,13 +18,13 @@ class User {
     this.name,
     this.email,
     this.password,
-    this.urlPhoto,
+    // this.urlPhoto,
     this.workoutPlan,
     this.nutritionPlan,
   });
 
-  static User? currentUser;
   static var token;
+  static User? currentUser;
 
   static Future<String> signUp({required String username, required String email, required String password, context}) async {
     final response = await http.post(
@@ -60,7 +62,7 @@ class User {
         token = user["token"];
         getProfile();
       } else {
-        toastError(context: context, text: "Failed to get account");
+        toastError(context: context, text: value.body);
         throw Exception('Failed to get response: ${value.statusCode}');
       }
     });
@@ -69,16 +71,15 @@ class User {
   static Future<void> logout({required BuildContext context}) async {
     final response = await http.post(
       Uri.parse('http://$ipConnectionAddress:3000/logout'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {"Authorization": "Bearer ${User.token}"},
       // body: jsonEncode({}),
     );
     if (response.statusCode == 200) {
       print("logout successful");
       print(response.body);
-      showSnackBar(context: context, text: "Logout successful");
+      toastSuccess(context: context, text: "Logout successful");
     } else {
-      toastError(context: context, text: "Logout failed");
-      throw response.statusCode;
+      toastError(context: context, text: "Logout failed ${response.statusCode} ${response.body}");
     }
   }
   static Future<Map<String, dynamic>> getProfile() async {
@@ -91,14 +92,10 @@ class User {
         name: user["name"] ?? "",
         email: user["email"] ?? "",
         password: user["password"] ?? "",
-        urlPhoto: user["photo"] ?? "",
+        // urlPhoto: user["photo"] ?? "",
         workoutPlan: user["workoutPlan"] ?? {},
         nutritionPlan: user["NutritionPlan"] ?? {},
       );
-      print("current user ${currentUser!.email}");
-      print("nutrition plan of user is ${currentUser!.name}");
-      print("nutrition plan of user is ${currentUser!.nutritionPlan}");
-      print("exercise plan of user is ${currentUser!.workoutPlan}");
       return user;
     } else{
       throw Exception("Failed to load data");

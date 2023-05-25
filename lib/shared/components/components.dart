@@ -1,3 +1,4 @@
+import 'package:calender_picker/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:circle_button/circle_button.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -10,6 +11,7 @@ PreferredSizeWidget notificationAppBar(context, String title) =>
     AppBar(
       backgroundColor: BackgroundColors.dialogBG,
       title: titleText(text: title),
+      centerTitle: true,
       actions: [
         MaterialButton(
           onPressed: () {
@@ -30,21 +32,13 @@ PreferredSizeWidget defaultAppBar(
     );
 
 PreferredSizeWidget changeableAppBar({
-  context, required String title, required bool isRequirementsTaken, required Widget replace, PreferredSizeWidget? bottom}) =>
+  context, required String title, required bool isRequirementsTaken, Widget? replace, PreferredSizeWidget? bottom}) =>
     AppBar(
       backgroundColor: BackgroundColors.dialogBG,
       title: titleText(text: title),
       centerTitle: true,
       actions: [
-        (isRequirementsTaken == false)
-            ? MaterialButton(
-          onPressed: () {
-            notificationNavigator(context, const Notifications());
-          },
-          child: const Icon(Icons.notifications,
-              color: Colors.white, size: 30),
-        )
-            : Padding(
+        Padding(
           padding: const EdgeInsets.only(right: 20.0),
           child: replace,
         )
@@ -574,3 +568,34 @@ void showSnackBar({
       backgroundColor: color ?? Colors.grey[700],
     )
 );
+
+Widget buildDaysOfWeek(void Function(DateTime) function) {
+  List<String> months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+      // paragraphText(text: months[DateTime.now().month-1]),
+      // const SizedBox(height: 10),
+      CalenderPicker(
+        DateTime.now(),
+        initialSelectedDate: DateTime.now(),
+        selectionColor: Colors.black,
+        daysCount: 6,
+        onDateChange: function,
+      ),
+    ],
+  );
+}

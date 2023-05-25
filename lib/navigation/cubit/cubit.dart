@@ -243,12 +243,13 @@ class CubitManager extends Cubit<MainStateManager> {
   PanelController foodListPanel = PanelController();
   int addNumber = 0;
 
-  void dietRequirements(isDietTaken){
-    isDietTaken = true;
-    emit(DietRequirements());
+  void requirements(requirements){
+    requirements = true;
+    emit(Requirements());
   }
-  void deleteButton(){
-    deleteButtonFood = !deleteButtonFood;
+  void deleteButton({staticBool}){
+    deleteButtonFood = staticBool ?? !deleteButtonFood;
+    print('ppp $deleteButtonFood');
     emit(DeleteButtonState());
   }
   void dropDownSelect(value, selectedValue){
@@ -335,9 +336,12 @@ class CubitManager extends Cubit<MainStateManager> {
   }
 
   //Gym
+  final exercisePanelController = PanelController();
   String exercisePanelName = "";
   String exercisePanelType = "";
-  void addExerciseName(name, type){
+  var exercisePanelId;
+  void addExerciseName(id, name, type){
+    exercisePanelId = id;
     exercisePanelName = name;
     exercisePanelType = type;
     emit(AddExerciseState());
@@ -381,4 +385,38 @@ class CubitManager extends Cubit<MainStateManager> {
   //   emit(FilterState(exerciseType: type));
   // }
 
+  //add meal to database
+  Future<void> addWorkouts({required String exerciseId}) async {
+    final response = await http.post(
+        Uri.parse('http://$ipConnectionAddress:3000/add-exercise-to-wourkoutplan/$exerciseId'),
+        headers: {"Authorization": "Bearer ${User.token}"},
+        body: jsonEncode({
+          "exerciseId": exerciseId
+        })
+    );
+    if (response.statusCode == 200) {
+      print('Exercise added to Workout Plan ${response.body}');
+      print('Exercise added to Workout Plan ${response.statusCode}');
+    } else {
+      throw Exception('Failed to add exercise to Workout Plan ${response.statusCode}');
+    }
+    emit(AddExerciseState());
+  }
+  //delete meal from database
+  Future<void> deleteWorkouts({required String exerciseId}) async {
+    final response = await http.post(
+        Uri.parse('http://$ipConnectionAddress:3000/wourkoutplan-delete-exercise/$exerciseId'),
+        headers: {"Authorization": "Bearer ${User.token}"},
+        body: jsonEncode({
+          "mealId": exerciseId
+        })
+    );
+    if (response.statusCode == 200) {
+      print('Exercise deleted from Workout Plan ${response.body}');
+      print('Exercise deleted from Workout Plan ${response.statusCode}');
+    } else {
+      throw Exception('Failed to delete exercise from Workout Plan ${response.statusCode}');
+    }
+    emit(RemoveExerciseState());
+  }
 }

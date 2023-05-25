@@ -27,7 +27,11 @@ class ExistExercise extends StatelessWidget {
       child: BlocConsumer<CubitManager, MainStateManager>(
         listener: (_, s) {
           if (s is ChangeSearchState) {
-            searchList = s.filteredList;
+              searchList = s.filteredList;
+            // if(s.filteredList.isNotEmpty){
+            // }else{
+            //
+            // }
             print(searchList);
           }else{
             getDataMapValues(allValues: true, key: "").then((value) {
@@ -43,6 +47,7 @@ class ExistExercise extends StatelessWidget {
             future: getDataMapValues(allValues: true, key: gym.exerciseType),
             builder: (_, snapshot){
               print("objectdata ${snapshot.data!.length}");
+              var gymData = (gym.isSearchOpened) ? searchList : snapshot.data!;
               if(snapshot.hasData){
                 return Scaffold(
                   backgroundColor: BackgroundColors.background,
@@ -70,172 +75,157 @@ class ExistExercise extends StatelessWidget {
                               : const Icon(Icons.search,
                               color: BackgroundColors.whiteBG),
                           onPressed: () {
-                            gym.changeSearchIcon(searchList: searchList);
+                            gym.changeSearchIcon(searchList: snapshot.data);
                             if (!gym.isSearchOpened) gym.searchQuery.clear();
-                            gym.searchQueryExerciseListener(searchList);
+                            gym.searchQueryExerciseListener(snapshot.data);
+                            print("snapshot data from categories ${snapshot.data}");
                           },
                         ),
                       ]
                   ),
                   body: SlidingUpPanel(
-                  controller: panelController,
-                  maxHeight: height(context, .5),
-                  minHeight: height(context, 0),
-                  defaultPanelState: PanelState.CLOSED,
-                  body: Column(
-                    children: [
-                      Container(
-                        color: BackgroundColors.inkWellBG,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10.0),
-                              child: QudsPopupButton(
-                                  tooltip: 'search filter',
-                                  items: gym.getSearchFilterItems(searchList),
-                                  child: subTitleText(
-                                      text: "${gym.exerciseType} / ${gym.dropDownSubHint}")),
-                            )
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: AlignedGridView.count(
-                              shrinkWrap: true,
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 5,
-                              crossAxisSpacing: 5,
-                              itemCount: searchList.length,
-                              itemBuilder: (_, i) => exerciseCard(
-                                  function: () {
-                                    (panelController.isPanelOpen) ? panelController.close()
-                                        : pageNavigator(
-                                        context,
-                                        ExerciseDetails(
-                                          exerciseName: searchList[i].exerciseName,
-                                          exerciseInfo: searchList[i].exerciseDescription,
-                                          exerciseImage: searchList[i].exerciseImage,
-                                          exerciseType: searchList[i].exerciseType,
-                                          exerciseTarget: searchList[i].exerciseTarget,
-                                          exerciseTips: searchList[i].exerciseTips,
-                                          exerciseRepetition: searchList[i].exerciseRepetition,
-                                          exerciseSets: searchList[i].exerciseSets,
-                                        ));
-                                  },
-                                  width: width(context, .5),
-                                  image: searchList[i].exerciseImage,
-                                  title: searchList[i].exerciseName,
-                                  addCardButton: true,
-                                  addFunction: () {
-                                    gym.addExerciseName(searchList[i].exerciseName, searchList[i].exerciseType);
-                                    (panelController.isPanelClosed)
-                                        ? panelController.open()
-                                        : panelController.close();
-                                  }
+                    controller: panelController,
+                    maxHeight: height(context, .5),
+                    minHeight: height(context, 0),
+                    defaultPanelState: PanelState.CLOSED,
+                    body: Column(
+                      children: [
+                        Container(
+                          color: BackgroundColors.inkWellBG,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                child: QudsPopupButton(
+                                    tooltip: 'search filter',
+                                    items: gym.getSearchFilterItems(snapshot.data),
+                                    child: subTitleText(
+                                        text: "${(gym.exerciseType == "") ? "All Exercises" : gym.exerciseType} / ${gym.dropDownSubHint}")),
                               )
+                            ],
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                  panelBuilder: (panelBuilder) => FutureBuilder(
-                      future: getDataMapValues(),
-                      builder: (_, snapshot){
-                        if(snapshot.hasData){
-                          List<String> dropDownTitles = snapshot.data!.map((e) => e.toString()).toList();
-                          return Container(
-                            decoration: const BoxDecoration(
-                                color: BackgroundColors.dialogBG,
-                                borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  titleText(text: "Add exercise"),
-                                  Row(
-                                    children: [
-                                      titleText(text: gym.exercisePanelName),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      subTitleText(text: gym.exercisePanelType),
-                                    ],
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                    color: BackgroundColors.whiteBG,
-                                    child: defaultDropDownMenu(
-                                        content: dropDownTitles,
-                                        hintValue: suggestion,
-                                        hintColor: TextColors.blackText,
-                                        function: (value) {
-                                          gym.dropDownSelect(value, suggestion);
-                                        }),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        width: MediaQuery.of(context).size.width * .4,
-                                        color: BackgroundColors.whiteBG,
-                                        child: defaultTextFormField(
-                                            controller: sets,
-                                            hint: "Sets",
-                                            hintTexColor: TextColors.blackText,
-                                            textInputType: TextInputType.number,
-                                            textStyle: TextColors.blackText),
-                                      ),
-                                      Container(
-                                        width: MediaQuery.of(context).size.width * .4,
-                                        color: BackgroundColors.whiteBG,
-                                        child: defaultTextFormField(
-                                            controller: reps,
-                                            hint: "Reps",
-                                            hintTexColor: TextColors.blackText,
-                                            textStyle: TextColors.blackText,
-                                            textInputType: TextInputType.number),
-                                      ),
-                                    ],
-                                  ),
-                                  DefaultButton(
-                                      function: () {
-                                        // setState(() {
-                                        //   switch (suggestion) {
-                                        //     case "WarmUp":
-                                        //     // warmUp!.add([exerciseName, exerciseType]);
-                                        //       break;
-                                        //     case "Exercise":
-                                        //       exercise.add([exercisePanelName, exercisePanelType]);
-                                        //       break;
-                                        //     case "Stretches":
-                                        //       stretches.add([exercisePanelName, exercisePanelType]);
-                                        //       break;
-                                        //   }
-                                        // });
-                                        homeNavigator(context, Navigation());
-                                      },
-                                      borderRadius: 20,
-                                      text: "Add")
-                                ],
-                              ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: AlignedGridView.count(
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.only(bottom: 150.0),
+                                physics: const BouncingScrollPhysics(),
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 5,
+                                crossAxisSpacing: 5,
+                                itemCount: gymData.length,
+                                itemBuilder: (_, i) => exerciseCard(
+                                    function: () {
+                                      (panelController.isPanelOpen) ? panelController.close()
+                                          : pageNavigator(
+                                          context,
+                                          ExerciseDetails(
+                                            exerciseName: gymData[i].exerciseName,
+                                            exerciseInfo: gymData[i].exerciseDescription,
+                                            exerciseImage: gymData[i].exerciseImage,
+                                            exerciseType: gymData[i].exerciseType,
+                                            exerciseTarget: gymData[i].exerciseTarget,
+                                            exerciseTips: gymData[i].exerciseTips,
+                                            exerciseRepetition: gymData[i].exerciseRepetition,
+                                            exerciseSets: gymData[i].exerciseSets,
+                                          ));
+                                    },
+                                    width: width(context, .5),
+                                    image: gymData[i].exerciseImage,
+                                    title: gymData[i].exerciseName,
+                                    addCardButton: true,
+                                    addFunction: () {
+                                      print(gymData[i].exerciseId);
+                                      gym.addExerciseName(gymData[i].exerciseId, gymData[i].exerciseName, gymData[i].exerciseType);
+                                      (panelController.isPanelClosed)
+                                          ? panelController.open()
+                                          : panelController.close();
+                                    }
+                                )
                             ),
-                          );
-                        }else if(snapshot.hasError){
-                          return Center(
-                              child: titleText(
-                                  text: "Error fetching data ${snapshot.error}"));
+                          ),
+                        )
+                      ],
+                    ),
+                    panelBuilder: (panelBuilder) => FutureBuilder(
+                        future: getDataMapValues(),
+                        builder: (_, snapshot){
+                          if(snapshot.hasData){
+                            List<String> dropDownTitles = snapshot.data!.map((e) => e.toString()).toList();
+                            return Container(
+                              decoration: const BoxDecoration(
+                                  color: BackgroundColors.dialogBG,
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    titleText(text: "Add exercise"),
+                                    Row(children: [titleText(text: gym.exercisePanelName)]),
+                                    Row(children: [subTitleText(text: gym.exercisePanelType)]),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                      color: BackgroundColors.whiteBG,
+                                      child: defaultDropDownMenu(
+                                          content: dropDownTitles,
+                                          hintValue: suggestion,
+                                          hintColor: TextColors.blackText,
+                                          function: (value) {
+                                            gym.dropDownSelect(value, suggestion);
+                                          }),
+                                    ),
+                                    subTitleText(text: "Sets and reps will be added according to your plan goal"),
+                                    // Row(
+                                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    //   children: [
+                                    //     Container(
+                                    //       width: MediaQuery.of(context).size.width * .4,
+                                    //       color: BackgroundColors.whiteBG,
+                                    //       child: defaultTextFormField(
+                                    //           controller: sets,
+                                    //           hint: "Sets",
+                                    //           hintTexColor: TextColors.blackText,
+                                    //           textInputType: TextInputType.number,
+                                    //           textStyle: TextColors.blackText),
+                                    //     ),
+                                    //     Container(
+                                    //       width: MediaQuery.of(context).size.width * .4,
+                                    //       color: BackgroundColors.whiteBG,
+                                    //       child: defaultTextFormField(
+                                    //           controller: reps,
+                                    //           hint: "Reps",
+                                    //           hintTexColor: TextColors.blackText,
+                                    //           textStyle: TextColors.blackText,
+                                    //           textInputType: TextInputType.number),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                    DefaultButton(
+                                        function: () {
+                                          gym.addWorkouts(exerciseId: gym.exercisePanelId);
+                                        },
+                                        borderRadius: 20,
+                                        text: "Add")
+                                  ],
+                                ),
+                              ),
+                            );
+                          }else if(snapshot.hasError){
+                            return Center(
+                                child: titleText(
+                                    text: "Error fetching data ${snapshot.error}"));
 
-                        }else{
-                          return const Center(child: CircularProgressIndicator());
+                          }else{
+                            return const Center(child: CircularProgressIndicator());
+                          }
                         }
-                      }
-                  ),
-                ));
+                    ),
+                  )
+                );
               }else if (snapshot.hasError) {
                 return Center(
                     child: titleText(

@@ -4,6 +4,7 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 
 import '../shared/components/components.dart';
+import '../shared/components/constants.dart';
 
 
 List<GymDialogs> dialogDataG = GymDialogs.dialogDataG();
@@ -45,7 +46,7 @@ class GymDialogs {
           "Cables"
         ]));
     data.add(GymDialogs(
-        title: ["Add your weight and height"], content: ["weight", "height"]));
+        title: ["Add your weight and height"], content: [addHeight.text, addWeight.text]));
     data.add(GymDialogs(title: ["Do you have any injuries ?"],
         content: [
           "Shoulder joint osteoarthritis",
@@ -67,7 +68,7 @@ class GymDialogs {
   }
 }
 
-int addTraining = 0;
+bool isExerciseTaken = true;
 List requirements = ["","","",[],[],[],[]];
 
 void buttonGoalSelected(int index, int subTitle){
@@ -90,7 +91,7 @@ void buttonGoalSelected(int index, int subTitle){
 
 final List<bool> selectedButtonExp = List.generate(3, (i) => false);
 bool eChosen = false;
-Widget openDialogExperience(BuildContext context) => StatefulBuilder(builder: (context, StateSetter setState)=> defaultDialog(
+Widget openDialogExperience(BuildContext context, gym) => StatefulBuilder(builder: (context, StateSetter setState)=> defaultDialog(
   context: context,
   title: subTitleText(text: dialogDataG[0].title[0],maxLines: 2),
   body: ListView.builder(
@@ -147,7 +148,7 @@ Widget openDialogExperience(BuildContext context) => StatefulBuilder(builder: (c
           context: context,
           barrierDismissible: false,
           builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-            return openDialogGoal(context);
+            return openDialogGoal(context, gym);
           }),
           animationType: DialogTransitionType.sizeFade,
           curve: Curves.fastOutSlowIn,
@@ -163,7 +164,7 @@ Widget openDialogExperience(BuildContext context) => StatefulBuilder(builder: (c
 ));
 final List<bool> selectedButtonG = List.generate(3, (i) => false);
 bool gChosen = false;
-Widget openDialogGoal(BuildContext context) => StatefulBuilder(builder: (context, StateSetter setState)=> defaultDialog(
+Widget openDialogGoal(BuildContext context, gym) => StatefulBuilder(builder: (context, StateSetter setState)=> defaultDialog(
     context: context,
     title: subTitleText(text: dialogDataG[1].title[0],maxLines: 2),
     body: ListView.builder(
@@ -197,7 +198,7 @@ Widget openDialogGoal(BuildContext context) => StatefulBuilder(builder: (context
         context: context,
         barrierDismissible: true,
         builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-          return openDialogExperience(context);
+          return openDialogExperience(context, gym);
         }),
         animationType: DialogTransitionType.sizeFade,
         curve: Curves.fastOutSlowIn,
@@ -236,7 +237,7 @@ Widget openDialogGoal(BuildContext context) => StatefulBuilder(builder: (context
             context: context,
             barrierDismissible: false,
             builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-              return openDialogDate(context);
+              return openDialogDate(context, gym);
             }),
             animationType: DialogTransitionType.sizeFade,
             curve: Curves.fastOutSlowIn,
@@ -247,7 +248,7 @@ Widget openDialogGoal(BuildContext context) => StatefulBuilder(builder: (context
     }
 ));
 List<String> selectedDays = [];
-Widget openDialogDate(BuildContext context) => defaultDialog(
+Widget openDialogDate(BuildContext context, gym) => defaultDialog(
   context: context,
   title: subTitleText(text: dialogDataG[2].title[0],maxLines: 2),
   body: Padding(
@@ -287,7 +288,7 @@ Widget openDialogDate(BuildContext context) => defaultDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-        return openDialogGoal(context);
+        return openDialogGoal(context, gym);
       }),
       animationType: DialogTransitionType.sizeFade,
       curve: Curves.fastOutSlowIn,
@@ -312,7 +313,7 @@ Widget openDialogDate(BuildContext context) => defaultDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-          return openDialogWorkoutTools(context);
+          return openDialogWorkoutTools(context, gym);
         }),
         animationType: DialogTransitionType.sizeFade,
         curve: Curves.fastOutSlowIn,
@@ -321,8 +322,9 @@ Widget openDialogDate(BuildContext context) => defaultDialog(
     }
   },
 );
+
 List<String> selectedTools = [];
-Widget openDialogWorkoutTools(BuildContext context) => defaultDialog(
+Widget openDialogWorkoutTools(BuildContext context, gym) => defaultDialog(
     context: context,
     title: subTitleText(text: dialogDataG[3].title[0],maxLines: 2),
     body: Column(
@@ -365,7 +367,7 @@ Widget openDialogWorkoutTools(BuildContext context) => defaultDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-          return openDialogDate(context);
+          return openDialogDate(context, gym);
         }),
         animationType: DialogTransitionType.sizeFade,
         curve: Curves.fastOutSlowIn,
@@ -390,7 +392,7 @@ Widget openDialogWorkoutTools(BuildContext context) => defaultDialog(
           context: context,
           barrierDismissible: false,
           builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-            return openDialogHW(context);
+            return openDialogHW(context, gym);
           }),
           animationType: DialogTransitionType.sizeFade,
           curve: Curves.fastOutSlowIn,
@@ -399,108 +401,40 @@ Widget openDialogWorkoutTools(BuildContext context) => defaultDialog(
       }
     }
 );
-double height = 180;
-double weight = 70;
-Widget openDialogHW(BuildContext context) => defaultDialog(
+
+TextEditingController addHeight = TextEditingController();
+TextEditingController addWeight = TextEditingController();
+Widget openDialogHW(BuildContext context, gym) => defaultDialog(
   context: context,
   title: subTitleText(text: dialogDataG[4].title[0],maxLines: 2),
   body: Column(
     children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Row(
-          children: [
-            Column(
-              children: [
-                Image.asset('images/man.png', height: 200, width: 150),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(
-                      '${weight.round()} ',
-                      style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white
-                      ),
-                    ),
-                    const Text(
-                      'Kg',
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const Spacer(),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        '${height.round()} ',
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white
-                        ),
-                      ),
-                      const Text(
-                        'cm',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                RotatedBox(
-                  quarterTurns: -1,
-                  child: SizedBox(
-                    width: 250,
-                    child: Slider(
-                      value: height,
-                      max: 210,
-                      min: 120,
-                      activeColor: Colors.lightGreen,
-                      inactiveColor: BackgroundColors.whiteBG,
-                      onChanged: (value){
-                        // setState(() {
-                        //   height = value;
-                        // });
-                      },
-
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ],
+      SizedBox(
+        width: width(context, .4),
+        child: defaultTextFormField(
+          controller: addHeight,
+          textInputType: TextInputType.number,
+          hint: "height",
+          textAlign: TextAlign.start,
+          border: const OutlineInputBorder(
+              borderSide: BorderSide(width: 1, color: BackgroundColors.whiteBG)),
+          focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(width: 1, color: BackgroundColors.whiteBG)),
         ),
       ),
-      Slider(
-        value: weight,
-        max: 200,
-        min: 40,
-        activeColor: BackgroundColors.selectedButton,
-        inactiveColor: BackgroundColors.whiteBG,
-        onChanged: (value){
-          // setState(() {
-          //   weight = value;
-          // });
-        },
+      const SizedBox(height: 10.0),
+      SizedBox(
+        width: width(context, .4),
+        child: defaultTextFormField(
+          controller: addWeight,
+          textInputType: TextInputType.number,
+          hint: "weight",
+          textAlign: TextAlign.start,
+          border: const OutlineInputBorder(
+              borderSide: BorderSide(width: 1, color: BackgroundColors.whiteBG)),
+          focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(width: 1, color: BackgroundColors.whiteBG)),
+        ),
       ),
     ],
   ),
@@ -514,7 +448,7 @@ Widget openDialogHW(BuildContext context) => defaultDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-        return openDialogWorkoutTools(context);
+        return openDialogWorkoutTools(context, gym);
       }),
       animationType: DialogTransitionType.sizeFade,
       curve: Curves.fastOutSlowIn,
@@ -522,13 +456,13 @@ Widget openDialogHW(BuildContext context) => defaultDialog(
     );        },
   nextDialog: () {
     requirements.removeAt(3);
-    requirements.insert(4, [height.round(), weight.round()]);
+    requirements.insert(4, [addHeight.text, addWeight.text]);
     Navigator.pop(context);
     showAnimatedDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-        return openDialogInjuries(context);
+        return openDialogInjuries(context, gym);
       }),
       animationType: DialogTransitionType.sizeFade,
       curve: Curves.fastOutSlowIn,
@@ -537,159 +471,55 @@ Widget openDialogHW(BuildContext context) => defaultDialog(
   },
 );
 List<String> selectedInjuries = [];
-Widget openDialogInjuries(BuildContext context) => defaultDialog(
+Widget openDialogInjuries(BuildContext context, gym) => defaultDialog(
     context: context,
     title: subTitleText(text: dialogDataG[5].title[0],maxLines: 2),
-    body: Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: MultiSelectContainer(
-          itemsPadding: const EdgeInsetsDirectional.all(10),
-          itemsDecoration: MultiSelectDecorations(
-            decoration: BoxDecoration(
-                color: BackgroundColors.extraButton,
-                borderRadius: BorderRadius.circular(50)
-            ),
-            selectedDecoration: BoxDecoration(
-                color: BackgroundColors.selectedButton,
-                borderRadius: BorderRadius.circular(50)
-            ),
-          ),
-          items: [
-            MultiSelectCard(value: dialogDataG[5].content[0], label: dialogDataG[5].content[0]),
-            MultiSelectCard(value: dialogDataG[5].content[1], label: dialogDataG[5].content[1]),
-            MultiSelectCard(value: dialogDataG[5].content[2], label: dialogDataG[5].content[2]),
-            MultiSelectCard(value: dialogDataG[5].content[3], label: dialogDataG[5].content[3]),
-            MultiSelectCard(value: dialogDataG[5].content[4], label: dialogDataG[5].content[4]),
-            MultiSelectCard(value: dialogDataG[5].content[5], label: dialogDataG[5].content[5]),
-            MultiSelectCard(value: dialogDataG[5].content[6], label: dialogDataG[5].content[6]),
-            MultiSelectCard(value: dialogDataG[5].content[7], label: dialogDataG[5].content[7]),
-            MultiSelectCard(value: dialogDataG[5].content[8], label: dialogDataG[5].content[8]),
-            MultiSelectCard(value: dialogDataG[5].content[9], label: dialogDataG[5].content[9]),
-            MultiSelectCard(value: dialogDataG[5].content[10], label: dialogDataG[5].content[10]),
-          ],
-          onChange: (allSelectedItems, selectedItem) {
-            selectedInjuries = allSelectedItems;
-          }
-      ),
-    ),
-    quickExit: false,
-    setBackIcon: true,
-    setNextIcon: true,
-    cancelButton: true,
-    prevDialog: () {
-      Navigator.of(context).pop();
-      showAnimatedDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-          return openDialogHW(context);
-        }),
-        animationType: DialogTransitionType.sizeFade,
-        curve: Curves.fastOutSlowIn,
-        duration: const Duration(seconds: 1),
-      );        },
-    nextDialog: () {
-      requirements.removeAt(5);
-      requirements.insert(5, selectedInjuries);
-      Navigator.pop(context);
-      showAnimatedDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-          return openDialogInBody(context);
-        }),
-        animationType: DialogTransitionType.sizeFade,
-        curve: Curves.fastOutSlowIn,
-        duration: const Duration(seconds: 1),
-      );
-    }
-);
-List<double> measureInbody = [0, 0, 0, 0];
-Widget openDialogInBody(BuildContext context) => StatefulBuilder(builder: (context, StateSetter setState)=> defaultDialog(
-    context: context,
-    title: subTitleText(text: dialogDataG[6].title[0],maxLines: 2),
     body: Column(
       children: [
-        Text(dialogDataG[6].subtitle![0], style: const TextStyle(color: TextColors.whiteText,fontSize: 18)),
-        ListView.builder(
-            shrinkWrap: true,
-            itemBuilder: (context, index) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 10,
-                      left: 15.0
-                  ),
-                  child: Text(
-                    dialogDataG[6].content[index],
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        '${measureInbody[index].round()}',
-                        style: const TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                        ),
-                      ),
-                      const Spacer(),
-                      const Icon(Icons.percent)
-                    ],
-                  ),
-                ),
-                Slider(
-                  value: measureInbody[index],
-                  max: 30,
-                  min: 0,
-                  activeColor: BackgroundColors.button,
-                  inactiveColor: Colors.white,
-                  onChanged: (value){
-                    setState(() {
-                      measureInbody[index] = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-            itemCount: dialogDataG[6].content.length),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: DefaultButton(
+          padding: const EdgeInsets.all(20.0),
+          child: MultiSelectContainer(
+              itemsPadding: const EdgeInsetsDirectional.all(10),
+              itemsDecoration: MultiSelectDecorations(
+                decoration: BoxDecoration(
+                    color: BackgroundColors.button,
+                    borderRadius: BorderRadius.circular(50)
+                ),
+                selectedDecoration: BoxDecoration(
+                    color: BackgroundColors.selectedButton,
+                    borderRadius: BorderRadius.circular(50)
+                ),
+              ),
+              items: [
+                MultiSelectCard(value: dialogDataG[5].content[0], label: dialogDataG[5].content[0]),
+                MultiSelectCard(value: dialogDataG[5].content[1], label: dialogDataG[5].content[1]),
+                MultiSelectCard(value: dialogDataG[5].content[2], label: dialogDataG[5].content[2]),
+                MultiSelectCard(value: dialogDataG[5].content[3], label: dialogDataG[5].content[3]),
+                MultiSelectCard(value: dialogDataG[5].content[4], label: dialogDataG[5].content[4]),
+                MultiSelectCard(value: dialogDataG[5].content[5], label: dialogDataG[5].content[5]),
+                MultiSelectCard(value: dialogDataG[5].content[6], label: dialogDataG[5].content[6]),
+                MultiSelectCard(value: dialogDataG[5].content[7], label: dialogDataG[5].content[7]),
+                MultiSelectCard(value: dialogDataG[5].content[8], label: dialogDataG[5].content[8]),
+                MultiSelectCard(value: dialogDataG[5].content[9], label: dialogDataG[5].content[9]),
+                MultiSelectCard(value: dialogDataG[5].content[10], label: dialogDataG[5].content[10]),
+              ],
+              onChange: (allSelectedItems, selectedItem) {
+                selectedInjuries = allSelectedItems;
+              }
+          ),
+        ),
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: DefaultButton(
               function: (){
-                for(int i=0; i<measureInbody.length; i++){
-                  if(measureInbody[i] == 0){
-                    var snackBar = SnackBar(
-                      content: Text(
-                        "Inbody ${dialogDataG[6].content[i]} must not have 0",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                  else{
-                    requirements.removeAt(6);
-                    requirements.insert(6, measureInbody);
-                  }
-                }
-                setState((){
-                  addTraining ++;
+                  isExerciseTaken = true;
+                  gym.requirements(isExerciseTaken);
                   Navigator.pop(context);
-                  // widget.gymRequirement = true;
-                  print('$addTraining dialogs');
-                });
+                  print('$isExerciseTaken dialogs');
               },
               borderRadius: 30,
               text: "save",
-          )
+            )
         )
       ],
     ),
@@ -703,11 +533,10 @@ Widget openDialogInBody(BuildContext context) => StatefulBuilder(builder: (conte
         context: context,
         barrierDismissible: false,
         builder: (context) => StatefulBuilder(builder: (context, StateSetter setState){
-          return openDialogInjuries(context);
+          return openDialogHW(context, gym);
         }),
         animationType: DialogTransitionType.sizeFade,
         curve: Curves.fastOutSlowIn,
         duration: const Duration(seconds: 1),
-      );
-    }
-));
+      );        },
+);

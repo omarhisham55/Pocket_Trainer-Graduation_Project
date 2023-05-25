@@ -29,7 +29,7 @@ class ChangeSearchState extends MainStateManager{
 
 class DeleteButtonState extends MainStateManager{}
 
-class DietRequirements extends MainStateManager{}
+class Requirements extends MainStateManager{}
 
 class DropDownState extends MainStateManager{
   String selectedValue;
@@ -44,6 +44,8 @@ class PieChartState extends MainStateManager{
 class HandleSlidingPanelState extends MainStateManager{}
 
 class RemoveMealState extends MainStateManager{}
+
+class RemoveExerciseState extends MainStateManager{}
 
 class AddMealState extends MainStateManager{}
 
