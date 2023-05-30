@@ -51,6 +51,11 @@ class AddMealState extends MainStateManager{}
 
 class AddExerciseState extends MainStateManager{}
 
+class GetExerciseDataToPanel extends MainStateManager{}
+
 class FilterState extends MainStateManager{}
+
+class ChangeDateState extends MainStateManager{}
+
 
 

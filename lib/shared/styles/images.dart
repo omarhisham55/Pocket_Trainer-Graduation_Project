@@ -6,6 +6,7 @@ class MainImages{
   static const logo2 = "images/logo2.png";
   static const faceBody = "images/frontBody.png";
   static const backBody = "images/backBody.png";
+  static const restDay = "images/restDay.png";
 }
 class GymImages{
   static const emptyGym = "images/workout/gym.png";

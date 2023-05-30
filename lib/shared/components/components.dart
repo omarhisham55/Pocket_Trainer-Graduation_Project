@@ -1,4 +1,5 @@
 import 'package:calender_picker/date_picker_widget.dart';
+import 'package:final_packet_trainer/data/gym_dialog_data.dart';
 import 'package:flutter/material.dart';
 import 'package:circle_button/circle_button.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -186,13 +187,13 @@ Widget defaultDropDownMenu({
         onChanged: function);
 
 Widget defaultInkWell({
+  required final BuildContext context,
   required final String image,
   required final String title,
-  required final Widget subtitle,
+  required final List<Widget> subtitle,
   required final Widget child,
   required final Function() function,
   Function()? removeFunction,
-  double? width,
   Color? iconColor,
   bool? recommended = false,
   bool? remove = false,
@@ -230,7 +231,12 @@ Widget defaultInkWell({
                                 maxLines: 1),
                           ),
                           const SizedBox(height: 10),
-                          subtitle,
+                          SizedBox(
+                            width: width(context, .63),
+                            child: Wrap(
+                              children: subtitle,
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           child
                         ],
@@ -303,8 +309,11 @@ Widget defaultDialog({
                   //title
                   Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 20.0, horizontal: 10.0),
-                      child: title),
+                          vertical: 20.0),
+                      child: SizedBox(
+                        width: (setBackIcon) ? width(context, .66) : width(context, .78),
+                        child: title,
+                      )),
                 ],
               ),
               //content required
@@ -341,6 +350,9 @@ Widget defaultDialog({
             visible: (cancelButton) ? true : false,
             child: DefaultButton(
               function: () {
+                requirements = ["", "", "", [], [], []];
+                selectedButtonExp.fillRange(0, selectedButtonExp.length, false);
+                selectedButtonG.fillRange(0, selectedButtonG.length, false);
                 Navigator.pop(context);
               },
               backgroundColor: Colors.red,
@@ -529,8 +541,8 @@ void toastWarning({
   required BuildContext context,
   required String text
 }) => MotionToast.warning(
-    title: paragraphText(text: "Warning!"),
-    description: paragraphText(text: text),
+    title: paragraphText(text: "Warning!", color: TextColors.blackText),
+    description: paragraphText(text: text, color: TextColors.blackText),
     animationCurve: Curves.bounceIn,
     borderRadius: 0,
     animationDuration: const Duration(milliseconds: 1000),

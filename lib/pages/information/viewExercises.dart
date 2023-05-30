@@ -73,7 +73,7 @@ class InformationDetails extends StatelessWidget {
                         if (snapshot.hasData) {
                           return (snapshot.data!.isEmpty)
                               ? Center(
-                            child: titleText(text: "No meals found"),
+                            child: titleText(text: "No exercises found"),
                           )
                               : AlignedGridView.count(
                               itemCount: searchList.length, //$exercise number

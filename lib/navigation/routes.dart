@@ -1,6 +1,7 @@
 
 
 
+import 'package:final_packet_trainer/main.dart';
 import 'package:flutter/material.dart';
 
 import '../login_signup/login_signup.dart';
@@ -8,7 +9,8 @@ import 'navigation.dart';
 
 Map<String, WidgetBuilder> routes = {
   "/": (_) => const Navigation(),
-  "/login": (_) => Login(),
+  "/login": (_) => const Login(),
+  "/splash": (_) => const SplashScreen(),
   // "/notification": (_) => const Notifications(),
   // "/PremiumPlans": (_) => const PremiumPlans(),
   // "/PaymentMethod": (_) => const PaymentMethod(),

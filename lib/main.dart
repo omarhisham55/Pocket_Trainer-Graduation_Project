@@ -2,8 +2,12 @@ import 'package:bloc/bloc.dart';
 import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/data/nutritionData.dart';
 import 'package:final_packet_trainer/data/userData.dart';
+import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/network/networkConnectionCheck.dart';
+import 'package:final_packet_trainer/shared/styles/colors.dart';
+import 'package:final_packet_trainer/shared/styles/images.dart';
 import 'package:flutter/material.dart';
+import 'login_signup/login_signup.dart';
 import 'navigation/routes.dart';
 import 'shared/blocObserver.dart';
 
@@ -47,8 +51,35 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: "/login",
+      initialRoute: "/splash",
       routes: routes,
+    );
+  }
+}
+
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      logoNavigator(context, const Login());
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: BackgroundColors.background,
+      body: Center(
+        child: Image.asset(MainImages.logo),
+      ),
     );
   }
 }

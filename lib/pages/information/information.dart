@@ -36,7 +36,7 @@ class Information extends StatelessWidget {
                         itemBuilder: (_, i) => DefaultButton(
                           function: (){
                             print(type);
-                            pageNavigator(context, InformationDetails(exerciseType: snapshot.data![i]));
+                            pageNavigator(context, InformationDetails(exerciseType: type[i]));
                           },
                           text: snapshot.data![i], //$exercise name
                           height: height(context, 0.13),

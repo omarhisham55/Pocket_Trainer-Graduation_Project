@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../data/exerciseData.dart';
-import '../../navigation/navigation.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/colors.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
@@ -26,13 +25,11 @@ class ExistExercise extends StatelessWidget {
       create: (_) => CubitManager(),
       child: BlocConsumer<CubitManager, MainStateManager>(
         listener: (_, s) {
+          if(s is AddExerciseState){
+            Navigator.popUntil(context, (route) => route.isFirst);
+          }
           if (s is ChangeSearchState) {
               searchList = s.filteredList;
-            // if(s.filteredList.isNotEmpty){
-            // }else{
-            //
-            // }
-            print(searchList);
           }else{
             getDataMapValues(allValues: true, key: "").then((value) {
               searchList = value;
@@ -46,7 +43,6 @@ class ExistExercise extends StatelessWidget {
           return FutureBuilder(
             future: getDataMapValues(allValues: true, key: gym.exerciseType),
             builder: (_, snapshot){
-              print("objectdata ${snapshot.data!.length}");
               var gymData = (gym.isSearchOpened) ? searchList : snapshot.data!;
               if(snapshot.hasData){
                 return Scaffold(
@@ -139,7 +135,7 @@ class ExistExercise extends StatelessWidget {
                                     addCardButton: true,
                                     addFunction: () {
                                       print(gymData[i].exerciseId);
-                                      gym.addExerciseName(gymData[i].exerciseId, gymData[i].exerciseName, gymData[i].exerciseType);
+                                      gym.addExerciseName(gymData[i].exerciseId, gymData[i].exerciseName, type: gymData[i].exerciseType);
                                       (panelController.isPanelClosed)
                                           ? panelController.open()
                                           : panelController.close();
@@ -171,7 +167,7 @@ class ExistExercise extends StatelessWidget {
                                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                                       color: BackgroundColors.whiteBG,
                                       child: defaultDropDownMenu(
-                                          content: dropDownTitles,
+                                          content: ["Warm up", "Exercise", "Stretches"],
                                           hintValue: suggestion,
                                           hintColor: TextColors.blackText,
                                           function: (value) {
@@ -206,7 +202,18 @@ class ExistExercise extends StatelessWidget {
                                     // ),
                                     DefaultButton(
                                         function: () {
-                                          gym.addWorkouts(exerciseId: gym.exercisePanelId);
+                                          gym.addWorkouts(exerciseId: gym.exercisePanelId).then((value) {
+                                              toastWarning(context: context, text: "this exercise already added in your workoutPlan");
+                                            print ("value$value");
+                                            if(value == "this exercise already added in your workoutPlan"){
+                                              print ("value1$value");
+                                            }else{
+                                              print ("value2$value");
+                                              toastSuccess(context: context, text: "Exercise added to Workout Plan");
+                                            }
+                                          }).catchError((e){
+                                            toastError(context: context, text: e);
+                                          });
                                         },
                                         borderRadius: 20,
                                         text: "Add")

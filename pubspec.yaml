@@ -54,7 +54,8 @@ dependencies:
   bloc: ^8.1.1
   flutter_bloc: ^8.1.2
   motion_toast: ^2.6.7
-
+  puppeteer: ^3.0.0
+  stacked_bar_chart: ^1.1.0+2
 dev_dependencies:
   flutter_test:
     sdk: flutter

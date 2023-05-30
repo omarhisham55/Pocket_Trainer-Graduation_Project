@@ -195,12 +195,12 @@ class Login extends StatelessWidget {
                     ),
                     const SizedBox(height: 60),
                     defaultTextFormField(
-                        controller: signUpLoginChangeable.userController,
+                        controller: signUpLoginChangeable.emailController,
                         isPassword: false,
-                        hint: "Username",
+                        hint: "Email",
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Enter Valid Username";
+                            return "Enter Valid Email";
                           }
                           return null;
                         }
@@ -231,7 +231,7 @@ class Login extends StatelessWidget {
                         DefaultButton(
                           function: () {
                             if (signUpLoginChangeable.loginKey.currentState!.validate()) {
-                              User.login(username: signUpLoginChangeable.userController.text, password: signUpLoginChangeable.passController.text, context: context).then((value){
+                              User.login(username: signUpLoginChangeable.emailController.text, password: signUpLoginChangeable.passController.text, context: context).then((value){
                                 User.getProfile().then((value) {
                                   homeNavigator(context, const Navigation());
                                   toastSuccess(context: context, text: "Login successful welcome ${User.currentUser!.name}");

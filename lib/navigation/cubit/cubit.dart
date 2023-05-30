@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:final_packet_trainer/data/gym_dialog_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/data/nutritionData.dart';
@@ -249,7 +250,6 @@ class CubitManager extends Cubit<MainStateManager> {
   }
   void deleteButton({staticBool}){
     deleteButtonFood = staticBool ?? !deleteButtonFood;
-    print('ppp $deleteButtonFood');
     emit(DeleteButtonState());
   }
   void dropDownSelect(value, selectedValue){
@@ -288,7 +288,7 @@ class CubitManager extends Cubit<MainStateManager> {
         Uri.parse('http://$ipConnectionAddress:3000/add-meal-to-nutritionPlan/$mealId'),
         headers: {"Authorization": "Bearer ${User.token}"},
         body: jsonEncode({
-          "mealId": mealId
+          "mealId": [mealId]
         })
     );
     if (response.statusCode == 200) {
@@ -303,16 +303,16 @@ class CubitManager extends Cubit<MainStateManager> {
   void addMeal(context, selectedValue){
       if(selectedMeals.isNotEmpty){
         print(selectedMeals);
-        for(int i=0; i<selectedMeals.length; i++){
-          addMeals(mealId: selectedMeals[i].id).then((value) => toastSuccess(context: context, text: "Meals added to $selectedValue", duration: 3));
-          addMealController.close();
-        }
+        final futures = selectedMeals.map((meal) => addMeals(mealId: meal.id));
+        Future.wait(futures).then((values) => toastSuccess(context: context, text: "Meals added to $selectedValue", duration: 3)).catchError((e){print("lolo ${e.runtimeType}");});
+        addMealController.close();
         emit(AddMealState());
       }else{
         showSnackBar(context: context, text: "select meals");
         print("select meals");
       }
   }
+
   //delete meal from database
   Future<void> deleteMeals({required String mealId}) async {
     final response = await http.post(
@@ -337,15 +337,6 @@ class CubitManager extends Cubit<MainStateManager> {
 
   //Gym
   final exercisePanelController = PanelController();
-  String exercisePanelName = "";
-  String exercisePanelType = "";
-  var exercisePanelId;
-  void addExerciseName(id, name, type){
-    exercisePanelId = id;
-    exercisePanelName = name;
-    exercisePanelType = type;
-    emit(AddExerciseState());
-  }
 
   String exerciseType = "";
   List<QudsPopupMenuBase> getSearchFilterItems(searchList) {
@@ -386,7 +377,22 @@ class CubitManager extends Cubit<MainStateManager> {
   // }
 
   //add meal to database
-  Future<void> addWorkouts({required String exerciseId}) async {
+  String exercisePanelName = "";
+  String exercisePanelType = "";
+  String exercisePanelId = "";
+  String exercisePanelImage = "";
+  String exercisePanelSets = "";
+  String exercisePanelReps = "";
+  void addExerciseName(id, name, {String? type, String? image, int? sets, int? reps}){
+    exercisePanelId = id;
+    exercisePanelName = name;
+    exercisePanelType = type.toString();
+    exercisePanelImage = image.toString();
+    exercisePanelSets = sets.toString();
+    exercisePanelReps = reps.toString();
+    emit(GetExerciseDataToPanel());
+  }
+  Future<String> addWorkouts({required String exerciseId}) async {
     final response = await http.post(
         Uri.parse('http://$ipConnectionAddress:3000/add-exercise-to-wourkoutplan/$exerciseId'),
         headers: {"Authorization": "Bearer ${User.token}"},
@@ -395,12 +401,11 @@ class CubitManager extends Cubit<MainStateManager> {
         })
     );
     if (response.statusCode == 200) {
-      print('Exercise added to Workout Plan ${response.body}');
-      print('Exercise added to Workout Plan ${response.statusCode}');
+      emit(AddExerciseState());
+      return response.body;
     } else {
       throw Exception('Failed to add exercise to Workout Plan ${response.statusCode}');
     }
-    emit(AddExerciseState());
   }
   //delete meal from database
   Future<void> deleteWorkouts({required String exerciseId}) async {
@@ -418,5 +423,16 @@ class CubitManager extends Cubit<MainStateManager> {
       throw Exception('Failed to delete exercise from Workout Plan ${response.statusCode}');
     }
     emit(RemoveExerciseState());
+  }
+
+  //date
+  DateTime selectedDate = DateTime.now();
+  void onSelectedDate(date){
+    selectedDate = date;
+    emit(ChangeDateState());
+  }
+  String weekdayOfIndex = "";
+  void getWeekday(index){
+    weekdayOfIndex = daysOfTraining[index];
   }
 }

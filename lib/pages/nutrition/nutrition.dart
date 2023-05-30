@@ -1,3 +1,4 @@
+import 'package:final_packet_trainer/data/gym_dialog_data.dart';
 import 'package:final_packet_trainer/data/nutritionData.dart';
 import 'package:flutter/material.dart';
 import '../../data/nutrition_dialog_data.dart';
@@ -27,6 +28,7 @@ class Nutrition extends StatelessWidget {
         listener: (_, s){},
         builder: (_, s){
           CubitManager nutrition = CubitManager.get(_);
+          CubitManager gym = CubitManager.get(_);
           return Scaffold(
               appBar: (isDietTaken == false) ? notificationAppBar(context, "Nutrition") : null,
               backgroundColor: BackgroundColors.background,
@@ -48,37 +50,44 @@ class Nutrition extends StatelessWidget {
                       const Spacer(),
                       DefaultButton(
                           function: () {
-                            showAnimatedDialog(
+                            (isExerciseTaken) ?  showAnimatedDialog(
                               context: context,
                               barrierDismissible: true,
                               builder: (context) => StatefulBuilder(builder: (context, StateSetter setState)=> openDialogAllergy(context, nutrition)),
                               animationType: DialogTransitionType.sizeFade,
                               curve: Curves.fastOutSlowIn,
                               duration: const Duration(seconds: 1),
+                            ) : showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  backgroundColor: BackgroundColors.dialogBG,
+                                  title: subTitleText(text: "Make Program First"),
+                                  actions: [
+                                    Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(bottom: 10.0),
+                                        child: DefaultButton(
+                                          function: (){
+                                            Navigator.pop(context);
+                                            nutrition.currentIndex = 1;
+                                            showAnimatedDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (context) => StatefulBuilder(builder: (context, StateSetter setState)=> openDialogExperience(context, gym)),
+                                              animationType: DialogTransitionType.sizeFade,
+                                              curve: Curves.fastOutSlowIn,
+                                              duration: const Duration(seconds: 1),
+                                            );
+                                          },
+                                          text: "Go",
+                                        ),
+                                      )
+                                    ),
+                                  ],
+                                );
+                              },
                             );
-                            // (widget.isGymReqsTaken!) ? openDialogAllergy(context) : showDialog(
-                            //   context: context,
-                            //   builder: (context) {
-                            //     return AlertDialog(
-                            //       backgroundColor: MyColors.dialogBG,
-                            //       title: const SubtitleText(text: "Make Program First"),
-                            //       actions: [
-                            //         Center(
-                            //           child: Padding(
-                            //             padding: const EdgeInsets.only(bottom: 10.0),
-                            //             child: DefaultButton(
-                            //               function: (){
-                            //                 Navigator.pop(context);
-                            //                 openDialogExperience(context);
-                            //               },
-                            //               child: const SubtitleText(text: "Go"),
-                            //             ),
-                            //           )
-                            //         ),
-                            //       ],
-                            //     );
-                            //   },
-                            // );
                           },
                           text: "Create")
                     ],

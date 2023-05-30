@@ -248,6 +248,7 @@ class NutritionHome extends StatelessWidget {
                       child: Padding(
                           padding: const EdgeInsets.only(bottom: 250.0, top: 10.0, right: 10.0, left: 10.0),
                           child: ListView(
+                            physics: const BouncingScrollPhysics(),
                             children: [
                               FutureBuilder(
                                   future: getBreakfastNutritionPlan(),
@@ -279,6 +280,7 @@ class NutritionHome extends StatelessWidget {
                                                       shrinkWrap: true,
                                                       itemBuilder: (_, i) {
                                                         return defaultInkWell(
+                                                          context: context,
                                                             remove: nutrition.deleteButtonFood,
                                                             removeFunction: (){
                                                               nutrition.deleteMeals(mealId: breakfast[i]['mealId']).then((value) {
@@ -287,22 +289,19 @@ class NutritionHome extends StatelessWidget {
                                                             },
                                                             image: breakfast[i]['imageUrl'] ?? "not found",
                                                             title: breakfast[i]['name'] ?? "not found",
-                                                            subtitle: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                paragraphText(
-                                                                    text:
-                                                                    "Protein: ${breakfast[i]['protein'] ?? "not found"}"),
-                                                                const SizedBox(width: 10.0),
-                                                                paragraphText(
-                                                                    text:
-                                                                    "Carbs ${breakfast[i]['carbs'] ?? "not found"}"),
-                                                                const SizedBox(width: 10.0),
-                                                                paragraphText(
-                                                                    text:
-                                                                    "Fats ${breakfast[i]['fats'] ?? "not found"}"),
-                                                              ],
-                                                            ),
+                                                            subtitle: [
+                                                                  paragraphText(
+                                                                      text:
+                                                                      "Protein: ${breakfast[i]['protein'] ?? "not found"}"),
+                                                                  const SizedBox(width: 10.0),
+                                                                  paragraphText(
+                                                                      text:
+                                                                      "Carbs ${breakfast[i]['carbs'] ?? "not found"}"),
+                                                                  const SizedBox(width: 10.0),
+                                                                  paragraphText(
+                                                                      text:
+                                                                      "Fats ${breakfast[i]['fats'] ?? "not found"}"),
+                                                                ],
                                                             child: Row(
                                                               children: [
                                                                 CircleAvatar(
@@ -386,6 +385,7 @@ class NutritionHome extends StatelessWidget {
                                                       shrinkWrap: true,
                                                       itemBuilder: (_, i) {
                                                         return defaultInkWell(
+                                                          context: context,
                                                             remove: nutrition.deleteButtonFood,
                                                             removeFunction: (){
                                                               nutrition.deleteMeals(mealId: lunch[i]['mealId']).then((value) {
@@ -394,9 +394,7 @@ class NutritionHome extends StatelessWidget {
                                                             },
                                                             image: lunch[i]['imageUrl'] ?? "not found",
                                                             title: lunch[i]['name'] ?? "not found",
-                                                            subtitle: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
+                                                            subtitle: [
                                                                 paragraphText(
                                                                     text:
                                                                     "Protein: ${lunch[i]['protein'] ?? "not found"}"),
@@ -409,7 +407,6 @@ class NutritionHome extends StatelessWidget {
                                                                     text:
                                                                     "Fats ${lunch[i]['fats'] ?? "not found"}"),
                                                               ],
-                                                            ),
                                                             child: Row(
                                                               children: [
                                                                 CircleAvatar(
@@ -492,6 +489,7 @@ class NutritionHome extends StatelessWidget {
                                                       shrinkWrap: true,
                                                       itemBuilder: (_, i) {
                                                         return defaultInkWell(
+                                                          context: context,
                                                             remove: nutrition.deleteButtonFood,
                                                             removeFunction: (){
                                                               nutrition.deleteMeals(mealId: dinner[i]['mealId']).then((value) {
@@ -500,9 +498,7 @@ class NutritionHome extends StatelessWidget {
                                                             },
                                                             image: dinner[i]['imageUrl'] ?? "not found",
                                                             title: dinner[i]['name'] ?? "not found",
-                                                            subtitle: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
+                                                            subtitle: [
                                                                 paragraphText(
                                                                     text:
                                                                     "Protein: ${dinner[i]['protein'] ?? "not found"}"),
@@ -515,7 +511,6 @@ class NutritionHome extends StatelessWidget {
                                                                     text:
                                                                     "Fats ${dinner[i]['fats'] ?? "not found"}"),
                                                               ],
-                                                            ),
                                                             child: Row(
                                                               children: [
                                                                 CircleAvatar(

@@ -1,18 +1,19 @@
-// import 'package:flutter_qjs/flutter_qjs.dart';
+import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:http/http.dart' as http;
-// Future<void> startDetection() async {
-//   final qjs = Qjs();
-//   final result = await qjs.evalFile('python_scripts/myscript.py');
-//   print('Python script execution result: $result');
-//   await qjs.release();
-// }
+import 'dart:convert';
 
-void startDetection() async{
-  final response = await http.get(Uri.parse('http://your-server-url/execute-python-script'));
-  if (response.statusCode == 200) {
-    // Python script executed successfully
-    print(response.body);
-  } else {
-    print('Error executing Python script: ${response.statusCode}');
+class PoseDetectionModel {
+  Future<void> model() async {
+    final url = Uri.parse('http://$ipConnectionAddress:5000/video_frame');
+    final headers = {'Content-Type': 'application/json'};
+    // final data = {'scriptData': 'Data to be sent to the server'};
+
+    final response = await http.post(url, headers: headers);
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      print('Result from the Python script: $result');
+    } else {
+      print('Failed to execute the Python script.');
+    }
   }
 }

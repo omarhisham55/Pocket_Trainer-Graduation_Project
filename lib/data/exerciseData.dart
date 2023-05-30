@@ -17,36 +17,45 @@ class Exercise {
   String exerciseId;
   String exerciseName;
   String exerciseType;
-  String exerciseTarget;
+  String exerciseBodyPart;
+  String exerciseLevel;
+  String exerciseEquipment;
+  // String exerciseTarget;
   String exerciseDescription;
-  String exerciseTips;
-  String exerciseRepetition;
-  String exerciseSets;
-  String exerciseImage;
+  // String exerciseTips;
+  // String exerciseRepetition;
+  // String exerciseSets;
+  // String exerciseImage;
 
   Exercise({
     required this.exerciseId,
     required this.exerciseName,
     required this.exerciseType,
-    required this.exerciseTarget,
+    required this.exerciseBodyPart,
+    required this.exerciseEquipment,
+    required this.exerciseLevel,
+    // required this.exerciseTarget,
     required this.exerciseDescription,
-    required this.exerciseTips,
-    required this.exerciseRepetition,
-    required this.exerciseSets,
-    required this.exerciseImage,
+    // required this.exerciseTips,
+    // required this.exerciseRepetition,
+    // required this.exerciseSets,
+    // required this.exerciseImage,
   });
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
     return Exercise(
       exerciseId: json["_id"] ?? "",
-      exerciseName: json["name"] ?? "",
-      exerciseType: json["bodyPart"] ?? "",
-      exerciseTarget: json["target"],
-      exerciseDescription: json["description"] ?? "",
-      exerciseTips: json["tips"] ?? "",
-      exerciseRepetition: json["repetition"] ?? "",
-      exerciseSets: json["sets"] ?? "",
-      exerciseImage: json["imageUrl"] ?? "",
+      exerciseName: json["Title"] ?? "",
+      exerciseBodyPart: json["bodyPart"] ?? "",
+      exerciseType: json["Type"] ?? "",
+      // exerciseTarget: json["target"],
+      exerciseDescription: json["Desc"] ?? "",
+      exerciseLevel: json["Level"] ?? "",
+      exerciseEquipment: json["Equipment"] ?? "",
+      // exerciseTips: json["tips"] ?? "",
+      // exerciseRepetition: json["repetition"] ?? "",
+      // exerciseSets: json["sets"] ?? "",
+      // exerciseImage: json["imageUrl"] ?? "",
     );
   }
 }
@@ -126,7 +135,9 @@ Future<List> getLegExercises() async {
       .get(Uri.parse('http://$ipConnectionAddress:3000/leg/exercises'));
   if (legExercises.statusCode == 200) {
     var data = json.decode(legExercises.body);
+    print(legExercises.statusCode);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
+    print(dataList.length);
     return dataList;
   } else {
     throw Exception('Failed to load data');
@@ -332,10 +343,7 @@ Future<List> getWorkoutPlan() async {
       headers: {"Authorization": "Bearer ${User.token}"}
   );
   if(workout.statusCode == 200){
-    print(workout.statusCode);
     var data = json.decode(workout.body);
-    print('dato $data');
-    print('dato ${data.length}');
     return data;
   } else{
     throw Exception("Failed to load data ${workout.statusCode}");
