@@ -20,7 +20,7 @@ import '../../shared/components/components.dart';
 import '../../shared/styles/images.dart';
 import '../gym/gym.dart';
 import '../nutrition/diet_recommended_plan.dart';
-
+import 'package:http/http.dart' as http;
 class GymHome extends StatelessWidget {
   GymHome({Key? key}) : super(key: key);
   String selectedExerciseType = "select meal time";
@@ -88,10 +88,13 @@ class GymHome extends StatelessWidget {
                             final isSelected = date.day == gym.selectedDate.day &&
                                 date.month == gym.selectedDate.month &&
                                 date.year == gym.selectedDate.year;
-                            final String week = allWeekdays[index].toString();
-
+                            final String week = allWeekdays[date.weekday-1].toString();
+                            print(week);
+                            print(date.weekday);
                             return GestureDetector(
-                              onTap: () {gym.onSelectedDate(date);},
+                              onTap: () {
+                                print("molasa ${DateTime.now().weekday}");
+                                gym.onSelectedDate(date);},
                               child: Container(
                                 padding: const EdgeInsets.all(10.0),
                                 decoration: BoxDecoration(
@@ -192,7 +195,7 @@ class GymHome extends StatelessWidget {
                             date.year == gym.selectedDate.year) {
                           // Display the list for the selected date
                           gym.getWeekday(index);
-                          return (daysOfTraining[index] == "Off Day") ? Column(
+                          return (daysOfTraining[index] == "RestDay") ? Column(
                               children: [
                                 Image.asset(MainImages.restDay),
                                 titleText(text: "Day Off")
@@ -203,13 +206,15 @@ class GymHome extends StatelessWidget {
                             child: Padding(
                                 padding: const EdgeInsets.only(bottom: 250.0, top: 10.0, right: 10.0, left: 10.0),
                                 child: ListView(
+                                  shrinkWrap: true,
                                   physics: const BouncingScrollPhysics(),
                                   children: [
                                     FutureBuilder(
                                         future: getWorkoutPlan(),
                                         builder: (_, snapshot){
                                           if(snapshot.hasData){
-                                            List workout = snapshot.data!;
+                                             Map<String, dynamic> allWorkout = snapshot.data!;
+                                            List workout = snapshot.data!['ArmDay'];
                                             return Visibility(
                                                 visible: (workout.isEmpty) ? false : true,
                                                 child:  Column(
@@ -238,18 +243,31 @@ class GymHome extends StatelessWidget {
                                                                 context: context,
                                                                   remove: gym.deleteButtonFood,
                                                                   removeFunction: (){
-                                                                    gym.deleteWorkouts(exerciseId: workout[i]['exerciseId']).then((value) {
-                                                                      toastSuccess(context: context, text: "${workout[i]['name']} has been deleted");
-                                                                    });
+                                                                    try {
+                                                                      print("backDay ${workout.length}");
+                                                                      gym.deleteWorkouts(exerciseId: workout[i]['exerciseId']).then((value) {
+                                                                        toastSuccess(
+                                                                          context: context,
+                                                                          text: "${workout[i]['name']} has been deleted",
+                                                                        );
+                                                                        print("backDay ${workout.length}");
+                                                                      });
+                                                                    } catch (error) {
+                                                                      throw error;
+                                                                    }
+                                                                    // gym.deleteWorkouts(exerciseId: workout[i]['exerciseId']).then((value) {
+                                                                    //   toastSuccess(context: context, text: "${workout[i]['name']} has been deleted");
+                                                                    // });
+                                                                    // print('zaza ${workout[i]['exerciseId']}');
                                                                   },
-                                                                  image: workout[i]['imageUrl'] ?? "not found",
-                                                                  title: workout[i]['name'] ?? "not found",
-                                                                  subtitle: [subTitleText(text: workout[i]["bodyPart"])],
+                                                                  image: "workout[i]['imageUrl'] ?? not found",
+                                                                  title: workout[i]['Title'] ?? "not found",
+                                                                  subtitle: [subTitleText(text: workout[i]["BodyPart"])],
                                                                   child: Row(
                                                                     children: [
-                                                                      paragraphText(text: "Sets: ${workout[i]['sets'] ?? "not found"}"),
+                                                                      paragraphText(text: "Sets: "),
                                                                       const SizedBox(width: 15.0),
-                                                                      paragraphText(text: "Reps: ${workout[i]['repetition'] ?? "not found"}"),
+                                                                      paragraphText(text: "Reps: "),
                                                                     ],
                                                                   ),
                                                                   function: () {

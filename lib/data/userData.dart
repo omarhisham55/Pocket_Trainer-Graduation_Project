@@ -96,6 +96,7 @@ class User {
         workoutPlan: user["workoutPlan"] ?? {},
         nutritionPlan: user["NutritionPlan"] ?? {},
       );
+      print(user);
       return user;
     } else{
       throw Exception("Failed to load data");

@@ -515,8 +515,8 @@ void toastError({
   required String text
 }) =>
     MotionToast.error(
-      title: paragraphText(text: "Error!"),
-      description: paragraphText(text: text),
+      title: paragraphText(text: "Error!", color: TextColors.blackText),
+      description: paragraphText(text: text, color: TextColors.blackText),
       position: MotionToastPosition.top,
       barrierColor: Colors.black.withOpacity(0.3),
       width: 300,

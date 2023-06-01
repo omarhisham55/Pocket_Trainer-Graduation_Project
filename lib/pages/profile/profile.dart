@@ -1,6 +1,8 @@
 import 'package:final_packet_trainer/data/userData.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../data/gym_dialog_data.dart';
 import '../../login_signup/login_signup.dart';
 import 'package:final_packet_trainer/pages/profile/premiumPlans.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
@@ -129,7 +131,19 @@ class Profile extends StatelessWidget {
                             height: 100,
                             width: MediaQuery.of(context).size.width,
                             backgroundColor: Colors.transparent,
-                            function: () {},
+                            function: () {
+                              showAnimatedDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (context) =>
+                                    StatefulBuilder(
+                                        builder: (context, StateSetter setState) =>
+                                            openDialogExperience(context, user)),
+                                animationType: DialogTransitionType.sizeFade,
+                                curve: Curves.fastOutSlowIn,
+                                duration: const Duration(seconds: 1),
+                              );
+                            },
                             borderRadius: 30,
                             text: "Current Program",
                           ),
@@ -173,11 +187,8 @@ class Profile extends StatelessWidget {
                           width: MediaQuery.of(context).size.width,
                           backgroundColor: BackgroundColors.dialogBG,
                           function: () {
-                            User.logout(context: context).then((value) {
-                              // noNavNavigator(context, const Login());
-                            }).catchError((e) {
-                              throw e;
-                            });
+                            User.token = null.toString();
+                            pushReplacement(context, const Login());
                           },
                           text: "Logout",
                         )

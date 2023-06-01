@@ -38,6 +38,14 @@ class CubitManager extends Cubit<MainStateManager> {
   GlobalKey<FormState> loginKey = GlobalKey<FormState>();
   GlobalKey<FormState> signupKey = GlobalKey<FormState>();
   bool signup = false;
+  bool fromHome = false;
+  void changeBool(value) {
+    value = !value;
+    fromHome = value;
+    print("value = $value");
+    print("from home = $fromHome");
+    emit(ChangeBoolState());
+  }
 
   void isPasswordCheck() {
     isPassword = !isPassword;
@@ -287,9 +295,6 @@ class CubitManager extends Cubit<MainStateManager> {
     final response = await http.post(
         Uri.parse('http://$ipConnectionAddress:3000/add-meal-to-nutritionPlan/$mealId'),
         headers: {"Authorization": "Bearer ${User.token}"},
-        body: jsonEncode({
-          "mealId": [mealId]
-        })
     );
     if (response.statusCode == 200) {
       print('Meal added to Nutrition Plan ${response.body}');
@@ -317,10 +322,8 @@ class CubitManager extends Cubit<MainStateManager> {
   Future<void> deleteMeals({required String mealId}) async {
     final response = await http.post(
         Uri.parse('http://$ipConnectionAddress:3000/delete-meal-from-nutritionPlan/$mealId'),
-        headers: {"Authorization": "Bearer ${User.token}"},
-        body: jsonEncode({
-          "mealId": mealId
-        })
+        headers: {"Authorization": "Bearer ${User.token}",
+          "Content-Type": "application/json"},
     );
     if (response.statusCode == 200) {
       print('Meal deleted from Nutrition Plan ${response.body}');
@@ -407,14 +410,33 @@ class CubitManager extends Cubit<MainStateManager> {
       throw Exception('Failed to add exercise to Workout Plan ${response.statusCode}');
     }
   }
-  //delete meal from database
+  //delete workout from database
+  // Future<void> deleteWorkouts({required String exerciseId}) async {
+  //   final response = await http.post(
+  //       Uri.parse('http://$ipConnectionAddress:3000/wourkoutplan-delete-back-exercise/$exerciseId'),
+  //       headers: {"Authorization": "Bearer ${User.token}"},
+  //   );
+  //   if (response.statusCode == 200) {
+  //     print('Exercise deleted from Workout Plan ${response.body}');
+  //     print('Exercise deleted from Workout Plan ${response.statusCode}');
+  //   } else {
+  //     throw Exception('Failed to delete exercise from Workout Plan ${response.statusCode}');
+  //   }
+  //   emit(RemoveExerciseState());
+  //
+  // }
   Future<void> deleteWorkouts({required String exerciseId}) async {
-    final response = await http.post(
-        Uri.parse('http://$ipConnectionAddress:3000/wourkoutplan-delete-exercise/$exerciseId'),
-        headers: {"Authorization": "Bearer ${User.token}"},
-        body: jsonEncode({
-          "mealId": exerciseId
-        })
+    print(exerciseId);
+    print(User.token);
+    final response = await http.delete(
+        Uri.parse('http://$ipConnectionAddress:3000/wourkoutplan-delete-arm-exercise'),
+        headers: {"Authorization": "Bearer ${User.token}",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "http://$ipConnectionAddress:3000/*"
+        },
+      body: jsonEncode(<String, String>{
+        'exerciseId': exerciseId,
+      }),
     );
     if (response.statusCode == 200) {
       print('Exercise deleted from Workout Plan ${response.body}');
@@ -423,6 +445,7 @@ class CubitManager extends Cubit<MainStateManager> {
       throw Exception('Failed to delete exercise from Workout Plan ${response.statusCode}');
     }
     emit(RemoveExerciseState());
+
   }
 
   //date
@@ -434,5 +457,33 @@ class CubitManager extends Cubit<MainStateManager> {
   String weekdayOfIndex = "";
   void getWeekday(index){
     weekdayOfIndex = daysOfTraining[index];
+  }
+
+  //create workoutplan
+  Future<Map<String, dynamic>> createWorkoutPlan(level, goal, trainingLocation) async {
+    try{
+      var workout = await http.post(Uri.parse('http://$ipConnectionAddress:3000/wourkoutplan-recommendation'),
+        headers: {"Authorization": "Bearer ${User.token}",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "http://$ipConnectionAddress:3000/*"},
+        body: jsonEncode(<String, String>{
+          'level': level,
+          'goal': goal,
+          'training_location': trainingLocation,
+        }),
+      );
+      print("create plan dodo");
+      if(workout.statusCode == 200){
+        var data = json.decode(workout.body);
+        print("created workout plan $data");
+        emit(CreateWorkoutPlan());
+        return data;
+      } else{
+        throw Exception("Failed to load data ${workout.statusCode}");
+      }
+    }catch(e){
+      print("create plan failed $e");
+      rethrow;
+    }
   }
 }

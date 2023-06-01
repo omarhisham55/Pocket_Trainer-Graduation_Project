@@ -1,3 +1,6 @@
+import 'package:final_packet_trainer/data/exerciseData.dart';
+import 'package:final_packet_trainer/data/userData.dart';
+import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
@@ -24,7 +27,7 @@ class GymDialogs {
     ], subtitle: [
       "Beginner",
       "Intermediate",
-      "Advanced"
+      "Expert"
     ], content: [
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
@@ -33,8 +36,8 @@ class GymDialogs {
     data.add(GymDialogs(title: [
       "Goal"
     ], subtitle: [
-      "Strength",
-      "Muscle size",
+      "Bulk",
+      "Cut",
       "Cardio"
     ], content: [
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
@@ -47,13 +50,10 @@ class GymDialogs {
     data.add(GymDialogs(title: [
       "Workout tools"
     ], subtitle: [
-      "Select your equipment workout tools"
+      "Would you like to use gym tools or train from home\n skipping this will recommend gym equipment"
     ], content: [
-      "Barbell",
-      "Dumbbells",
-      "Machines",
-      "Body weight",
-      "Cables"
+      "Use gym equipments",
+      "Train from home"
     ]));
     data.add(GymDialogs(
         title: ["Add your weight and height"],
@@ -97,7 +97,7 @@ void popAndShowNext({required BuildContext context, required dialog, required cu
 }
 
 bool isExerciseTaken = false;
-List requirements = ["", "", "", [], [], []];
+List requirements = ["", "", [], [], [], []];
 
 final List<bool> selectedButtonExp = List.generate(3, (i) => false);
 Widget openDialogExperience(BuildContext context, gym) => StatefulBuilder(
@@ -238,7 +238,7 @@ Widget openDialogGoal(BuildContext context, gym) => StatefulBuilder(
 );
 
 List selectedDays = [];
-List daysOfTraining = [];
+List daysOfTraining = ["RestDay","WorkDay","WorkDay","WorkDay","RestDay","WorkDay","RestDay"];
 List<MultiSelectCard<Object?>> weekdays = [
   MultiSelectCard(value: 'Saturday', label: dialogDataG[2].content[0]),
   MultiSelectCard(value: 'Sunday', label: dialogDataG[2].content[1]),
@@ -305,50 +305,64 @@ Widget openDialogDate(BuildContext context, gym) => defaultDialog(
       },
     );
 
-List selectedTools = [];
-List<MultiSelectCard<Object?>> tools = [
-  MultiSelectCard(
-      value: dialogDataG[3].content[0],
-      label: dialogDataG[3].content[0]),
-  MultiSelectCard(
-      value: dialogDataG[3].content[1],
-      label: dialogDataG[3].content[1]),
-  MultiSelectCard(
-      value: dialogDataG[3].content[2],
-      label: dialogDataG[3].content[2]),
-  MultiSelectCard(
-      value: dialogDataG[3].content[3],
-      label: dialogDataG[3].content[3]),
-  MultiSelectCard(
-      value: dialogDataG[3].content[4],
-      label: dialogDataG[3].content[4]),
-];
-
-Widget openDialogWorkoutTools(BuildContext context, gym) => defaultDialog(
+bool fromHome = true;
+Widget openDialogWorkoutTools(BuildContext context, gym) =>  StatefulBuilder(
+    builder: (context, StateSetter setState) => defaultDialog(
     context: context,
     title: subTitleText(text: dialogDataG[3].title[0], maxLines: 2),
     body: Column(
       children: [
+        paragraphText(text: dialogDataG[3].title[0], maxLines: 2),
         Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(dialogDataG[3].subtitle![0],
-              style:
-                  const TextStyle(color: TextColors.whiteText, fontSize: 18)),
+          padding: const EdgeInsets.all(10.0),
+          child: InkWell(
+              onTap: () {
+                setState((){
+                  fromHome = false;
+                  print(fromHome);
+                });
+              },
+              child: Container(
+                width: width(context, 1),
+                padding: const EdgeInsets.all(30.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(
+                      color: (!fromHome)
+                          ? BackgroundColors.selectedButton
+                          : BackgroundColors.whiteBG,
+                      width: (!fromHome) ? 3 : 1,
+                    )
+                ),
+                child: subTitleText(text: dialogDataG[3].content[0]),
+              ),
+            )
         ),
-        MultiSelectContainer(
-            itemsPadding: const EdgeInsetsDirectional.all(10),
-            itemsDecoration: MultiSelectDecorations(
-              decoration: BoxDecoration(
-                  color: BackgroundColors.button,
-                  borderRadius: BorderRadius.circular(50)),
-              selectedDecoration: BoxDecoration(
-                  color: BackgroundColors.selectedButton,
-                  borderRadius: BorderRadius.circular(50)),
-            ),
-            items: tools,
-            onChange: (allSelectedItems, selectedItem) {
-              selectedTools = allSelectedItems;
-            }),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: InkWell(
+              onTap: () {
+                setState((){
+                  fromHome = true;
+                  print(fromHome);
+                });
+              },
+              child: Container(
+                width: width(context, 1),
+                padding: const EdgeInsets.all(30.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(
+                      color: (fromHome)
+                          ? BackgroundColors.selectedButton
+                          : BackgroundColors.whiteBG,
+                      width: (fromHome) ? 3 : 1,
+                    )
+                ),
+                child: subTitleText(text: dialogDataG[3].content[1]),
+              ),
+            )
+        ),
       ],
     ),
     quickExit: false,
@@ -362,21 +376,11 @@ Widget openDialogWorkoutTools(BuildContext context, gym) => defaultDialog(
       popAndShowNext(context: context, dialog: openDialogDate, cubit: gym);
     },
     nextDialog: () {
-      if (selectedTools.isEmpty) {
-        const snackBar = SnackBar(
-          content: Text(
-            "You must choose",
-            style: TextStyle(fontSize: 14),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } else {
         requirements.removeAt(3);
-        requirements.insert(3, selectedTools);
+        requirements.insert(3, (fromHome) ? "Home" : "Gym");
         print("requirements from tools $requirements");
         popAndShowNext(context: context, dialog: openDialogHW, cubit: gym);
-      }
-    });
+    }));
 
 TextEditingController addHeight = TextEditingController();
 TextEditingController addWeight = TextEditingController();
@@ -423,8 +427,6 @@ Widget openDialogHW(BuildContext context, gym) => defaultDialog(
       setNextIcon: true,
       cancelButton: true,
       prevDialog: () {
-        requirements[3] = [];
-        selectedTools = [];
         popAndShowNext(context: context, dialog: openDialogWorkoutTools, cubit: gym);
       },
       nextDialog: () {
@@ -446,7 +448,7 @@ Widget openDialogHW(BuildContext context, gym) => defaultDialog(
     );
 
 List<String> selectedInjuries = [];
-Widget openDialogInjuries(BuildContext context, gym) => defaultDialog(
+Widget openDialogInjuries(BuildContext context, gym) =>defaultDialog(
       context: context,
       title: subTitleText(text: dialogDataG[5].title[0], maxLines: 2),
       body: Column(
@@ -508,10 +510,16 @@ Widget openDialogInjuries(BuildContext context, gym) => defaultDialog(
                 function: () {
                   requirements.removeAt(5);
                   requirements.insert(5, selectedInjuries);
-                  print("requirements from injuries $requirements");
-                  isExerciseTaken = true;
-                  gym.requirements(isExerciseTaken);
-                  Navigator.pop(context);
+                  // print("requirements from injuries $requirements");
+                    gym.createWorkoutPlan(requirements[0], requirements[1], requirements[3]).then((value) {
+                      isExerciseTaken = true;
+                      Navigator.pop(context);
+                      gym.requirements(isExerciseTaken);
+                      print('workout added bombom');
+                    }).catchError((e){
+                      print('workout crashed bombom');
+                      throw e;
+                    });
                 },
                 borderRadius: 30,
                 text: "save",

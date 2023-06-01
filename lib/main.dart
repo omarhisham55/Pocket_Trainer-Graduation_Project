@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/data/nutritionData.dart';
@@ -10,12 +12,14 @@ import 'package:flutter/material.dart';
 import 'login_signup/login_signup.dart';
 import 'navigation/routes.dart';
 import 'shared/blocObserver.dart';
+import 'package:path/path.dart' as path;
 
 void main() {
   Bloc.observer = MyBlocObserver();
   // ipConnectionAddress2.then((value) {
   //   print(value);
   // });
+
   getDataMapValues(allValues: true).then((value) {
     print("successful exercise data from ${value.length}");
     getBreakfast().then((value) {

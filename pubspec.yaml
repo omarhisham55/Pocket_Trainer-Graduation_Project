@@ -21,6 +21,9 @@ version: 1.0.0+1
 environment:
   sdk: '>=2.19.5 <3.0.0'
 
+scripts:
+  start: npm start
+  build: flutter build
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -56,6 +59,11 @@ dependencies:
   motion_toast: ^2.6.7
   puppeteer: ^3.0.0
   stacked_bar_chart: ^1.1.0+2
+  flutter_launcher_icons: ^0.13.1
+  process_run: ^0.13.0
+  path: ^1.8.3
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

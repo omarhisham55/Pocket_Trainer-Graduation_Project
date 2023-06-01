@@ -16,6 +16,8 @@ class RadioButtonAddMealState extends MainStateManager{}
 
 class SignUpState extends MainStateManager{}
 
+class ChangeBoolState extends MainStateManager{}
+
 class LoginState extends MainStateManager{}
 
 class GymBodyState extends MainStateManager{}
@@ -56,6 +58,9 @@ class GetExerciseDataToPanel extends MainStateManager{}
 class FilterState extends MainStateManager{}
 
 class ChangeDateState extends MainStateManager{}
+
+class CreateWorkoutPlan extends MainStateManager{}
+
 
 
 

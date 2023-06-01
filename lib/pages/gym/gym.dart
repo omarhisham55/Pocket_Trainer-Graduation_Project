@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:calender_picker/calender_picker.dart';
 import '../../data/gym_dialog_data.dart';
+import '../../data/userData.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/images.dart';
 import 'gymHome.dart';
@@ -71,6 +72,12 @@ class Gym extends StatelessWidget {
                     const Spacer(),
                     DefaultButton(
                         function: () {
+                          try{
+                            gym.createWorkoutPlan('level', 'goal', 'trainingLocation');
+                          }catch(e){
+                            rethrow;
+                          }
+                          // User.getProfile();
                           showAnimatedDialog(
                             context: context,
                             barrierDismissible: true,
