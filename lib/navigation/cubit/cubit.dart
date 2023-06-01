@@ -256,6 +256,15 @@ class CubitManager extends Cubit<MainStateManager> {
     requirements = true;
     emit(Requirements());
   }
+  void changeToNotEmpty(){
+    User.currentUser!.workoutPlan!.values.forEach((workoutList) {
+      if (workoutList.isNotEmpty) {
+        isWorkoutPlanEmpty = false;
+        return;
+      }
+    });
+    emit(Requirements());
+  }
   void deleteButton({staticBool}){
     deleteButtonFood = staticBool ?? !deleteButtonFood;
     emit(DeleteButtonState());
@@ -388,7 +397,7 @@ class CubitManager extends Cubit<MainStateManager> {
   String exercisePanelReps = "";
   void addExerciseName(id, name, {String? type, String? image, int? sets, int? reps}){
     exercisePanelId = id;
-    exercisePanelName = name;
+    exercisePanelName = name.toString();
     exercisePanelType = type.toString();
     exercisePanelImage = image.toString();
     exercisePanelSets = sets.toString();
@@ -429,7 +438,7 @@ class CubitManager extends Cubit<MainStateManager> {
     print(exerciseId);
     print(User.token);
     final response = await http.delete(
-        Uri.parse('http://$ipConnectionAddress:3000/wourkoutplan-delete-arm-exercise'),
+        Uri.parse('http://$ipConnectionAddress:3000/wourkoutplan-delete-exercise'),
         headers: {"Authorization": "Bearer ${User.token}",
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "http://$ipConnectionAddress:3000/*"
@@ -460,30 +469,25 @@ class CubitManager extends Cubit<MainStateManager> {
   }
 
   //create workoutplan
-  Future<Map<String, dynamic>> createWorkoutPlan(level, goal, trainingLocation) async {
-    try{
-      var workout = await http.post(Uri.parse('http://$ipConnectionAddress:3000/wourkoutplan-recommendation'),
-        headers: {"Authorization": "Bearer ${User.token}",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "http://$ipConnectionAddress:3000/*"},
-        body: jsonEncode(<String, String>{
-          'level': level,
-          'goal': goal,
-          'training_location': trainingLocation,
-        }),
-      );
-      print("create plan dodo");
-      if(workout.statusCode == 200){
-        var data = json.decode(workout.body);
-        print("created workout plan $data");
-        emit(CreateWorkoutPlan());
-        return data;
-      } else{
-        throw Exception("Failed to load data ${workout.statusCode}");
-      }
-    }catch(e){
-      print("create plan failed $e");
-      rethrow;
-    }
+}
+Future<Map<String, dynamic>> createWorkoutPlan(level, goal, trainingLocation) async {
+  var workout = await http.post(Uri.parse('http://$ipConnectionAddress:3000/wourkoutplan-recommendation'),
+    headers: {"Authorization": "Bearer ${User.token}",
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "http://$ipConnectionAddress:3000/*"},
+    body: jsonEncode(<String, String>{
+      'level': level,
+      'goal': goal,
+      'training_location': trainingLocation,
+    }),
+  );
+  print("create plan dodo");
+  if(workout.statusCode == 200){
+    var data = json.decode(workout.body);
+    print("created workout plan $data");
+    // emit(CreateWorkoutPlan());
+    return data;
+  } else{
+    throw Exception("Failed to load data ${workout.statusCode}");
   }
 }

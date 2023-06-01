@@ -72,11 +72,7 @@ class Gym extends StatelessWidget {
                     const Spacer(),
                     DefaultButton(
                         function: () {
-                          try{
-                            gym.createWorkoutPlan('level', 'goal', 'trainingLocation');
-                          }catch(e){
-                            rethrow;
-                          }
+                          // User.currentUser!.workoutPlan = {};
                           // User.getProfile();
                           showAnimatedDialog(
                             context: context,
@@ -84,7 +80,7 @@ class Gym extends StatelessWidget {
                             builder: (context) =>
                                 StatefulBuilder(
                                     builder: (context, StateSetter setState) =>
-                                        openDialogExperience(context, gym)),
+                                        openDialogExperience(context, CubitManager.get(_))),
                             animationType: DialogTransitionType.sizeFade,
                             curve: Curves.fastOutSlowIn,
                             duration: const Duration(seconds: 1),

@@ -74,7 +74,7 @@ class Nutrition extends StatelessWidget {
                                             showAnimatedDialog(
                                               context: context,
                                               barrierDismissible: true,
-                                              builder: (context) => StatefulBuilder(builder: (context, StateSetter setState)=> openDialogExperience(context, gym)),
+                                              builder: (context) => StatefulBuilder(builder: (context, StateSetter setState)=> openDialogExperience(context, CubitManager.get(_))),
                                               animationType: DialogTransitionType.sizeFade,
                                               curve: Curves.fastOutSlowIn,
                                               duration: const Duration(seconds: 1),

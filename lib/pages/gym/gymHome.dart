@@ -21,16 +21,18 @@ import '../../shared/styles/images.dart';
 import '../gym/gym.dart';
 import '../nutrition/diet_recommended_plan.dart';
 import 'package:http/http.dart' as http;
+
 class GymHome extends StatelessWidget {
   GymHome({Key? key}) : super(key: key);
   String selectedExerciseType = "select meal time";
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (_) => CubitManager(),
         child: BlocConsumer<CubitManager, MainStateManager>(
           listener: (_, s) {
-            if(s is DropDownState){
+            if (s is DropDownState) {
               selectedExerciseType = s.selectedValue;
             }
           },
@@ -43,17 +45,25 @@ class GymHome extends StatelessWidget {
                     leading: const Icon(Icons.add),
                     title: const Text('Add exercise'),
                     onPressed: () {
-                      (gym.weekdayOfIndex == "Off Day") ? toastWarning(context: context, text: "This day is off can't add exercises") :
-                        {gym.deleteButton(staticBool: false),
-                        pageNavigator(context, const AddExercise())};
+                      (gym.weekdayOfIndex == "Off Day")
+                          ? toastWarning(
+                              context: context,
+                              text: "This day is off can't add exercises")
+                          : {
+                              gym.deleteButton(staticBool: false),
+                              pageNavigator(context, const AddExercise())
+                            };
                     }),
                 QudsPopupMenuDivider(),
                 QudsPopupMenuItem(
                     leading: const Icon(Icons.delete_outline),
                     title: const Text('Delete exercise'),
                     onPressed: () {
-                      (gym.weekdayOfIndex == "Off Day") ? toastWarning(context: context, text: "This day is off no exercises to delete") :
-                      gym.deleteButton();
+                      (gym.weekdayOfIndex == "Off Day")
+                          ? toastWarning(
+                              context: context,
+                              text: "This day is off no exercises to delete")
+                          : gym.deleteButton();
                     }),
                 QudsPopupMenuDivider(),
                 QudsPopupMenuItem(
@@ -61,10 +71,12 @@ class GymHome extends StatelessWidget {
                     title: const Text('Exercise info'),
                     onPressed: () {
                       Navigator.of(context).push(PremiumAnimation(
-                          page: RecommendedProgramNutritionInfo(fromHome: true)));
+                          page:
+                              RecommendedProgramNutritionInfo(fromHome: true)));
                     }),
               ];
             }
+
             return Stack(
               alignment: Alignment.bottomCenter,
               children: [
@@ -74,9 +86,11 @@ class GymHome extends StatelessWidget {
                     title: "Gym Home",
                     isRequirementsTaken: true,
                     replace: QudsPopupButton(
-                        tooltip: 'open',
-                        items: getMenuGym(context),
-                        child: const Icon(Icons.more_vert, color: Colors.white, size: 30)),
+                      tooltip: 'open',
+                      items: getMenuGym(context),
+                      child: const Icon(Icons.more_vert,
+                          color: Colors.white, size: 30),
+                    ),
                     bottom: PreferredSize(
                       preferredSize: const Size.fromHeight(90.0),
                       child: Padding(
@@ -84,60 +98,70 @@ class GymHome extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: List<Widget>.generate(6, (index) {
-                            final date = DateTime.now().add(Duration(days: index));
-                            final isSelected = date.day == gym.selectedDate.day &&
-                                date.month == gym.selectedDate.month &&
-                                date.year == gym.selectedDate.year;
-                            final String week = allWeekdays[date.weekday-1].toString();
+                            final date =
+                                DateTime.now().add(Duration(days: index));
+                            final isSelected =
+                                date.day == gym.selectedDate.day &&
+                                    date.month == gym.selectedDate.month &&
+                                    date.year == gym.selectedDate.year;
+                            final String week = allWeekdays[date.weekday - 1].toString();
                             print(week);
                             print(date.weekday);
                             return GestureDetector(
                               onTap: () {
                                 print("molasa ${DateTime.now().weekday}");
-                                gym.onSelectedDate(date);},
+                                gym.onSelectedDate(date);
+                              },
                               child: Container(
                                 padding: const EdgeInsets.all(10.0),
                                 decoration: BoxDecoration(
-                                  color: isSelected ? BackgroundColors.blackBG : BackgroundColors.whiteBG,
+                                  color: isSelected
+                                      ? BackgroundColors.blackBG
+                                      : BackgroundColors.whiteBG,
                                   borderRadius: BorderRadius.circular(15.0),
                                 ),
                                 child: Column(
                                   children: [
                                     paragraphText(
-                                        text: week.substring(0, 3),
-                                        color: isSelected ? TextColors.whiteText : TextColors.blackText
+                                      text: week.substring(0, 3),
+                                      color: isSelected
+                                          ? TextColors.whiteText
+                                          : TextColors.blackText,
                                     ),
                                     subTitleText(
-                                        text: "${date.day}",
-                                        color: isSelected ? TextColors.whiteText : TextColors.blackText
+                                      text: "${date.day}",
+                                      color: isSelected
+                                          ? TextColors.whiteText
+                                          : TextColors.blackText,
                                     ),
                                   ],
-                                )
+                                ),
                               ),
                             );
                           }),
+                        ),
                       ),
                     ),
-                  )
                   ),
                   backgroundColor: BackgroundColors.background,
                   body: SlidingUpPanel(
                     controller: gym.exercisePanelController,
                     maxHeight: height(context, .4),
                     minHeight: 0.0,
-                    onPanelClosed: (){},
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-                    //SlideUp panel for show food list when blue button appears
+                    onPanelClosed: () {},
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(30)),
                     panelBuilder: (scrollController) => SafeArea(
                       child: Container(
                         width: 400,
                         height: 150,
                         decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20)),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                         child: Padding(
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 20),
                           child: Stack(
                             alignment: Alignment.topRight,
                             children: [
@@ -145,12 +169,15 @@ class GymHome extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   titleText(
-                                      text: gym.exercisePanelName,
-                                      color: TextColors.blackText),
+                                    text: gym.exercisePanelName,
+                                    color: TextColors.blackText,
+                                  ),
                                   const SizedBox(height: 20),
                                   subTitleText(
-                                      text: "${gym.exercisePanelSets} sets . ${gym.exercisePanelReps} reps",
-                                      color: TextColors.blackText),
+                                    text:
+                                        "${gym.exercisePanelSets} sets . ${gym.exercisePanelReps} reps",
+                                    color: TextColors.blackText,
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: SizedBox(
@@ -161,17 +188,16 @@ class GymHome extends StatelessWidget {
                                         fit: BoxFit.fill,
                                       ),
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
-                              //start ai model
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: DefaultButton(
                                   function: () {
-                                    PoseDetectionModel().model().then((value){
+                                    PoseDetectionModel().model().then((value) {
                                       print("model opened");
-                                    }).catchError((e){
+                                    }).catchError((e) {
                                       print('error at $e');
                                     });
                                     gym.exercisePanelController.close();
@@ -180,7 +206,7 @@ class GymHome extends StatelessWidget {
                                   borderRadius: 30,
                                   width: MediaQuery.of(context).size.width * .4,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -193,121 +219,200 @@ class GymHome extends StatelessWidget {
                         if (date.day == gym.selectedDate.day &&
                             date.month == gym.selectedDate.month &&
                             date.year == gym.selectedDate.year) {
-                          // Display the list for the selected date
                           gym.getWeekday(index);
-                          return (daysOfTraining[index] == "RestDay") ? Column(
-                              children: [
-                                Image.asset(MainImages.restDay),
-                                titleText(text: "Day Off")
-                              ],
-                          ) : InkWell(
-                            onTap: (){
-                              gym.exercisePanelController.close();},
-                            child: Padding(
-                                padding: const EdgeInsets.only(bottom: 250.0, top: 10.0, right: 10.0, left: 10.0),
-                                child: ListView(
-                                  shrinkWrap: true,
-                                  physics: const BouncingScrollPhysics(),
+                          return (daysOfTraining[index] == "RestDay")
+                              ? Column(
                                   children: [
-                                    FutureBuilder(
-                                        future: getWorkoutPlan(),
-                                        builder: (_, snapshot){
-                                          if(snapshot.hasData){
-                                             Map<String, dynamic> allWorkout = snapshot.data!;
-                                            List workout = snapshot.data!['ArmDay'];
-                                            return Visibility(
-                                                visible: (workout.isEmpty) ? false : true,
-                                                child:  Column(
+                                    Image.asset(MainImages.restDay),
+                                    titleText(text: "Day Off"),
+                                  ],
+                                )
+                              : InkWell(
+                                  onTap: () {
+                                    gym.exercisePanelController.close();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 250.0,
+                                        top: 10.0,
+                                        right: 10.0,
+                                        left: 10.0),
+                                    child: ListView(
+                                      shrinkWrap: true,
+                                      physics: const BouncingScrollPhysics(),
+                                      children: [
+                                        FutureBuilder(
+                                          future: getWorkoutPlan(),
+                                          builder: (_, snapshot) {
+                                            if (snapshot.hasData) {
+                                              Map<String, dynamic> allWorkout =
+                                                  snapshot.data!;
+                                              List workout =
+                                                  snapshot.data!['ChestDay'];
+                                              return Visibility(
+                                                visible: (workout.isEmpty)
+                                                    ? false
+                                                    : true,
+                                                child: Column(
                                                   children: [
-                                                    //green circle, title
                                                     Row(
                                                       children: [
                                                         const CircleAvatar(
                                                           radius: 5,
-                                                          backgroundColor: Colors.green,
+                                                          backgroundColor:
+                                                              Colors.green,
                                                         ),
-                                                        const SizedBox(width: 7),
-                                                        paragraphText(text: titles[0])
+                                                        const SizedBox(
+                                                            width: 7),
+                                                        paragraphText(
+                                                            text: titles[0]),
                                                       ],
                                                     ),
                                                     Container(
-                                                        decoration: BoxDecoration(
-                                                            color: BackgroundColors.inkWellBG,
-                                                            borderRadius:
-                                                            BorderRadius.circular(20)),
-                                                        child: ListView.separated(
-                                                            physics: const NeverScrollableScrollPhysics(),
-                                                            shrinkWrap: true,
-                                                            itemBuilder: (_, i) {
-                                                              return defaultInkWell(
-                                                                context: context,
-                                                                  remove: gym.deleteButtonFood,
-                                                                  removeFunction: (){
-                                                                    try {
-                                                                      print("backDay ${workout.length}");
-                                                                      gym.deleteWorkouts(exerciseId: workout[i]['exerciseId']).then((value) {
-                                                                        toastSuccess(
-                                                                          context: context,
-                                                                          text: "${workout[i]['name']} has been deleted",
-                                                                        );
-                                                                        print("backDay ${workout.length}");
-                                                                      });
-                                                                    } catch (error) {
-                                                                      throw error;
-                                                                    }
-                                                                    // gym.deleteWorkouts(exerciseId: workout[i]['exerciseId']).then((value) {
-                                                                    //   toastSuccess(context: context, text: "${workout[i]['name']} has been deleted");
-                                                                    // });
-                                                                    // print('zaza ${workout[i]['exerciseId']}');
-                                                                  },
-                                                                  image: "workout[i]['imageUrl'] ?? not found",
-                                                                  title: workout[i]['Title'] ?? "not found",
-                                                                  subtitle: [subTitleText(text: workout[i]["BodyPart"])],
-                                                                  child: Row(
-                                                                    children: [
-                                                                      paragraphText(text: "Sets: "),
-                                                                      const SizedBox(width: 15.0),
-                                                                      paragraphText(text: "Reps: "),
-                                                                    ],
-                                                                  ),
-                                                                  function: () {
-                                                                    gym.addExerciseName(workout[i]["exerciseId"], workout[i]["name"], type: workout[i]["bodyPart"], image: workout[i]["imageUrl"], sets: workout[i]["sets"], reps: workout[i]["repetition"]);
-                                                                    (gym.exercisePanelController.isPanelClosed) ? gym.exercisePanelController.open()
-                                                                        : gym.exercisePanelController.close();
-                                                                  }
-                                                              );
-                                                            },
-                                                            separatorBuilder: (_, i) => Padding(
-                                                              padding:
-                                                              const EdgeInsets.symmetric(
-                                                                  horizontal: 20),
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                    border: Border.all(
-                                                                        width: 1,
-                                                                        color: BackgroundColors
-                                                                            .background)),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              BackgroundColors
+                                                                  .inkWellBG,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                        child:
+                                                            ListView.separated(
+                                                          physics:
+                                                              const NeverScrollableScrollPhysics(),
+                                                          shrinkWrap: true,
+                                                          itemBuilder: (_, i) {
+                                                            return defaultInkWell(
+                                                              context: context,
+                                                              remove: gym
+                                                                  .deleteButtonFood,
+                                                              removeFunction:
+                                                                  () {
+                                                                try {
+                                                                  print(
+                                                                      "backDay ${workout.length}");
+                                                                  gym
+                                                                      .deleteWorkouts(
+                                                                          exerciseId: workout[i]
+                                                                              [
+                                                                              'exerciseId'])
+                                                                      .then(
+                                                                          (value) {
+                                                                    toastSuccess(
+                                                                      context:
+                                                                          context,
+                                                                      text:
+                                                                          "${workout[i]['name']} has been deleted",
+                                                                    );
+                                                                    print(
+                                                                        "backDay ${workout.length}");
+                                                                  });
+                                                                } catch (error) {
+                                                                  throw error;
+                                                                }
+                                                              },
+                                                              image:
+                                                                  "http://t0.gstatic.com/images?q=tbn:ANd9GcQ3bFRqprKKFG-YxFSFe23rTSZxKoUkjlQLBA1vPEwv2fKlV9Ea&s",
+                                                              title: workout[i][
+                                                                      'Title'] ??
+                                                                  "not found",
+                                                              subtitle: [
+                                                                subTitleText(
+                                                                    text: workout[
+                                                                            i][
+                                                                        "BodyPart"]),
+                                                              ],
+                                                              child: Row(
+                                                                children: [
+                                                                  paragraphText(
+                                                                      text:
+                                                                          "Sets: "),
+                                                                  const SizedBox(
+                                                                      width:
+                                                                          15.0),
+                                                                  paragraphText(
+                                                                      text:
+                                                                          "Reps: "),
+                                                                ],
+                                                              ),
+                                                              function: () {
+                                                                gym.addExerciseName(
+                                                                  workout[i][
+                                                                      "exerciseId"],
+                                                                  workout[i]
+                                                                      ["name"],
+                                                                  type: workout[
+                                                                          i][
+                                                                      "bodyPart"],
+                                                                  image: workout[
+                                                                          i][
+                                                                      "imageUrl"],
+                                                                  sets: workout[
+                                                                          i]
+                                                                      ["sets"],
+                                                                  reps: workout[
+                                                                          i][
+                                                                      "repetition"],
+                                                                );
+                                                                (gym.exercisePanelController
+                                                                        .isPanelClosed)
+                                                                    ? gym
+                                                                        .exercisePanelController
+                                                                        .open()
+                                                                    : gym
+                                                                        .exercisePanelController
+                                                                        .close();
+                                                              },
+                                                            );
+                                                          },
+                                                          separatorBuilder:
+                                                              (_, i) => Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        20),
+                                                            child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border:
+                                                                    Border.all(
+                                                                  width: 1,
+                                                                  color: BackgroundColors
+                                                                      .background,
+                                                                ),
                                                               ),
                                                             ),
-                                                            itemCount: workout.length))
+                                                          ),
+                                                          itemCount:
+                                                              workout.length,
+                                                        )),
                                                   ],
-                                                ));
-                                          } else if (snapshot.hasError) {
-                                            return Center(
+                                                ),
+                                              );
+                                            } else if (snapshot.hasError) {
+                                              return Center(
                                                 child: titleText(
-                                                    text: "Error fetching data ${snapshot.error}"));
-                                          } else {
-                                            return const Center(child: CircularProgressIndicator());
-                                          }
-                                        }
+                                                  text:
+                                                      "Error fetching data ${snapshot.error}",
+                                                ),
+                                              );
+                                            } else {
+                                              return const Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                        const SizedBox(height: 10.0),
+                                      ],
                                     ),
-                                    const SizedBox(height: 10.0),
-                                  ],
-                                )
-                            ),
-                          );
+                                  ),
+                                );
                         } else {
-                          // Display an empty container for other dates
                           return Container();
                         }
                       },
@@ -328,7 +433,6 @@ class GymHome extends StatelessWidget {
               ],
             );
           },
-        )
-    );
+        ));
   }
 }

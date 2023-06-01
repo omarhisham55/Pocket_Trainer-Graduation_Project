@@ -132,13 +132,14 @@ class Profile extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                             backgroundColor: Colors.transparent,
                             function: () {
+                              print(requirements);
                               showAnimatedDialog(
                                 context: context,
                                 barrierDismissible: true,
                                 builder: (context) =>
                                     StatefulBuilder(
                                         builder: (context, StateSetter setState) =>
-                                            openDialogExperience(context, user)),
+                                            openDialogExperience(context, CubitManager.get(_))),
                                 animationType: DialogTransitionType.sizeFade,
                                 curve: Curves.fastOutSlowIn,
                                 duration: const Duration(seconds: 1),
@@ -188,7 +189,7 @@ class Profile extends StatelessWidget {
                           backgroundColor: BackgroundColors.dialogBG,
                           function: () {
                             User.token = null.toString();
-                            pushReplacement(context, const Login());
+                            noNavNavigator(context, const Login());
                           },
                           text: "Logout",
                         )

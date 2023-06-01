@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:final_packet_trainer/data/gym_dialog_data.dart';
+import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -48,7 +50,7 @@ class User {
     }
   }
 
-  static Future<void> login({required String username, required String password, required BuildContext context}) async {
+  static Future<void> login({required String username, required String password, required BuildContext context, required blocContest}) async {
     final response = await http.post(
       Uri.parse('http://$ipConnectionAddress:3000/loggedin'),
       headers: {'Content-Type': 'application/json'},
@@ -61,6 +63,7 @@ class User {
         final user = jsonDecode(value.body);
         token = user["token"];
         getProfile();
+        CubitManager.get(blocContest).changeToNotEmpty();
       } else {
         toastError(context: context, text: value.body);
         throw Exception('Failed to get response: ${value.statusCode}');
@@ -96,7 +99,6 @@ class User {
         workoutPlan: user["workoutPlan"] ?? {},
         nutritionPlan: user["NutritionPlan"] ?? {},
       );
-      print(user);
       return user;
     } else{
       throw Exception("Failed to load data");

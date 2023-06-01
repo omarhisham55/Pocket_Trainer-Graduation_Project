@@ -95,8 +95,9 @@ void popAndShowNext({required BuildContext context, required dialog, required cu
     duration: const Duration(seconds: 1),
   );
 }
+bool isWorkoutPlanEmpty = true;
 
-bool isExerciseTaken = false;
+bool isExerciseTaken = (isWorkoutPlanEmpty) ? false : true;
 List requirements = ["", "", [], [], [], []];
 
 final List<bool> selectedButtonExp = List.generate(3, (i) => false);
@@ -511,10 +512,12 @@ Widget openDialogInjuries(BuildContext context, gym) =>defaultDialog(
                   requirements.removeAt(5);
                   requirements.insert(5, selectedInjuries);
                   // print("requirements from injuries $requirements");
-                    gym.createWorkoutPlan(requirements[0], requirements[1], requirements[3]).then((value) {
+                  print("momomomo ${User.currentUser!.workoutPlan}");
+                    createWorkoutPlan(requirements[0], requirements[1], requirements[3]).then((value) {
                       isExerciseTaken = true;
                       Navigator.pop(context);
                       gym.requirements(isExerciseTaken);
+                      User.getProfile();
                       print('workout added bombom');
                     }).catchError((e){
                       print('workout crashed bombom');

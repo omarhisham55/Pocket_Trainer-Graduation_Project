@@ -232,7 +232,7 @@ class Login extends StatelessWidget {
                         DefaultButton(
                           function: () {
                             if (signUpLoginChangeable.loginKey.currentState!.validate()) {
-                              User.login(username: signUpLoginChangeable.emailController.text, password: signUpLoginChangeable.passController.text, context: context).then((value){
+                            User.login(username: signUpLoginChangeable.emailController.text, password: signUpLoginChangeable.passController.text, context: context, blocContest: _).then((value){
                                 User.getProfile().then((value) {
                                   homeNavigator(context, const Navigation());
                                   toastSuccess(context: context, text: "Login successful welcome ${User.currentUser!.name}");
