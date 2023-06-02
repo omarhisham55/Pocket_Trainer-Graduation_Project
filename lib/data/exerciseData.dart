@@ -61,11 +61,16 @@ class Exercise {
 }
 
 String ipConnectionAddress = "192.168.1.53";
+var accessControl = "http://$ipConnectionAddress:3000/*";
 // Future<String> ipConnectionAddress2 = getIPAddress();
 
 //get exercises
 Future<List> getChestExercises() async {
-  var chestExercises = await http.get(Uri.parse('http://$ipConnectionAddress:3000/chest/exercises'));
+  var chestExercises = await http.get(
+      Uri.parse('http://$ipConnectionAddress:3000/chest/exercises'),
+  headers: {
+    "Access-Control-Allow-Origin": accessControl
+  });
   if (chestExercises.statusCode == 200) {
     var data = json.decode(chestExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -80,7 +85,10 @@ Future<List> getChestExercises() async {
 
 Future<List> getBackExercises() async {
   var backExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/back/exercises'));
+      .get(Uri.parse('http://$ipConnectionAddress:3000/back/exercises'),
+      headers: {
+  "Access-Control-Allow-Origin": accessControl
+  });
   if (backExercises.statusCode == 200) {
     var data = json.decode(backExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -93,7 +101,10 @@ Future<List> getBackExercises() async {
 
 Future<List> getShoulderExercises() async {
   var shoulderExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/shoulder/exercises'));
+      .get(Uri.parse('http://$ipConnectionAddress:3000/shoulder/exercises'),
+  headers: {
+    "Access-Control-Allow-Origin": accessControl
+  });
   if (shoulderExercises.statusCode == 200) {
     var data = json.decode(shoulderExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -106,7 +117,10 @@ Future<List> getShoulderExercises() async {
 
 Future<List> getArmExercises() async {
   var armExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/arm/exercises'));
+      .get(Uri.parse('http://$ipConnectionAddress:3000/arm/exercises'),
+  headers: {
+    "Access-Control-Allow-Origin": accessControl
+  });
   if (armExercises.statusCode == 200) {
     var data = json.decode(armExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -119,7 +133,10 @@ Future<List> getArmExercises() async {
 
 Future<List> getLegExercises() async {
   var legExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/leg/exercises'));
+      .get(Uri.parse('http://$ipConnectionAddress:3000/leg/exercises'),
+  headers: {
+    "Access-Control-Allow-Origin": accessControl
+  });
   if (legExercises.statusCode == 200) {
     var data = json.decode(legExercises.body);
     print(legExercises.statusCode);
@@ -132,7 +149,10 @@ Future<List> getLegExercises() async {
 }
 
 Future<List> getCoreExercises() async {
-  var legExercises = await http.get(Uri.parse('http://$ipConnectionAddress:3000/abdominals/exercises'));
+  var legExercises = await http.get(Uri.parse('http://$ipConnectionAddress:3000/abdominals/exercises'),
+  headers: {
+    "Access-Control-Allow-Origin": accessControl
+  });
   if (legExercises.statusCode == 200) {
     var data = json.decode(legExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -330,9 +350,6 @@ Future<Map<String, dynamic>> getWorkoutPlan() async {
   );
   if(workout.statusCode == 200){
     var data = json.decode(workout.body);
-    print('getWorkout plan $data');
-    print('chest aa ${data['ChestDay']}');
-
     return data;
   } else{
     throw Exception("Failed to load data ${workout.statusCode}");

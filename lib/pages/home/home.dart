@@ -147,13 +147,13 @@ class Home extends StatelessWidget {
                           Visibility(
                               visible: (homeContent.isFrontBody) ? true : false,
                               child: Positioned(
-                                top: 70,
-                                left: 40,
+                                top: 80,
+                                left: 20,
                                 child: TextButton(
                                     onPressed: () {
                                       pageNavigator(
                                           context,
-                                          InformationDetails(
+                                          const InformationDetails(
                                               exerciseType: "Shoulders"));
                                     },
                                     child: subTitleText(text: "Shoulders")),
@@ -162,12 +162,12 @@ class Home extends StatelessWidget {
                             visible: (homeContent.isFrontBody) ? true : false,
                             child: Positioned(
                               top: 110,
-                              left: 50,
+                              left: 100,
                               child: TextButton(
                                   onPressed: () {
                                     pageNavigator(
                                         context,
-                                        InformationDetails(
+                                        const InformationDetails(
                                             exerciseType: "Chest"));
                                   },
                                   child: subTitleText(text: "Chest")),
@@ -177,15 +177,30 @@ class Home extends StatelessWidget {
                             visible: (homeContent.isFrontBody) ? true : false,
                             child: Positioned(
                               top: 120,
-                              left: 300,
+                              left: 260,
                               child: TextButton(
                                   onPressed: () {
                                     pageNavigator(
                                         context,
-                                        InformationDetails(
-                                            exerciseType: "Biceps"));
+                                        const InformationDetails(
+                                            exerciseType: "Arms"));
                                   },
-                                  child: subTitleText(text: "Biceps")),
+                                  child: subTitleText(text: "Arms")),
+                            ),
+                          ),
+                          Visibility(
+                            visible: (homeContent.isFrontBody) ? true : false,
+                            child: Positioned(
+                              top: 150,
+                              left: 210,
+                              child: TextButton(
+                                  onPressed: () {
+                                    pageNavigator(
+                                        context,
+                                        const InformationDetails(
+                                            exerciseType: "Core"));
+                                  },
+                                  child: subTitleText(text: "Core")),
                             ),
                           ),
                           Visibility(
@@ -197,7 +212,7 @@ class Home extends StatelessWidget {
                                   onPressed: () {
                                     pageNavigator(
                                         context,
-                                        InformationDetails(
+                                        const InformationDetails(
                                             exerciseType: "Legs"));
                                   },
                                   child: subTitleText(text: "Legs")),
@@ -212,10 +227,10 @@ class Home extends StatelessWidget {
                                   onPressed: () {
                                     pageNavigator(
                                         context,
-                                        InformationDetails(
-                                            exerciseType: "Triceps"));
+                                        const InformationDetails(
+                                            exerciseType: "Arms"));
                                   },
-                                  child: subTitleText(text: "Triceps")),
+                                  child: subTitleText(text: "Arms")),
                             ),
                           ),
                           Visibility(
@@ -227,7 +242,7 @@ class Home extends StatelessWidget {
                                   onPressed: () {
                                     pageNavigator(
                                         context,
-                                        InformationDetails(
+                                        const InformationDetails(
                                             exerciseType: "Back"));
                                   },
                                   child: subTitleText(text: "Back")),
@@ -242,7 +257,7 @@ class Home extends StatelessWidget {
                                   onPressed: () {
                                     pageNavigator(
                                         context,
-                                        InformationDetails(
+                                        const InformationDetails(
                                             exerciseType: "Legs"));
                                   },
                                   child: subTitleText(text: "Legs")),

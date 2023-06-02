@@ -466,6 +466,13 @@ class CubitManager extends Cubit<MainStateManager> {
   String weekdayOfIndex = "";
   void getWeekday(index){
     weekdayOfIndex = daysOfTraining[index];
+    // print('$weekdayOfIndex of ${index}');
+    emit(ChangeDateState());
+  }
+  int currentDateIndex = 0;
+  void changeIndex(index){
+    currentDateIndex = index;
+    emit(ChangeDateState());
   }
 
   //create workoutplan

@@ -62,8 +62,7 @@ class User {
       if (value.statusCode == 200) {
         final user = jsonDecode(value.body);
         token = user["token"];
-        getProfile();
-        CubitManager.get(blocContest).changeToNotEmpty();
+        getProfile().then((value) => CubitManager.get(blocContest).changeToNotEmpty());
       } else {
         toastError(context: context, text: value.body);
         throw Exception('Failed to get response: ${value.statusCode}');

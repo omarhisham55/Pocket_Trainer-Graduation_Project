@@ -1,3 +1,4 @@
+import 'package:calender_picker/date_picker_widget.dart';
 import 'package:circle_button/circle_button.dart';
 import 'package:final_packet_trainer/data/nutritionData.dart';
 import 'package:final_packet_trainer/data/userData.dart';
@@ -94,9 +95,20 @@ class NutritionHome extends StatelessWidget {
                       preferredSize: const Size.fromHeight(110.0),
                       child: Padding(
                         padding: const EdgeInsets.all(9.0),
-                        child: buildDaysOfWeek((date){
-
-                        }),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            // paragraphText(text: months[DateTime.now().month-1]),
+                            // const SizedBox(height: 10),
+                            CalenderPicker(
+                              DateTime.now(),
+                              initialSelectedDate: DateTime.now(),
+                              selectionColor: Colors.black,
+                              daysCount: 6,
+                              onDateChange: (date){},
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

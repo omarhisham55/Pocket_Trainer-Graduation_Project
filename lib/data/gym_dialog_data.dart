@@ -1,6 +1,7 @@
 import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/data/userData.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
+import 'package:final_packet_trainer/pages/gym/gymRecommendedPlan.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
@@ -239,7 +240,7 @@ Widget openDialogGoal(BuildContext context, gym) => StatefulBuilder(
 );
 
 List selectedDays = [];
-List daysOfTraining = ["RestDay","WorkDay","WorkDay","WorkDay","RestDay","WorkDay","RestDay"];
+List daysOfTraining = [];
 List<MultiSelectCard<Object?>> weekdays = [
   MultiSelectCard(value: 'Saturday', label: dialogDataG[2].content[0]),
   MultiSelectCard(value: 'Sunday', label: dialogDataG[2].content[1]),
@@ -517,7 +518,7 @@ Widget openDialogInjuries(BuildContext context, gym) =>defaultDialog(
                       isExerciseTaken = true;
                       Navigator.pop(context);
                       gym.requirements(isExerciseTaken);
-                      User.getProfile();
+                      pageNavigator(context, GymRecommendedPlan(requirements: requirements));
                       print('workout added bombom');
                     }).catchError((e){
                       print('workout crashed bombom');

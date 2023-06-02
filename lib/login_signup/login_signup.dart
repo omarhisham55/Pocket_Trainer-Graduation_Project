@@ -279,17 +279,19 @@ class Login extends StatelessWidget {
               child: Scaffold(
                 backgroundColor: BackgroundColors.background,
                 resizeToAvoidBottomInset: false,
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 50.0, vertical: 60.0),
-                  child: Center(
-                    child: AnimatedCrossFade(
-                        firstChild: loginSignUpScreens[1],
-                        secondChild: loginSignUpScreens[0],
-                        crossFadeState: signUpLoginChangeable.signup
-                            ? CrossFadeState.showFirst
-                            : CrossFadeState.showSecond,
-                        duration: const Duration(milliseconds: 1000)),
+                body: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50.0, vertical: 60.0),
+                    child: Center(
+                      child: AnimatedCrossFade(
+                          firstChild: loginSignUpScreens[1],
+                          secondChild: loginSignUpScreens[0],
+                          crossFadeState: signUpLoginChangeable.signup
+                              ? CrossFadeState.showFirst
+                              : CrossFadeState.showSecond,
+                          duration: const Duration(milliseconds: 1000)),
+                    ),
                   ),
                 ),
               ),

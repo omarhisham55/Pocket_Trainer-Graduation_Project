@@ -582,20 +582,6 @@ void showSnackBar({
 );
 
 Widget buildDaysOfWeek(void Function(DateTime) function) {
-  List<String> months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ];
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
