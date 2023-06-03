@@ -1,30 +1,26 @@
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:final_packet_trainer/data/gym_dialog_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:final_packet_trainer/data/exerciseData.dart';
-import 'package:final_packet_trainer/data/nutritionData.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
-import 'package:final_packet_trainer/pages/information/viewExercises.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-import '../../data/nutrition_dialog_data.dart';
 import '../../data/offers.dart';
 import '../../data/userData.dart';
 import '../../pages/gym/gym.dart';
 import '../../pages/home/home.dart';
 import '../../pages/information/information.dart';
-import '../../pages/nutrition/diet_recommended_plan.dart';
 import '../../pages/nutrition/nutrition.dart';
 import '../../pages/profile/profile.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/colors.dart';
-import '../animationNavigation.dart';
 
 class CubitManager extends Cubit<MainStateManager> {
   CubitManager() : super(InitialState());
@@ -185,11 +181,11 @@ class CubitManager extends Cubit<MainStateManager> {
         buildSearchMealList(searchList);
       } else {
         searchText = searchQuery.text;
-        print(searchText);
         buildSearchMealList(searchList);
       }
     });
   }
+
   void searchQueryExerciseListener(searchList) {
     searchQuery.addListener(() {
       if (searchQuery.text.isEmpty) {
@@ -197,48 +193,50 @@ class CubitManager extends Cubit<MainStateManager> {
         buildSearchExerciseList(searchList);
       } else {
         searchText = searchQuery.text;
-        print(searchText);
         buildSearchExerciseList(searchList);
       }
     });
   }
+
   List buildSearchMealList(searchList) {
-      if (searchText.isEmpty) {
-        emit(ChangeSearchState(filteredList: searchList));
-        return searchList;
-      } else {
-        List filteredList = [];
-          for (int i = 0; i < searchList.length; i++) {
-            if (searchList[i].name.toLowerCase().contains(
-                searchText.toLowerCase())) {
-              filteredList.add(searchList[i]);
-            }
-          }
-        print("length after filter ${filteredList.length}");
-        print("meal name filter ${filteredList[0].name}");
-        emit(ChangeSearchState(filteredList: filteredList));
-        return filteredList;
+    if (searchText.isEmpty) {
+      emit(ChangeSearchState(filteredList: searchList));
+      return searchList;
+    } else {
+      List filteredList = [];
+      for (int i = 0; i < searchList.length; i++) {
+        if (searchList[i]
+            .name
+            .toLowerCase()
+            .contains(searchText.toLowerCase())) {
+          filteredList.add(searchList[i]);
+        }
       }
+      emit(ChangeSearchState(filteredList: filteredList));
+      return filteredList;
+    }
   }
+
   List buildSearchExerciseList(searchList) {
-      if (searchText.isEmpty) {
-        emit(ChangeSearchState(filteredList: searchList));
-        return searchList;
-      } else {
-        List filteredList = [];
-          for (int i = 0; i < searchList.length; i++) {
-            if (searchList[i].exerciseName.toLowerCase().contains(
-                searchText.toLowerCase())) {
-              filteredList.add(searchList[i]);
-            }
-          }
-        print("length after filter ${filteredList.length}");
-        print("exercise name filter ${filteredList[0].exerciseName}");
-        emit(ChangeSearchState(filteredList: filteredList));
-        return filteredList;
+    if (searchText.isEmpty) {
+      emit(ChangeSearchState(filteredList: searchList));
+      return searchList;
+    } else {
+      List filteredList = [];
+      for (int i = 0; i < searchList.length; i++) {
+        if (searchList[i]
+            .exerciseName
+            .toLowerCase()
+            .contains(searchText.toLowerCase())) {
+          filteredList.add(searchList[i]);
+        }
       }
+      emit(ChangeSearchState(filteredList: filteredList));
+      return filteredList;
+    }
   }
-  void changeSearchIcon({searchList}){
+
+  void changeSearchIcon({searchList}) {
     isSearchOpened = !isSearchOpened;
     emit(ChangeSearchState(filteredList: searchList));
   }
@@ -252,97 +250,112 @@ class CubitManager extends Cubit<MainStateManager> {
   PanelController foodListPanel = PanelController();
   int addNumber = 0;
 
-  void requirements(requirements){
+  void requirements(requirements) {
     requirements = true;
     emit(Requirements());
   }
-  void changeToNotEmpty(){
-    User.currentUser!.workoutPlan!.values.forEach((workoutList) {
+
+  void changeToNotEmpty() {
+    for (var workoutList in User.currentUser!.workoutPlan!.values) {
       if (workoutList.isNotEmpty) {
         isWorkoutPlanEmpty = false;
-        return;
+        continue;
       }
-    });
+    }
     emit(Requirements());
   }
-  void deleteButton({staticBool}){
+
+  void deleteButton({staticBool}) {
     deleteButtonFood = staticBool ?? !deleteButtonFood;
     emit(DeleteButtonState());
   }
-  void dropDownSelect(value, selectedValue){
+
+  void dropDownSelect(value, selectedValue) {
     selectedValue = value;
     emit(DropDownState(selectedValue: selectedValue));
   }
+
   bool isChecked = false;
-  bool disableButton(){
+  bool disableButton() {
     isChecked = true;
     emit(RadioButtonAddMealState());
     return isChecked;
   }
-  int pieChart(event,pieTouchResponse, touchedIndex){
-    if (!event.isInterestedForInteractions
-        || pieTouchResponse == null
-        || pieTouchResponse.touchedSection == null
-    ) {
+
+  int pieChart(event, pieTouchResponse, touchedIndex) {
+    if (!event.isInterestedForInteractions ||
+        pieTouchResponse == null ||
+        pieTouchResponse.touchedSection == null) {
       touchedIndex = -1;
     }
     touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
     return touchedIndex;
   }
 
-  void slidingPanel(controller){
-    controller.isPanelOpen
-        ? controller.close()
-        : controller.open();
+  void slidingPanel(controller) {
+    controller.isPanelOpen ? controller.close() : controller.open();
     emit(HandleSlidingPanelState());
   }
+
   List selectedMeals = [];
   String selectedValue = "select meal time";
 
   //add meal to database
   Future<void> addMeals({required String mealId}) async {
     final response = await http.post(
-        Uri.parse('http://$ipConnectionAddress:3000/add-meal-to-nutritionPlan/$mealId'),
-        headers: {"Authorization": "Bearer ${User.token}"},
+      Uri.parse('$url/add-meal-to-nutritionPlan/$mealId'),
+      headers: {"Authorization": "Bearer ${User.token}"},
     );
     if (response.statusCode == 200) {
       print('Meal added to Nutrition Plan ${response.body}');
       print('Meal added to Nutrition Plan ${response.statusCode}');
     } else {
-      throw Exception('Failed to add meal to Nutrition Plan ${response.statusCode}');
+      throw Exception(
+          'Failed to add meal to Nutrition Plan ${response.statusCode}');
     }
     emit(AddMealState());
   }
 
-  void addMeal(context, selectedValue){
-      if(selectedMeals.isNotEmpty){
-        print(selectedMeals);
-        final futures = selectedMeals.map((meal) => addMeals(mealId: meal.id));
-        Future.wait(futures).then((values) => toastSuccess(context: context, text: "Meals added to $selectedValue", duration: 3)).catchError((e){print("lolo ${e.runtimeType}");});
-        addMealController.close();
-        emit(AddMealState());
-      }else{
-        showSnackBar(context: context, text: "select meals");
-        print("select meals");
-      }
+  void addMeal(context, selectedValue) {
+    if (selectedMeals.isNotEmpty) {
+      print(selectedMeals);
+      final futures = selectedMeals.map((meal) => addMeals(mealId: meal.id));
+      Future.wait(futures)
+          .then((values) => toastSuccess(
+              context: context,
+              text: "Meals added to $selectedValue",
+              duration: 3))
+          .catchError((e) {
+        print("lolo ${e.runtimeType}");
+      });
+      addMealController.close();
+      emit(AddMealState());
+    } else {
+      showSnackBar(context: context, text: "select meals");
+      print("select meals");
+    }
   }
 
   //delete meal from database
   Future<void> deleteMeals({required String mealId}) async {
     final response = await http.post(
-        Uri.parse('http://$ipConnectionAddress:3000/delete-meal-from-nutritionPlan/$mealId'),
-        headers: {"Authorization": "Bearer ${User.token}",
-          "Content-Type": "application/json"},
+      Uri.parse('$url/delete-meal-from-nutritionPlan/$mealId'),
+      headers: {
+        "Authorization": "Bearer ${User.token}",
+        "Content-Type": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       print('Meal deleted from Nutrition Plan ${response.body}');
       print('Meal deleted from Nutrition Plan ${response.statusCode}');
     } else {
-      throw Exception('Failed to delete meal from Nutrition Plan ${response.statusCode}');
+      throw Exception(
+          'Failed to delete meal from Nutrition Plan ${response.statusCode}');
     }
     emit(RemoveMealState());
   }
-  void removeMeal(List selectedMeal, int index){
+
+  void removeMeal(List selectedMeal, int index) {
     selectedMeal.removeAt(index);
     emit(RemoveMealState());
   }
@@ -361,26 +374,33 @@ class CubitManager extends Cubit<MainStateManager> {
                 onPressed: () {
                   dropDownHint = dropDownFirstLevel[index];
                   dropDownSubHint = dropDownSecondLevel[i];
-                  if(dropDownHint == "All Exercises"){
+                  if (dropDownHint == "All Exercises") {
                     exerciseType = "";
-                  }else{
+                  } else {
                     exerciseType = dropDownHint;
                   }
                   emit(FilterState());
-                }
-              );
-          })
-      );
+                });
+          }));
     });
   }
 
   List<String> dropDownFirstLevel = [
-    "All Exercises", "Chest", "Back",
-    "Shoulders", "Biceps", "Triceps", "Legs"
+    "All Exercises",
+    "Chest",
+    "Back",
+    "Shoulders",
+    "Biceps",
+    "Triceps",
+    "Legs"
   ];
   List<String> dropDownSecondLevel = [
-    "All techniques", "Cables", "Dumbbells",
-    "Body Weight", "Barbell", "Machines"
+    "All techniques",
+    "Cables",
+    "Dumbbells",
+    "Body Weight",
+    "Barbell",
+    "Machines"
   ];
   String dropDownHint = "All Exercises";
   String dropDownSubHint = "All techniques";
@@ -395,7 +415,8 @@ class CubitManager extends Cubit<MainStateManager> {
   String exercisePanelImage = "";
   String exercisePanelSets = "";
   String exercisePanelReps = "";
-  void addExerciseName(id, name, {String? type, String? image, int? sets, int? reps}){
+  void addExerciseName(id, name,
+      {String? type, String? image, int? sets, int? reps}) {
     exercisePanelId = id;
     exercisePanelName = name.toString();
     exercisePanelType = type.toString();
@@ -404,21 +425,28 @@ class CubitManager extends Cubit<MainStateManager> {
     exercisePanelReps = reps.toString();
     emit(GetExerciseDataToPanel());
   }
-  Future<String> addWorkouts({required String exerciseId}) async {
+
+  Future addWorkouts(
+      {required String exerciseId, required BuildContext context}) async {
+    print(exerciseId);
     final response = await http.post(
-        Uri.parse('http://$ipConnectionAddress:3000/add-exercise-to-wourkoutplan/$exerciseId'),
-        headers: {"Authorization": "Bearer ${User.token}"},
-        body: jsonEncode({
-          "exerciseId": exerciseId
-        })
-    );
-    if (response.statusCode == 200) {
+        Uri.parse('$url/workoutplan/add/chest/exercise'),
+        headers: {
+          "Authorization": "Bearer ${User.token}",
+          "Access-Control-Allow-Origin": "$url/*"
+        },
+        body: jsonEncode({"exerciseId": exerciseId}));
+    if (response.statusCode == 201) {
+      print("zama ${response.body}");
+      toastSuccess(context: context, text: 'Exercise added successfully');
       emit(AddExerciseState());
       return response.body;
     } else {
-      throw Exception('Failed to add exercise to Workout Plan ${response.statusCode}');
+      toastError(context: context, text: response.body);
+      return response.body;
     }
   }
+
   //delete workout from database
   // Future<void> deleteWorkouts({required String exerciseId}) async {
   //   final response = await http.post(
@@ -438,11 +466,12 @@ class CubitManager extends Cubit<MainStateManager> {
     print(exerciseId);
     print(User.token);
     final response = await http.delete(
-        Uri.parse('http://$ipConnectionAddress:3000/wourkoutplan-delete-exercise'),
-        headers: {"Authorization": "Bearer ${User.token}",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "http://$ipConnectionAddress:3000/*"
-        },
+      Uri.parse('$url/wourkoutplan/delete/exercise'),
+      headers: {
+        "Authorization": "Bearer ${User.token}",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "$url/*"
+      },
       body: jsonEncode(<String, String>{
         'exerciseId': exerciseId,
       }),
@@ -451,37 +480,44 @@ class CubitManager extends Cubit<MainStateManager> {
       print('Exercise deleted from Workout Plan ${response.body}');
       print('Exercise deleted from Workout Plan ${response.statusCode}');
     } else {
-      throw Exception('Failed to delete exercise from Workout Plan ${response.statusCode}');
+      throw Exception(
+          'Failed to delete exercise from Workout Plan ${response.statusCode}');
     }
     emit(RemoveExerciseState());
-
   }
 
   //date
   DateTime selectedDate = DateTime.now();
-  void onSelectedDate(date){
+  void onSelectedDate(date) {
     selectedDate = date;
     emit(ChangeDateState());
   }
+
   String weekdayOfIndex = "";
-  void getWeekday(index){
+  void getWeekday(index) {
     weekdayOfIndex = daysOfTraining[index];
     // print('$weekdayOfIndex of ${index}');
     emit(ChangeDateState());
   }
+
   int currentDateIndex = 0;
-  void changeIndex(index){
+  void changeIndex(index) {
     currentDateIndex = index;
     emit(ChangeDateState());
   }
 
   //create workoutplan
 }
-Future<Map<String, dynamic>> createWorkoutPlan(level, goal, trainingLocation) async {
-  var workout = await http.post(Uri.parse('http://$ipConnectionAddress:3000/wourkoutplan-recommendation'),
-    headers: {"Authorization": "Bearer ${User.token}",
+
+Future<Map<String, dynamic>> createWorkoutPlan(
+    level, goal, trainingLocation) async {
+  var workout = await http.post(
+    Uri.parse('$url/wourkoutplan-recommendation'),
+    headers: {
+      "Authorization": "Bearer ${User.token}",
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "http://$ipConnectionAddress:3000/*"},
+      "Access-Control-Allow-Origin": "$url/*"
+    },
     body: jsonEncode(<String, String>{
       'level': level,
       'goal': goal,
@@ -489,12 +525,12 @@ Future<Map<String, dynamic>> createWorkoutPlan(level, goal, trainingLocation) as
     }),
   );
   print("create plan dodo");
-  if(workout.statusCode == 200){
+  if (workout.statusCode == 200) {
     var data = json.decode(workout.body);
     print("created workout plan $data");
     // emit(CreateWorkoutPlan());
     return data;
-  } else{
+  } else {
     throw Exception("Failed to load data ${workout.statusCode}");
   }
 }

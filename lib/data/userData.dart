@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:final_packet_trainer/data/gym_dialog_data.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -30,7 +29,7 @@ class User {
 
   static Future<String> signUp({required String username, required String email, required String password, context}) async {
     final response = await http.post(
-      Uri.parse('http://$ipConnectionAddress:3000/signup'),
+      Uri.parse('$url/signup'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(<String, String>{
         'name': username,
@@ -51,8 +50,9 @@ class User {
   }
 
   static Future<void> login({required String username, required String password, required BuildContext context, required blocContest}) async {
+    // ignore: unused_local_variable
     final response = await http.post(
-      Uri.parse('http://$ipConnectionAddress:3000/loggedin'),
+      Uri.parse('$url/loggedin'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(<String, String>{
         'email': username,
@@ -69,23 +69,8 @@ class User {
       }
     });
   }
-
-  static Future<void> logout({required BuildContext context}) async {
-    final response = await http.post(
-      Uri.parse('http://$ipConnectionAddress:3000/logout'),
-      headers: {"Authorization": "Bearer ${User.token}"},
-      // body: jsonEncode({}),
-    );
-    if (response.statusCode == 200) {
-      print("logout successful");
-      print(response.body);
-      toastSuccess(context: context, text: "Logout successful");
-    } else {
-      toastError(context: context, text: "Logout failed ${response.statusCode} ${response.body}");
-    }
-  }
   static Future<Map<String, dynamic>> getProfile() async {
-    final profile = await http.get(Uri.parse('http://$ipConnectionAddress:3000/profile'),
+    final profile = await http.get(Uri.parse('$url/profile'),
         headers: {"Authorization": "Bearer ${User.token}"}
     );
     if(profile.statusCode == 200){

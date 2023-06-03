@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/colors.dart';
-import '../../shared/styles/images.dart';
 
 class ExerciseDetails extends StatelessWidget {
   final String? exerciseName;

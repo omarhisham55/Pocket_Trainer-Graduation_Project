@@ -325,9 +325,9 @@ Widget defaultDialog({
                   padding: const EdgeInsets.all(15.0),
                   child: GestureDetector(
                       onTap: nextDialog,
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        children: const [
+                        children: [
                           Text(
                             'Next',
                             style: TextStyle(

@@ -1,27 +1,17 @@
-import 'package:calender_picker/date_picker_widget.dart';
-import 'package:circle_button/circle_button.dart';
 import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/data/gym_dialog_data.dart';
-import 'package:final_packet_trainer/data/nutritionData.dart';
-import 'package:final_packet_trainer/data/userData.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:final_packet_trainer/pages/gym/AddExercise.dart';
-import 'package:final_packet_trainer/pages/gym/gymRecommendedPlan.dart';
 import 'package:final_packet_trainer/poseDetectionModel/poseDetection.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import '../../navigation/animationNavigation.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/images.dart';
-import '../gym/gym.dart';
-import '../nutrition/diet_recommended_plan.dart';
-import 'package:http/http.dart' as http;
 
 class GymHome extends StatelessWidget {
   GymHome({Key? key}) : super(key: key);
@@ -295,7 +285,7 @@ class GymHome extends StatelessWidget {
                                                                     print("backDay ${workout.length}");
                                                                   });
                                                                 } catch (error) {
-                                                                  throw error;
+                                                                  rethrow;
                                                                 }
                                                               },
                                                               image: "http://t0.gstatic.com/images?q=tbn:ANd9GcQ3bFRqprKKFG-YxFSFe23rTSZxKoUkjlQLBA1vPEwv2fKlV9Ea&s",

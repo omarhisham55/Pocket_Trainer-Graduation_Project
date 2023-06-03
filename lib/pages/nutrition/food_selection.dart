@@ -4,7 +4,6 @@ import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/nutrition_dialog_data.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/colors.dart';
 import 'food_details.dart';

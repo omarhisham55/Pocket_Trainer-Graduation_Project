@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 
 class LogoAnimation extends PageRouteBuilder{
@@ -22,6 +24,7 @@ class HomeAnimation extends PageRouteBuilder{
         //according to offset transition will be up, down, left or right
         var begin = const Offset(0, 1);
         var end = Offset.zero;
+        // ignore: unused_local_variable
         var tween = Tween(begin: begin, end: end);
         var curveAnimation = CurvedAnimation(parent: animation, curve: Curves.easeIn);
         return SizeTransition(sizeFactor: curveAnimation, child: child);

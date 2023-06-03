@@ -1,12 +1,7 @@
-import 'package:final_packet_trainer/navigation/routes.dart';
-import 'package:final_packet_trainer/notification/notification.dart';
-import 'package:final_packet_trainer/pages/nutrition/nutritionHome.dart';
 import 'package:flutter/material.dart';
 import '../../navigation/animationNavigation.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-import '../styles/colors.dart';
-import 'components.dart';
 
 PageTransitionAnimation scale = PageTransitionAnimation.scale;
 PageTransitionAnimation fade = PageTransitionAnimation.fade;

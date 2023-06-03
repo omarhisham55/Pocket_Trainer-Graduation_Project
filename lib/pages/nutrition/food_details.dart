@@ -41,12 +41,12 @@ class _FoodDetailsState extends State<FoodDetails>
   int randomNumber = Random().nextInt(2);
 
   List<Color> colors = [
-    Color(0xff4d504d),
-    Color(0xff6b79a6),
-    Color(0xffd6dcd6),
-    Color(0xff779b73),
-    Color(0xffa9dda5),
-    Color(0xff9aaced),
+    const Color(0xff4d504d),
+    const Color(0xff6b79a6),
+    const Color(0xffd6dcd6),
+    const Color(0xff779b73),
+    const Color(0xffa9dda5),
+    const Color(0xff9aaced),
   ];
 
   @override
@@ -54,7 +54,7 @@ class _FoodDetailsState extends State<FoodDetails>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 1500),
     );
     _animation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
       parent: _animationController,
@@ -253,7 +253,7 @@ class _FoodDetailsState extends State<FoodDetails>
               }
               return BarTooltipItem(
                 '$type\n',
-                TextStyle(
+                const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,

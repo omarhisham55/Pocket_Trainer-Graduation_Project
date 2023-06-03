@@ -29,21 +29,21 @@ class NutritionData {
 
   factory NutritionData.fromJson(Map<String, dynamic> json) {
     return NutritionData(
-        id: json["_id"].toString() ?? "",
-        name: json["name"] ?? "",
-        calories: json["calories"] ?? "",
-        protein: json["protein"] ?? "",
-        carbs: json["carbs"] ?? "",
-        fats: json["fats"] ?? "",
-        quantity: json["quantity"] ?? "",
-        image: json["imageUrl"] ?? "",
-        typeofMeal: json["typeofMeal"] ?? "",
+        id: json["_id"].toString(),
+        name: json["name"].toString(),
+        calories: json["calories"].toString(),
+        protein: json["protein"].toString(),
+        carbs: json["carbs"].toString(),
+        fats: json["fats"].toString(),
+        quantity: json["quantity"].toString(),
+        image: json["imageUrl"].toString(),
+        typeofMeal: json["typeofMeal"].toString(),
     );
   }
 }
 
 Future<List> getBreakfast() async {
-  var meals = await http.get(Uri.parse('http://$ipConnectionAddress:3000/meals/breakfast'));
+  var meals = await http.get(Uri.parse('$url/meals/breakfast'));
   if(meals.statusCode == 200){
     var data = json.decode(meals.body);
     var mealsDataList = data.map((json) => NutritionData.fromJson(json)).toList();
@@ -53,7 +53,7 @@ Future<List> getBreakfast() async {
   }
 }
 Future<List> getLunch() async {
-  var meals = await http.get(Uri.parse('http://$ipConnectionAddress:3000/meals/lunch'));
+  var meals = await http.get(Uri.parse('$url/meals/lunch'));
   if(meals.statusCode == 200){
     var data = json.decode(meals.body);
     var mealsDataList = data.map((json) => NutritionData.fromJson(json)).toList();
@@ -63,7 +63,7 @@ Future<List> getLunch() async {
   }
 }
 Future<List> getDinner() async {
-  var meals = await http.get(Uri.parse('http://$ipConnectionAddress:3000/meals/dinner'));
+  var meals = await http.get(Uri.parse('$url/meals/dinner'));
   if(meals.statusCode == 200){
     var data = json.decode(meals.body);
     var mealsDataList = data.map((json) => NutritionData.fromJson(json)).toList();
@@ -89,18 +89,18 @@ Future<List> getNutritionData({required key}) async{
   }
   List values = [];
   for (String key in nutritionData.keys) {
+    // ignore: unused_local_variable
     for (dynamic meal in nutritionData[key]!) {
       values.add(nutritionData[key]!);
     }
   }
-  print("nutrition values $values");
   return values;
 }
 
 
 Future<List> getBreakfastNutritionPlan() async {
   final meals = await http.get(
-      Uri.parse('http://$ipConnectionAddress:3000/nutritionplan/breakfast'),
+      Uri.parse('$url/nutritionplan/breakfast'),
       headers: {"Authorization": "Bearer ${User.token}"}
   ).catchError((e){throw e;});
   if(meals.statusCode == 200){
@@ -112,7 +112,7 @@ Future<List> getBreakfastNutritionPlan() async {
 }
 Future<List> getLunchNutritionPlan() async {
   final meals = await http.get(
-      Uri.parse('http://$ipConnectionAddress:3000/nutritionplan/lunch'),
+      Uri.parse('$url/nutritionplan/lunch'),
       headers: {"Authorization": "Bearer ${User.token}"}
   ).catchError((e){throw e;});
   if(meals.statusCode == 200){
@@ -124,7 +124,7 @@ Future<List> getLunchNutritionPlan() async {
 }
 Future<List> getDinnerNutritionPlan() async {
   final meals = await http.get(
-      Uri.parse('http://$ipConnectionAddress:3000/nutritionplan/dinner'),
+      Uri.parse('$url/nutritionplan/dinner'),
       headers: {"Authorization": "Bearer ${User.token}"}
   ).catchError((e){throw e;});
   if(meals.statusCode == 200){

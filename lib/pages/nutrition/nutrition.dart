@@ -1,20 +1,14 @@
 import 'package:final_packet_trainer/data/gym_dialog_data.dart';
-import 'package:final_packet_trainer/data/nutritionData.dart';
 import 'package:flutter/material.dart';
 import '../../data/nutrition_dialog_data.dart';
-import '../../navigation/animationNavigation.dart';
 import '../../navigation/cubit/cubit.dart';
 import '../../navigation/cubit/states.dart';
-import '../../data/nutrition_dialog_data.dart';
 import '../../shared/components/constants.dart';
 import '../../shared/styles/colors.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/images.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:quds_popup_menu/quds_popup_menu.dart';
-import '../gym/gym.dart';
-import 'diet_recommended_plan.dart';
 import 'nutritionHome.dart';
 
 class Nutrition extends StatelessWidget {

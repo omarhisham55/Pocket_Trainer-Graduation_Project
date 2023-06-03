@@ -44,7 +44,7 @@ class AddExercise extends StatelessWidget {
                             left: 40,
                             child: TextButton(
                                 onPressed: (){
-                                  pageNavigator(context, InformationDetails(exerciseType: "Shoulders"));
+                                  pageNavigator(context, const InformationDetails(exerciseType: "Shoulders"));
                                 },
                                 child: subTitleText(text: "Shoulders", color: TextColors.blackText)
                             ),
@@ -57,7 +57,7 @@ class AddExercise extends StatelessWidget {
                           left: 50,
                           child: TextButton(
                               onPressed: (){
-                                pageNavigator(context, InformationDetails(exerciseType: "Chest"));
+                                pageNavigator(context, const InformationDetails(exerciseType: "Chest"));
                               },
                               child: subTitleText(text: "Chest", color: TextColors.blackText)
                           ),
@@ -70,7 +70,7 @@ class AddExercise extends StatelessWidget {
                           left: 300,
                           child: TextButton(
                               onPressed: (){
-                                pageNavigator(context, InformationDetails(exerciseType: "Arms"));
+                                pageNavigator(context, const InformationDetails(exerciseType: "Arms"));
                               },
                               child: subTitleText(text: "Arms", color: TextColors.blackText)
                           ),
@@ -83,7 +83,7 @@ class AddExercise extends StatelessWidget {
                           left: 90,
                           child: TextButton(
                               onPressed: (){
-                                pageNavigator(context, InformationDetails(exerciseType: "Legs"));
+                                pageNavigator(context, const InformationDetails(exerciseType: "Legs"));
                               },
                               child: subTitleText(text: "Legs", color: TextColors.blackText)
                           ),
@@ -96,7 +96,7 @@ class AddExercise extends StatelessWidget {
                           left: 50,
                           child: TextButton(
                               onPressed: (){
-                                pageNavigator(context, InformationDetails(exerciseType: "Arms"));
+                                pageNavigator(context, const InformationDetails(exerciseType: "Arms"));
                               },
                               child: subTitleText(text: "Arms", color: TextColors.blackText)
                           ),
@@ -109,7 +109,7 @@ class AddExercise extends StatelessWidget {
                           left: 250,
                           child: TextButton(
                               onPressed: (){
-                                pageNavigator(context, InformationDetails(exerciseType: "Back"));
+                                pageNavigator(context, const InformationDetails(exerciseType: "Back"));
                               },
                               child: subTitleText(text: "Back", color: TextColors.blackText)
                           ),
@@ -122,7 +122,7 @@ class AddExercise extends StatelessWidget {
                           left: 90,
                           child: TextButton(
                               onPressed: (){
-                                pageNavigator(context, InformationDetails(exerciseType: "Legs"));
+                                pageNavigator(context, const InformationDetails(exerciseType: "Legs"));
                               },
                               child: subTitleText(text: "Legs", color: TextColors.blackText)
                           ),

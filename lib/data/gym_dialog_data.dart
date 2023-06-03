@@ -1,4 +1,3 @@
-import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/data/userData.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/pages/gym/gymRecommendedPlan.dart';

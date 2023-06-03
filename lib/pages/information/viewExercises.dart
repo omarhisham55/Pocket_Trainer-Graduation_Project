@@ -4,7 +4,6 @@ import 'package:final_packet_trainer/pages/information/exerciseDetails.dart';
 import 'package:final_packet_trainer/shared/components/components.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
-import 'package:final_packet_trainer/shared/styles/images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';

@@ -1,5 +1,3 @@
-import 'dart:math';
-import 'package:final_packet_trainer/shared/network/networkConnectionCheck.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -46,7 +44,7 @@ class Exercise {
     return Exercise(
       exerciseId: json["_id"] ?? "",
       exerciseName: json["Title"] ?? "",
-      exerciseBodyPart: json["bodyPart"] ?? "",
+      exerciseBodyPart: json["BodyPart"] ?? "",
       exerciseType: json["Type"] ?? "",
       // exerciseTarget: json["target"],
       exerciseDescription: json["Desc"] ?? "",
@@ -63,20 +61,15 @@ class Exercise {
 String ipConnectionAddress = "192.168.1.53";
 var accessControl = "http://$ipConnectionAddress:3000/*";
 // Future<String> ipConnectionAddress2 = getIPAddress();
+String url = "https://webservise-pockettrainer.onrender.com";
+
 
 //get exercises
 Future<List> getChestExercises() async {
-  var chestExercises = await http.get(
-      Uri.parse('http://$ipConnectionAddress:3000/chest/exercises'),
-  headers: {
-    "Access-Control-Allow-Origin": accessControl
-  });
+  var chestExercises = await http.get(Uri.parse('$url/chest/exercises'));
   if (chestExercises.statusCode == 200) {
     var data = json.decode(chestExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
-    // ipConnectionAddress2.then((value) {
-    //   print(value);
-    // });
     return dataList;
   } else {
     throw Exception('Failed to load data');
@@ -84,11 +77,7 @@ Future<List> getChestExercises() async {
 }
 
 Future<List> getBackExercises() async {
-  var backExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/back/exercises'),
-      headers: {
-  "Access-Control-Allow-Origin": accessControl
-  });
+  var backExercises = await http.get(Uri.parse('$url/back/exercises'));
   if (backExercises.statusCode == 200) {
     var data = json.decode(backExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -100,11 +89,8 @@ Future<List> getBackExercises() async {
 }
 
 Future<List> getShoulderExercises() async {
-  var shoulderExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/shoulder/exercises'),
-  headers: {
-    "Access-Control-Allow-Origin": accessControl
-  });
+  var shoulderExercises = await http.get(
+      Uri.parse('$url/shoulder/exercises'));
   if (shoulderExercises.statusCode == 200) {
     var data = json.decode(shoulderExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -116,11 +102,8 @@ Future<List> getShoulderExercises() async {
 }
 
 Future<List> getArmExercises() async {
-  var armExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/arm/exercises'),
-  headers: {
-    "Access-Control-Allow-Origin": accessControl
-  });
+  var armExercises = await http.get(
+      Uri.parse('$url/arm/exercises'));
   if (armExercises.statusCode == 200) {
     var data = json.decode(armExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -132,16 +115,11 @@ Future<List> getArmExercises() async {
 }
 
 Future<List> getLegExercises() async {
-  var legExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/leg/exercises'),
-  headers: {
-    "Access-Control-Allow-Origin": accessControl
-  });
+  var legExercises = await http.get(
+      Uri.parse('$url/leg/exercises'));
   if (legExercises.statusCode == 200) {
     var data = json.decode(legExercises.body);
-    print(legExercises.statusCode);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
-    print(dataList.length);
     return dataList;
   } else {
     throw Exception('Failed to load data');
@@ -149,14 +127,11 @@ Future<List> getLegExercises() async {
 }
 
 Future<List> getCoreExercises() async {
-  var legExercises = await http.get(Uri.parse('http://$ipConnectionAddress:3000/abdominals/exercises'),
-  headers: {
-    "Access-Control-Allow-Origin": accessControl
-  });
+  var legExercises = await http.get(
+      Uri.parse('$url/abdominals/exercises'));
   if (legExercises.statusCode == 200) {
     var data = json.decode(legExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
-
     return dataList;
   } else {
     throw Exception('Failed to load data');
@@ -191,7 +166,7 @@ Future<List> getDataMapValues({String? key = "", bool? allValues}) async {
       keys.add(key);
     }
     return keys;
-  } else if(key != ""){
+  } else if (key != "") {
     // Wait for all futures to complete
     for (String key in allExercise.keys) {
       exerciseData[key] = await allExercise[key]!;
@@ -202,13 +177,13 @@ Future<List> getDataMapValues({String? key = "", bool? allValues}) async {
     // Print the attributes of each exercise
     List values = [];
     for (String key in exerciseData.keys) {
+      // ignore: unused_local_variable
       for (dynamic exercise in exerciseData[key]!) {
         values.add(exerciseData[key]!);
       }
     }
-    print("exercise values $values");
     return values;
-  }else{
+  } else {
     throw Exception('Failed to load data');
   }
 }
@@ -242,8 +217,7 @@ class Stretches {
 }
 
 Future<List> getChestStretches() async {
-  var chestExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/chest/stretches'));
+  var chestExercises = await http.get(Uri.parse('$url/chest/stretches'));
   if (chestExercises.statusCode == 200) {
     var data = json.decode(chestExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -258,7 +232,7 @@ Future<List> getChestStretches() async {
 
 Future<List> getBackStretches() async {
   var backExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/back/stretches'));
+      .get(Uri.parse('$url/back/stretches'));
   if (backExercises.statusCode == 200) {
     var data = json.decode(backExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -271,7 +245,7 @@ Future<List> getBackStretches() async {
 
 Future<List> getShoulderStretches() async {
   var shoulderExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/shoulder/stretches'));
+      .get(Uri.parse('$url/shoulder/stretches'));
   if (shoulderExercises.statusCode == 200) {
     var data = json.decode(shoulderExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -284,7 +258,7 @@ Future<List> getShoulderStretches() async {
 
 Future<List> getBicepsStretches() async {
   var armExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/biceps/stretches'));
+      .get(Uri.parse('$url/biceps/stretches'));
   if (armExercises.statusCode == 200) {
     var data = json.decode(armExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -297,7 +271,7 @@ Future<List> getBicepsStretches() async {
 
 Future<List> getTricepsStretches() async {
   var armExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/triceps/stretches'));
+      .get(Uri.parse('$url/triceps/stretches'));
   if (armExercises.statusCode == 200) {
     var data = json.decode(armExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -310,7 +284,7 @@ Future<List> getTricepsStretches() async {
 
 Future<List> getLegStretches() async {
   var legExercises = await http
-      .get(Uri.parse('http://$ipConnectionAddress:3000/leg/stretches'));
+      .get(Uri.parse('$url/leg/stretches'));
   if (legExercises.statusCode == 200) {
     var data = json.decode(legExercises.body);
     final List dataList = data.map((json) => Exercise.fromJson(json)).toList();
@@ -336,7 +310,6 @@ Future<List> getStretchesValues({String? key}) async {
   for (String key in allStretches.keys) {
     stretchesData[key] = await allStretches[key]!;
   }
-  print("stretches data $stretchesData");
   if (allStretches.containsKey(key)) {
     return stretchesData[key]!;
   } else {
@@ -345,14 +318,14 @@ Future<List> getStretchesValues({String? key}) async {
 }
 
 Future<Map<String, dynamic>> getWorkoutPlan() async {
-  var workout = await http.get(Uri.parse('http://$ipConnectionAddress:3000/workoutplan'),
-      headers: {"Authorization": "Bearer ${User.token}"},
+  var workout = await http.get(
+    Uri.parse('$url/workoutplan'),
+    headers: {"Authorization": "Bearer ${User.token}"},
   );
-  if(workout.statusCode == 200){
+  if (workout.statusCode == 200) {
     var data = json.decode(workout.body);
     return data;
-  } else{
+  } else {
     throw Exception("Failed to load data ${workout.statusCode}");
   }
 }
-

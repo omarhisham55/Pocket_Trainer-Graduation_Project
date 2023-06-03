@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:final_packet_trainer/pages/information/viewExercises.dart';
@@ -29,111 +28,111 @@ class Home extends StatelessWidget {
                   child: Column(
                     children: [
                       //Special offer section --carousel--
-                      Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20.0),
-                          child: CarouselSlider(
-                            options: CarouselOptions(
-                              aspectRatio: 16 / 9,
-                              viewportFraction: .8,
-                              initialPage: 0,
-                              enableInfiniteScroll: true,
-                              reverse: false,
-                              autoPlay: true,
-                              autoPlayInterval: const Duration(seconds: 3),
-                              autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              enlargeCenterPage: true,
-                              height: MediaQuery.of(context).size.height * 0.18,
-                              scrollDirection: Axis.horizontal,
-                              // onPageChanged: callbackFunction,
-                            ),
-                            items: [
-                              Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: BackgroundColors.offers,
-                                  ),
-                                  child: MaterialButton(
-                                    onPressed: () {},
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(20.0),
-                                      child: Stack(children: [
-                                        Image.asset(homeContent.specialOffer[0].image,
-                                            width: double.infinity,
-                                            alignment: Alignment.centerRight,
-                                            fit: BoxFit.contain),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            subTitleText(
-                                                text: homeContent.specialOffer[0].title),
-                                            const SizedBox(height: 10),
-                                            paragraphText(
-                                                text: homeContent.specialOffer[0].offer),
-                                          ],
-                                        )
-                                      ]),
-                                    ),
-                                  )),
-                              Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: BackgroundColors.offers,
-                                  ),
-                                  child: MaterialButton(
-                                    onPressed: () {},
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(20.0),
-                                      child: Stack(children: [
-                                        Image.asset(homeContent.specialOffer[1].image,
-                                            width: double.infinity,
-                                            alignment: Alignment.centerRight,
-                                            fit: BoxFit.contain),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            subTitleText(
-                                                text: homeContent.specialOffer[1].title),
-                                            const SizedBox(height: 10),
-                                            paragraphText(
-                                                text: homeContent.specialOffer[1].offer),
-                                          ],
-                                        )
-                                      ]),
-                                    ),
-                                  )),
-                              Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: BackgroundColors.offers,
-                                  ),
-                                  child: MaterialButton(
-                                    onPressed: () {},
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(20.0),
-                                      child: Stack(children: [
-                                        Image.asset(homeContent.specialOffer[2].image,
-                                            width: double.infinity,
-                                            alignment: Alignment.centerRight,
-                                            fit: BoxFit.contain),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            subTitleText(
-                                                text: homeContent.specialOffer[2].title),
-                                            const SizedBox(height: 10),
-                                            paragraphText(
-                                                text: homeContent.specialOffer[2].offer),
-                                          ],
-                                        )
-                                      ]),
-                                    ),
-                                  ))
-                            ],
-                          )),
+                      // Padding(
+                      //     padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      //     child: CarouselSlider(
+                      //       options: CarouselOptions(
+                      //         aspectRatio: 16 / 9,
+                      //         viewportFraction: .8,
+                      //         initialPage: 0,
+                      //         enableInfiniteScroll: true,
+                      //         reverse: false,
+                      //         autoPlay: true,
+                      //         autoPlayInterval: const Duration(seconds: 3),
+                      //         autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                      //         autoPlayCurve: Curves.fastOutSlowIn,
+                      //         enlargeCenterPage: true,
+                      //         height: MediaQuery.of(context).size.height * 0.18,
+                      //         scrollDirection: Axis.horizontal,
+                      //         // onPageChanged: callbackFunction,
+                      //       ),
+                      //       items: [
+                      //         Container(
+                      //             decoration: BoxDecoration(
+                      //               borderRadius: BorderRadius.circular(30),
+                      //               color: BackgroundColors.offers,
+                      //             ),
+                      //             child: MaterialButton(
+                      //               onPressed: () {},
+                      //               child: Padding(
+                      //                 padding: const EdgeInsets.all(20.0),
+                      //                 child: Stack(children: [
+                      //                   Image.asset(homeContent.specialOffer[0].image,
+                      //                       width: double.infinity,
+                      //                       alignment: Alignment.centerRight,
+                      //                       fit: BoxFit.contain),
+                      //                   Column(
+                      //                     crossAxisAlignment:
+                      //                         CrossAxisAlignment.start,
+                      //                     children: [
+                      //                       subTitleText(
+                      //                           text: homeContent.specialOffer[0].title),
+                      //                       const SizedBox(height: 10),
+                      //                       paragraphText(
+                      //                           text: homeContent.specialOffer[0].offer),
+                      //                     ],
+                      //                   )
+                      //                 ]),
+                      //               ),
+                      //             )),
+                      //         Container(
+                      //             decoration: BoxDecoration(
+                      //               borderRadius: BorderRadius.circular(30),
+                      //               color: BackgroundColors.offers,
+                      //             ),
+                      //             child: MaterialButton(
+                      //               onPressed: () {},
+                      //               child: Padding(
+                      //                 padding: const EdgeInsets.all(20.0),
+                      //                 child: Stack(children: [
+                      //                   Image.asset(homeContent.specialOffer[1].image,
+                      //                       width: double.infinity,
+                      //                       alignment: Alignment.centerRight,
+                      //                       fit: BoxFit.contain),
+                      //                   Column(
+                      //                     crossAxisAlignment:
+                      //                         CrossAxisAlignment.start,
+                      //                     children: [
+                      //                       subTitleText(
+                      //                           text: homeContent.specialOffer[1].title),
+                      //                       const SizedBox(height: 10),
+                      //                       paragraphText(
+                      //                           text: homeContent.specialOffer[1].offer),
+                      //                     ],
+                      //                   )
+                      //                 ]),
+                      //               ),
+                      //             )),
+                      //         Container(
+                      //             decoration: BoxDecoration(
+                      //               borderRadius: BorderRadius.circular(30),
+                      //               color: BackgroundColors.offers,
+                      //             ),
+                      //             child: MaterialButton(
+                      //               onPressed: () {},
+                      //               child: Padding(
+                      //                 padding: const EdgeInsets.all(20.0),
+                      //                 child: Stack(children: [
+                      //                   Image.asset(homeContent.specialOffer[2].image,
+                      //                       width: double.infinity,
+                      //                       alignment: Alignment.centerRight,
+                      //                       fit: BoxFit.contain),
+                      //                   Column(
+                      //                     crossAxisAlignment:
+                      //                         CrossAxisAlignment.start,
+                      //                     children: [
+                      //                       subTitleText(
+                      //                           text: homeContent.specialOffer[2].title),
+                      //                       const SizedBox(height: 10),
+                      //                       paragraphText(
+                      //                           text: homeContent.specialOffer[2].offer),
+                      //                     ],
+                      //                   )
+                      //                 ]),
+                      //               ),
+                      //             ))
+                      //       ],
+                      //     )),
                       //Muscular body image
                       Stack(
                         alignment: Alignment.bottomRight,

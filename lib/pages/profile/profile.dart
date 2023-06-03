@@ -51,9 +51,9 @@ class Profile extends StatelessWidget {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          CircleAvatar(
+                                          const CircleAvatar(
                                             radius: 50,
-                                            backgroundImage: const AssetImage(MainImages.emptyImage),
+                                            backgroundImage: AssetImage(MainImages.emptyImage),
                                             // foregroundImage: NetworkImage(user['photo'] ?? ""),
                                           ),
                                           const SizedBox(height: 10),

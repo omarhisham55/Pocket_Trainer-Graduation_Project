@@ -3,9 +3,7 @@ import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:final_packet_trainer/shared/components/components.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NewExercise extends StatelessWidget {

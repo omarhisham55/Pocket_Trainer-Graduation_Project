@@ -1,4 +1,3 @@
-import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/data/userData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,9 +80,12 @@ class Login extends StatelessWidget {
                       isPassword: signUpLoginChangeable.isConfirmPassword,
                       suffix: true,
                       validator: (value) {
-                        if (signUpLoginChangeable.passController.text != signUpLoginChangeable.confirmPassController.text) {
-                          print('pass cont = ${signUpLoginChangeable.passController.text}');
-                          print('confirm pass cont = ${signUpLoginChangeable.confirmPassController.text}');
+                        if (signUpLoginChangeable.passController.text !=
+                            signUpLoginChangeable.confirmPassController.text) {
+                          print(
+                              'pass cont = ${signUpLoginChangeable.passController.text}');
+                          print(
+                              'confirm pass cont = ${signUpLoginChangeable.confirmPassController.text}');
                           return "Passwords doesn't match";
                         }
                         return null;
@@ -131,12 +133,13 @@ class Login extends StatelessWidget {
                   //add photo
                   Row(
                     children: [
-                      paragraphText(
-                          text: "add profile picture"),
+                      paragraphText(text: "add profile picture"),
                       IconButton(
                           onPressed: () {},
-                          icon: const Icon(Icons.upload_file, color: BackgroundColors.whiteBG,)
-                      ),
+                          icon: const Icon(
+                            Icons.upload_file,
+                            color: BackgroundColors.whiteBG,
+                          )),
                       const Spacer(),
                       paragraphText(text: "optional", color: Colors.grey)
                     ],
@@ -149,13 +152,23 @@ class Login extends StatelessWidget {
                     children: [
                       DefaultButton(
                         function: () {
-                          if (signUpLoginChangeable.signupKey.currentState!.validate()) {
-                            User.signUp(username: signUpLoginChangeable.userController.text, email: signUpLoginChangeable.emailController.text, password: signUpLoginChangeable.passController.text, context: context).then((value) {
+                          if (signUpLoginChangeable.signupKey.currentState!
+                              .validate()) {
+                            User.signUp(
+                                    username: signUpLoginChangeable
+                                        .userController.text,
+                                    email: signUpLoginChangeable
+                                        .emailController.text,
+                                    password: signUpLoginChangeable
+                                        .passController.text,
+                                    context: context)
+                                .then((value) {
                               signUpLoginChangeable.pushToLogin();
-                            }).catchError((e){
+                            }).catchError((e) {
                               throw e;
                             });
-                             signUpLoginChangeable.signupKey.currentState!.save();
+                            signUpLoginChangeable.signupKey.currentState!
+                                .save();
                             // Perform action (e.g. send data to a server)
                           }
                         },
@@ -191,9 +204,7 @@ class Login extends StatelessWidget {
                         style: const TextStyle(
                             color: TextColors.whiteText,
                             fontSize: 70,
-                            fontWeight: FontWeight.bold
-                        )
-                    ),
+                            fontWeight: FontWeight.bold)),
                     const SizedBox(height: 60),
                     defaultTextFormField(
                         controller: signUpLoginChangeable.emailController,
@@ -204,8 +215,7 @@ class Login extends StatelessWidget {
                             return "Enter Valid Email";
                           }
                           return null;
-                        }
-                    ),
+                        }),
                     const SizedBox(height: 20),
                     //password
                     defaultTextFormField(
@@ -231,19 +241,33 @@ class Login extends StatelessWidget {
                       children: [
                         DefaultButton(
                           function: () {
-                            if (signUpLoginChangeable.loginKey.currentState!.validate()) {
-                            User.login(username: signUpLoginChangeable.emailController.text, password: signUpLoginChangeable.passController.text, context: context, blocContest: _).then((value){
+                            if (signUpLoginChangeable.loginKey.currentState!
+                                .validate()) {
+                              User.login(
+                                      username: signUpLoginChangeable
+                                          .emailController.text,
+                                      password: signUpLoginChangeable
+                                          .passController.text,
+                                      context: context,
+                                      blocContest: _)
+                                  .then((value) {
                                 User.getProfile().then((value) {
                                   homeNavigator(context, const Navigation());
-                                  toastSuccess(context: context, text: "Login successful welcome ${User.currentUser!.name}");
-                                }).catchError((e){
-                                  toastError(context: context, text: "couldn't get profile $e");
+                                  toastSuccess(
+                                      context: context,
+                                      text:
+                                          "Login successful welcome ${User.currentUser!.name}");
+                                }).catchError((e) {
+                                  toastError(
+                                      context: context,
+                                      text: "couldn't get profile $e");
                                 });
                               }).catchError((e) {
                                 throw e;
                               });
                               // Navigator.of(context).push(HomeAnimation(page: Navigation()));
-                              signUpLoginChangeable.loginKey.currentState!.save();
+                              signUpLoginChangeable.loginKey.currentState!
+                                  .save();
                               // Perform action (e.g. send data to a server)
                             }
                           },
@@ -260,20 +284,17 @@ class Login extends StatelessWidget {
                                 },
                                 child: paragraphText(
                                     text: "Sign up",
-                                    color: TextColors.dataText
-                                )
-                            )
+                                    color: TextColors.dataText))
                           ],
                         ),
                       ],
                     ),
                   ],
-                )
-            ),
+                )),
           ];
           return SafeArea(
             child: WillPopScope(
-              onWillPop: () async{
+              onWillPop: () async {
                 return false;
               },
               child: Scaffold(

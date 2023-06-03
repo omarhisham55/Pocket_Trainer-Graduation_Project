@@ -1,14 +1,11 @@
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
-import 'package:final_packet_trainer/pages/nutrition/nutritionHome.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../navigation/cubit/states.dart';
 import '/shared/components/components.dart';
-import 'package:circle_button/circle_button.dart';
 import '/shared/styles/colors.dart';
 import '/shared/styles/images.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class RecommendedProgramNutritionInfo extends StatelessWidget {
   final String? calories;

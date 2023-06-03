@@ -1,7 +1,6 @@
 import 'package:calender_picker/date_picker_widget.dart';
 import 'package:circle_button/circle_button.dart';
 import 'package:final_packet_trainer/data/nutritionData.dart';
-import 'package:final_packet_trainer/data/userData.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
@@ -13,7 +12,6 @@ import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../../navigation/animationNavigation.dart';
 import '../../shared/components/components.dart';
-import '../gym/gym.dart';
 import 'diet_recommended_plan.dart';
 import 'food_details.dart';
 import 'food_selection.dart';

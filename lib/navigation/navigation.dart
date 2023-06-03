@@ -1,20 +1,9 @@
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
-import 'package:final_packet_trainer/pages/nutrition/nutritionHome.dart';
-import 'package:final_packet_trainer/pages/gym/gym.dart';
-import 'package:final_packet_trainer/pages/home/home.dart';
-import 'package:final_packet_trainer/pages/information/information.dart';
-import 'package:final_packet_trainer/pages/nutrition/nutrition.dart';
-import 'package:final_packet_trainer/pages/profile/profile.dart';
-import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import '../shared/components/components.dart';
 import '../shared/styles/colors.dart';
-import '../shared/styles/images.dart';
 
 class Navigation extends StatelessWidget {
   const Navigation({super.key});
