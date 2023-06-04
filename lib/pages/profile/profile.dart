@@ -1,4 +1,5 @@
 import 'package:final_packet_trainer/data/userData.dart';
+import 'package:final_packet_trainer/main.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

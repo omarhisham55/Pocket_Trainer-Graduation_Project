@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/data/gym_dialog_data.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
@@ -10,13 +12,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+
 import '../../shared/components/components.dart';
 import '../../shared/styles/images.dart';
 
 class GymHome extends StatelessWidget {
   GymHome({Key? key}) : super(key: key);
   String selectedExerciseType = "select meal time";
-  int genrealIndex = 0 ;
+  int genrealIndex = 0;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -68,6 +71,7 @@ class GymHome extends StatelessWidget {
                     }),
               ];
             }
+
             return Stack(
               alignment: Alignment.bottomCenter,
               children: [
@@ -89,21 +93,19 @@ class GymHome extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: List<Widget>.generate(6, (index) {
-                            final date = DateTime.now().add(Duration(days: index));
+                            final date =
+                                DateTime.now().add(Duration(days: index));
                             final isSelected =
                                 date.day == gym.selectedDate.day &&
                                     date.month == gym.selectedDate.month &&
                                     date.year == gym.selectedDate.year;
-                            final String week = allWeekdays[date.weekday - 1].toString();
-                            print(week);
-                            print(date.weekday);
+                            final week =
+                                allWeekdays[date.weekday - 1].toString();
                             return GestureDetector(
                               onTap: () {
-                                // print("molasa ${DateTime.now().weekday}");
+                                print(week);
                                 gym.onSelectedDate(date);
                                 gym.getWeekday(index);
-                                print(gym.weekdayOfIndex);
-                                print(daysOfTraining);
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(10.0),
@@ -139,10 +141,11 @@ class GymHome extends StatelessWidget {
                   backgroundColor: BackgroundColors.background,
                   body: SlidingUpPanel(
                       controller: gym.exercisePanelController,
-                      maxHeight: height(context, .4),
+                      maxHeight: height(context, .45),
                       minHeight: 0.0,
                       onPanelClosed: () {},
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(30)),
                       panelBuilder: (scrollController) => SafeArea(
                             child: Container(
                               width: 400,
@@ -161,9 +164,12 @@ class GymHome extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        titleText(
-                                          text: gym.exercisePanelName,
-                                          color: TextColors.blackText,
+                                        SizedBox(
+                                          width: width(context, .5),
+                                          child: titleText(
+                                            text: gym.exercisePanelName,
+                                            color: TextColors.blackText,
+                                          ),
                                         ),
                                         const SizedBox(height: 20),
                                         subTitleText(
@@ -188,7 +194,9 @@ class GymHome extends StatelessWidget {
                                       padding: const EdgeInsets.all(5.0),
                                       child: DefaultButton(
                                         function: () {
-                                          PoseDetectionModel().model().then((value) {
+                                          PoseDetectionModel()
+                                              .model()
+                                              .then((value) {
                                             print("model opened");
                                           }).catchError((e) {
                                             print('error at $e');
@@ -197,7 +205,9 @@ class GymHome extends StatelessWidget {
                                         },
                                         text: "Start",
                                         borderRadius: 30,
-                                        width: MediaQuery.of(context).size.width * .4,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
                                       ),
                                     ),
                                   ],
@@ -206,14 +216,14 @@ class GymHome extends StatelessWidget {
                             ),
                           ),
                       body: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         itemCount: 6,
                         itemBuilder: (context, index) {
-                          // gym.changeIndex(index);
-                          final date = DateTime.now().add(Duration(days: index));
+                          final date =
+                              DateTime.now().add(Duration(days: index));
                           if (date.day == gym.selectedDate.day &&
                               date.month == gym.selectedDate.month &&
                               date.year == gym.selectedDate.year) {
-                            // gym.getWeekday(index);
                             return (gym.weekdayOfIndex == "Off Day")
                                 ? Column(
                                     children: [
@@ -241,9 +251,13 @@ class GymHome extends StatelessWidget {
                                               if (snapshot.hasData) {
                                                 Map<String, dynamic>
                                                     allWorkout = snapshot.data!;
-                                                List workout = snapshot.data!['ChestDay'];
+                                                List workout = allWorkout[
+                                                    allWorkout.keys
+                                                        .toList()[index]];
                                                 return Visibility(
-                                                  visible: (workout.isEmpty) ? false : true,
+                                                  visible: (workout.isEmpty)
+                                                      ? false
+                                                      : true,
                                                   child: Column(
                                                     children: [
                                                       Row(
@@ -262,52 +276,84 @@ class GymHome extends StatelessWidget {
                                                       Container(
                                                         decoration:
                                                             BoxDecoration(
-                                                          color: BackgroundColors.inkWellBG,
-                                                          borderRadius: BorderRadius.circular(20),
+                                                          color:
+                                                              BackgroundColors
+                                                                  .inkWellBG,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
                                                         ),
-                                                        child: ListView.separated(
+                                                        child:
+                                                            ListView.separated(
                                                           physics:
                                                               const NeverScrollableScrollPhysics(),
                                                           shrinkWrap: true,
                                                           itemBuilder: (_, i) {
                                                             return defaultInkWell(
                                                               context: context,
-                                                              remove: gym.deleteButtonFood,
+                                                              remove: gym
+                                                                  .deleteButtonFood,
                                                               removeFunction:
                                                                   () {
-                                                                try {
-                                                                  print("backDay ${workout.length}");
-                                                                  gym.deleteWorkouts(exerciseId: workout[i]['exerciseId']).then((value) {
-                                                                    toastSuccess(
-                                                                      context: context,
-                                                                      text: "${workout[i]['name']} has been deleted",
-                                                                    );
-                                                                    print("backDay ${workout.length}");
-                                                                  });
-                                                                } catch (error) {
-                                                                  rethrow;
-                                                                }
+                                                                gym
+                                                                    .deleteWorkouts(
+                                                                        exerciseId: workout[i]
+                                                                            [
+                                                                            'exerciseId'])
+                                                                    .then(
+                                                                        (value) {
+                                                                  toastSuccess(
+                                                                    context:
+                                                                        context,
+                                                                    text:
+                                                                        "${workout[i]['name']} has been deleted",
+                                                                  );
+                                                                });
                                                               },
-                                                              image: "http://t0.gstatic.com/images?q=tbn:ANd9GcQ3bFRqprKKFG-YxFSFe23rTSZxKoUkjlQLBA1vPEwv2fKlV9Ea&s",
-                                                              title: workout[i]['Title'] ?? "not found",
+                                                              image: workout[i]
+                                                                  ['imageUrl'],
+                                                              title: workout[i][
+                                                                      'Title'] ??
+                                                                  "not found",
                                                               subtitle: [
-                                                                subTitleText(text: workout[i]["BodyPart"]),
+                                                                subTitleText(
+                                                                    text: workout[
+                                                                            i][
+                                                                        "BodyPart"]),
                                                               ],
                                                               child: Row(
                                                                 children: [
-                                                                  paragraphText(text: "Sets: "),
-                                                                  const SizedBox(width: 15.0),
-                                                                  paragraphText(text: "Reps: "),
+                                                                  paragraphText(
+                                                                      text:
+                                                                          "Sets: "),
+                                                                  const SizedBox(
+                                                                      width:
+                                                                          15.0),
+                                                                  paragraphText(
+                                                                      text:
+                                                                          "Reps: "),
                                                                 ],
                                                               ),
                                                               function: () {
+                                                                print(
+                                                                    requirements);
                                                                 gym.addExerciseName(
-                                                                  workout[i]["exerciseId"],
-                                                                  workout[i]["name"],
-                                                                  type: workout[i]["bodyPart"],
-                                                                  image: 'http://t0.gstatic.com/images?q=tbn:ANd9GcQ3bFRqprKKFG-YxFSFe23rTSZxKoUkjlQLBA1vPEwv2fKlV9Ea&s',
-                                                                  sets: workout[i]["sets"],
-                                                                  reps: workout[i]["repetition"],
+                                                                  workout[i][
+                                                                      "exerciseId"],
+                                                                  workout[i]
+                                                                      ["Title"],
+                                                                  type: workout[
+                                                                          i][
+                                                                      "BodyPart"],
+                                                                  image: workout[
+                                                                          i][
+                                                                      'imageUrl'],
+                                                                  sets: workout[
+                                                                          i]
+                                                                      ["sets"],
+                                                                  reps: workout[
+                                                                          i][
+                                                                      "repetition"],
                                                                 );
                                                                 (gym.exercisePanelController
                                                                         .isPanelClosed)

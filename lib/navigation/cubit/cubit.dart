@@ -427,22 +427,21 @@ class CubitManager extends Cubit<MainStateManager> {
   }
 
   Future addWorkouts(
-      {required String exerciseId, required BuildContext context}) async {
+      {required String exerciseId}) async {
     print(exerciseId);
     final response = await http.post(
-        Uri.parse('$url/workoutplan/add/chest/exercise'),
-        headers: {
-          "Authorization": "Bearer ${User.token}",
-          "Access-Control-Allow-Origin": "$url/*"
-        },
-        body: jsonEncode({"exerciseId": exerciseId}));
+      Uri.parse('$url/workoutplan/add/chest/exercise/$exerciseId'),
+      headers: {
+        "Authorization": "Bearer ${User.token}",
+        "Access-Control-Allow-Origin": "$url/*"
+      },
+      // body: jsonEncode({"test": exerciseId})
+    );
     if (response.statusCode == 201) {
-      print("zama ${response.body}");
-      toastSuccess(context: context, text: 'Exercise added successfully');
       emit(AddExerciseState());
       return response.body;
     } else {
-      toastError(context: context, text: response.body);
+      print(response.statusCode);
       return response.body;
     }
   }
@@ -527,7 +526,7 @@ Future<Map<String, dynamic>> createWorkoutPlan(
   print("create plan dodo");
   if (workout.statusCode == 200) {
     var data = json.decode(workout.body);
-    print("created workout plan $data");
+    // print("created workout plan $data");
     // emit(CreateWorkoutPlan());
     return data;
   } else {

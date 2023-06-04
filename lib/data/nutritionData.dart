@@ -29,46 +29,51 @@ class NutritionData {
 
   factory NutritionData.fromJson(Map<String, dynamic> json) {
     return NutritionData(
-        id: json["_id"].toString(),
-        name: json["name"].toString(),
-        calories: json["calories"].toString(),
-        protein: json["protein"].toString(),
-        carbs: json["carbs"].toString(),
-        fats: json["fats"].toString(),
-        quantity: json["quantity"].toString(),
-        image: json["imageUrl"].toString(),
-        typeofMeal: json["typeofMeal"].toString(),
+      id: json["_id"].toString(),
+      name: json["name"].toString(),
+      calories: json["calories"].toString(),
+      protein: json["protein"].toString(),
+      carbs: json["carbs"].toString(),
+      fats: json["fats"].toString(),
+      quantity: json["quantity"].toString(),
+      image: json["imageUrl"].toString(),
+      typeofMeal: json["typeofMeal"].toString(),
     );
   }
 }
 
 Future<List> getBreakfast() async {
   var meals = await http.get(Uri.parse('$url/meals/breakfast'));
-  if(meals.statusCode == 200){
+  if (meals.statusCode == 200) {
     var data = json.decode(meals.body);
-    var mealsDataList = data.map((json) => NutritionData.fromJson(json)).toList();
+    var mealsDataList =
+        data.map((json) => NutritionData.fromJson(json)).toList();
     return mealsDataList;
-  } else{
+  } else {
     throw Exception("Failed to load data");
   }
 }
+
 Future<List> getLunch() async {
   var meals = await http.get(Uri.parse('$url/meals/lunch'));
-  if(meals.statusCode == 200){
+  if (meals.statusCode == 200) {
     var data = json.decode(meals.body);
-    var mealsDataList = data.map((json) => NutritionData.fromJson(json)).toList();
+    var mealsDataList =
+        data.map((json) => NutritionData.fromJson(json)).toList();
     return mealsDataList;
-  } else{
+  } else {
     throw Exception("Failed to load data");
   }
 }
+
 Future<List> getDinner() async {
   var meals = await http.get(Uri.parse('$url/meals/dinner'));
-  if(meals.statusCode == 200){
+  if (meals.statusCode == 200) {
     var data = json.decode(meals.body);
-    var mealsDataList = data.map((json) => NutritionData.fromJson(json)).toList();
+    var mealsDataList =
+        data.map((json) => NutritionData.fromJson(json)).toList();
     return mealsDataList;
-  } else{
+  } else {
     throw Exception("Failed to load data");
   }
 }
@@ -80,7 +85,7 @@ Map<String, Future<List>> allMeals = {
 };
 Map<String, List<dynamic>> nutritionData = {};
 
-Future<List> getNutritionData({required key}) async{
+Future<List> getNutritionData({required key}) async {
   for (String key in allMeals.keys) {
     nutritionData[key] = await allMeals[key]!;
   }
@@ -97,40 +102,49 @@ Future<List> getNutritionData({required key}) async{
   return values;
 }
 
-
 Future<List> getBreakfastNutritionPlan() async {
-  final meals = await http.get(
-      Uri.parse('$url/nutritionplan/breakfast'),
-      headers: {"Authorization": "Bearer ${User.token}"}
-  ).catchError((e){throw e;});
-  if(meals.statusCode == 200){
+  final meals = await http.get(Uri.parse('$url/nutritionplan/breakfast'),
+      headers: {
+        "Authorization": "Bearer ${User.token}",
+        "Access-Control-Allow-Origin": "$url/*"
+      }).catchError((e) {
+    throw e;
+  });
+  if (meals.statusCode == 200) {
     var data = json.decode(meals.body);
     return data;
-  } else{
+  } else {
     throw Exception("Failed to load data ${meals.statusCode}");
   }
 }
+
 Future<List> getLunchNutritionPlan() async {
-  final meals = await http.get(
-      Uri.parse('$url/nutritionplan/lunch'),
-      headers: {"Authorization": "Bearer ${User.token}"}
-  ).catchError((e){throw e;});
-  if(meals.statusCode == 200){
+  final meals = await http.get(Uri.parse('$url/nutritionplan/lunch'), headers: {
+    "Authorization": "Bearer ${User.token}",
+    "Access-Control-Allow-Origin": "$url/*"
+  }).catchError((e) {
+    throw e;
+  });
+  if (meals.statusCode == 200) {
     var data = json.decode(meals.body);
     return data;
-  } else{
+  } else {
     throw Exception("Failed to load data ${meals.statusCode}");
   }
 }
+
 Future<List> getDinnerNutritionPlan() async {
-  final meals = await http.get(
-      Uri.parse('$url/nutritionplan/dinner'),
-      headers: {"Authorization": "Bearer ${User.token}"}
-  ).catchError((e){throw e;});
-  if(meals.statusCode == 200){
+  final meals = await http.get(Uri.parse('$url/nutritionplan/dinner'),
+      headers: {
+        "Authorization": "Bearer ${User.token}",
+        "Access-Control-Allow-Origin": "$url/*"
+      }).catchError((e) {
+    throw e;
+  });
+  if (meals.statusCode == 200) {
     var data = json.decode(meals.body);
     return data;
-  } else{
+  } else {
     throw Exception("Failed to load data ${meals.statusCode}");
   }
 }

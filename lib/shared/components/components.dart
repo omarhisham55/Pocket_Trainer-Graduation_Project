@@ -8,8 +8,7 @@ import '../../notification/notification.dart';
 import '../styles/colors.dart';
 import 'constants.dart';
 
-PreferredSizeWidget notificationAppBar(context, String title) =>
-    AppBar(
+PreferredSizeWidget notificationAppBar(context, String title) => AppBar(
       backgroundColor: BackgroundColors.dialogBG,
       title: titleText(text: title),
       centerTitle: true,
@@ -24,16 +23,21 @@ PreferredSizeWidget notificationAppBar(context, String title) =>
     );
 
 PreferredSizeWidget defaultAppBar(
-    {required BuildContext context, required String title, List<
-        Widget>? actions}) =>
+        {required BuildContext context,
+        required String title,
+        List<Widget>? actions}) =>
     AppBar(
       backgroundColor: BackgroundColors.dialogBG,
       title: titleText(text: title),
       actions: actions,
     );
 
-PreferredSizeWidget changeableAppBar({
-  context, required String title, required bool isRequirementsTaken, Widget? replace, PreferredSizeWidget? bottom}) =>
+PreferredSizeWidget changeableAppBar(
+        {context,
+        required String title,
+        required bool isRequirementsTaken,
+        Widget? replace,
+        PreferredSizeWidget? bottom}) =>
     AppBar(
       backgroundColor: BackgroundColors.dialogBG,
       title: titleText(text: title),
@@ -73,10 +77,10 @@ Widget defaultTextFormField({
             keyboardType: (hint == "Username")
                 ? TextInputType.text
                 : (hint == "Password" || hint == "ConfirmPassword")
-                ? TextInputType.visiblePassword
-                : (hint == "Email")
-                ? TextInputType.emailAddress
-                : textInputType,
+                    ? TextInputType.visiblePassword
+                    : (hint == "Email")
+                        ? TextInputType.emailAddress
+                        : textInputType,
             style: TextStyle(color: textStyle ?? TextColors.whiteText),
             textAlign: textAlign ?? TextAlign.center,
             obscureText: isPassword!,
@@ -102,34 +106,38 @@ Widget defaultTextFormField({
                   onPressed: suffixPressed,
                   icon: isPassword
                       ? const Icon(Icons.remove_red_eye_outlined,
-                      color: BackgroundColors.whiteBG)
+                          color: BackgroundColors.whiteBG)
                       : const Icon(Icons.visibility_off_outlined,
-                      color: BackgroundColors.whiteBG)))
+                          color: BackgroundColors.whiteBG)))
         ],
       ),
     );
 
-Widget titleText({
-  required String text,
-  double? size = 25,
-  FontWeight? fontWeight = FontWeight.bold,
-  Color? color = TextColors.whiteText,
-  TextAlign? textAlign = TextAlign.center,
-}) =>
+Widget titleText(
+        {required String text,
+        double? size = 25,
+        FontWeight? fontWeight = FontWeight.bold,
+        Color? color = TextColors.whiteText,
+        TextAlign? textAlign = TextAlign.center,
+        int? maxLines = 1,
+        TextOverflow? textOverflow}) =>
     Text(
       text,
       textAlign: textAlign,
       style: TextStyle(fontSize: size, fontWeight: fontWeight, color: color),
+      overflow: textOverflow ?? TextOverflow.ellipsis,
+      maxLines: maxLines,
     );
 
-Widget subTitleText({required String text,
-  double? size = 20,
-  double? width,
-  FontWeight? fontWeight = FontWeight.w500,
-  Color? color = TextColors.whiteText,
-  TextAlign? textAlign = TextAlign.center,
-  int? maxLines = 2,
-  TextOverflow? textOverflow}) =>
+Widget subTitleText(
+        {required String text,
+        double? size = 20,
+        double? width,
+        FontWeight? fontWeight = FontWeight.w500,
+        Color? color = TextColors.whiteText,
+        TextAlign? textAlign = TextAlign.center,
+        int? maxLines = 2,
+        TextOverflow? textOverflow}) =>
     SizedBox(
       width: width,
       child: Text(
@@ -145,13 +153,14 @@ Widget subTitleText({required String text,
       ),
     );
 
-Widget paragraphText({required String text,
-  double? size = 15.0,
-  FontWeight? fontWeight = FontWeight.w400,
-  Color? color = TextColors.whiteText,
-  TextAlign? textAlign = TextAlign.center,
-  int? maxLines = 2,
-  TextOverflow? textOverflow}) =>
+Widget paragraphText(
+        {required String text,
+        double? size = 15.0,
+        FontWeight? fontWeight = FontWeight.w400,
+        Color? color = TextColors.whiteText,
+        TextAlign? textAlign = TextAlign.center,
+        int? maxLines = 2,
+        TextOverflow? textOverflow}) =>
     Text(
       text,
       textAlign: textAlign,
@@ -173,7 +182,9 @@ Widget defaultDropDownMenu({
         underline: Container(),
         isExpanded: true,
         hint: subTitleText(
-            text: hintValue, color: hintColor ?? TextColors.whiteText, fontWeight: FontWeight.w500),
+            text: hintValue,
+            color: hintColor ?? TextColors.whiteText,
+            fontWeight: FontWeight.w500),
         items: content.map((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -268,8 +279,7 @@ Widget defaultInkWell({
                   padding: EdgeInsets.only(bottom: 15),
                   child: Icon(Icons.minimize_sharp),
                 ),
-              )
-          ),
+              )),
         ),
       ],
     );
@@ -308,10 +318,11 @@ Widget defaultDialog({
                   ),
                   //title
                   Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20.0),
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
                       child: SizedBox(
-                        width: (setBackIcon) ? width(context, .66) : width(context, .78),
+                        width: (setBackIcon)
+                            ? width(context, .66)
+                            : width(context, .78),
                         child: title,
                       )),
                 ],
@@ -361,13 +372,14 @@ Widget defaultDialog({
       ],
     );
 
-Widget dialogButton({required String buttonTitle,
-  required Function() function,
-  double? borderRadius,
-  double? borderWidth,
-  Color? borderColor,
-  double? elevation,
-  String? buttonContent}) =>
+Widget dialogButton(
+        {required String buttonTitle,
+        required Function() function,
+        double? borderRadius,
+        double? borderWidth,
+        Color? borderColor,
+        double? elevation,
+        String? buttonContent}) =>
     MaterialButton(
       color: Colors.transparent,
       onPressed: function,
@@ -402,17 +414,18 @@ class DefaultButton extends StatefulWidget {
   Color? borderColor;
   bool? bigButton;
 
-  DefaultButton({super.key,
-    required this.function,
-    required this.text,
-    this.textColor,
-    this.borderRadius,
-    this.height,
-    this.width,
-    this.backgroundColor,
-    this.borderWidth,
-    this.borderColor,
-    this.bigButton});
+  DefaultButton(
+      {super.key,
+      required this.function,
+      required this.text,
+      this.textColor,
+      this.borderRadius,
+      this.height,
+      this.width,
+      this.backgroundColor,
+      this.borderWidth,
+      this.borderColor,
+      this.bigButton});
 
   @override
   State<DefaultButton> createState() => _ButtonState();
@@ -422,14 +435,8 @@ class _ButtonState extends State<DefaultButton> {
   @override
   Widget build(BuildContext context) {
     //if values = null set default value
-    widget.height ??= MediaQuery
-        .of(context)
-        .size
-        .height * .06;
-    widget.width ??= MediaQuery
-        .of(context)
-        .size
-        .width * .4;
+    widget.height ??= MediaQuery.of(context).size.height * .06;
+    widget.width ??= MediaQuery.of(context).size.width * .4;
     widget.backgroundColor ??= BackgroundColors.button;
     widget.borderRadius ??= 0;
     widget.borderWidth ??= 0;
@@ -455,16 +462,17 @@ class _ButtonState extends State<DefaultButton> {
   }
 }
 
-Widget exerciseCard({required Function() function,
-  required String image,
-  required String title,
-  double? borderRadius,
-  double? width,
-  double? imageHeight,
-  bool? addCardButton,
-  Function()? addFunction,
-  Color? titleColor
-}) => Stack(
+Widget exerciseCard(
+        {required Function() function,
+        required String image,
+        required String title,
+        double? borderRadius,
+        double? width,
+        double? imageHeight,
+        bool? addCardButton,
+        Function()? addFunction,
+        Color? titleColor}) =>
+    Stack(
       alignment: Alignment.topRight,
       children: [
         InkWell(
@@ -510,10 +518,7 @@ Widget exerciseCard({required Function() function,
       ],
     );
 
-void toastError({
-  required BuildContext context,
-  required String text
-}) =>
+void toastError({required BuildContext context, required String text}) =>
     MotionToast.error(
       title: paragraphText(text: "Error!", color: TextColors.blackText),
       description: paragraphText(text: text, color: TextColors.blackText),
@@ -524,11 +529,9 @@ void toastError({
       dismissable: false,
     ).show(context);
 
-void toastSuccess({
-  required BuildContext context,
-  required String text,
-  int? duration
-}) => MotionToast.success(
+void toastSuccess(
+        {required BuildContext context, required String text, int? duration}) =>
+    MotionToast.success(
       title: paragraphText(text: "Success!"),
       description: paragraphText(text: text),
       layoutOrientation: ToastOrientation.rtl,
@@ -537,31 +540,25 @@ void toastSuccess({
       toastDuration: Duration(seconds: duration ?? 2),
     ).show(context);
 
-void toastWarning({
-  required BuildContext context,
-  required String text
-}) => MotionToast.warning(
-    title: paragraphText(text: "Warning!", color: TextColors.blackText),
-    description: paragraphText(text: text, color: TextColors.blackText),
-    animationCurve: Curves.bounceIn,
-    borderRadius: 0,
-    animationDuration: const Duration(milliseconds: 1000),
-  ).show(context);
+void toastWarning({required BuildContext context, required String text}) =>
+    MotionToast.warning(
+      title: paragraphText(text: "Warning!", color: TextColors.blackText),
+      description: paragraphText(text: text, color: TextColors.blackText),
+      animationCurve: Curves.bounceIn,
+      borderRadius: 0,
+      animationDuration: const Duration(milliseconds: 1000),
+    ).show(context);
 
-void toastDelete({
-  required BuildContext context,
-  required String text
-}) => MotionToast.delete(
-  title: paragraphText(text: "Deleted successfully!"),
-  description: paragraphText(text: text) ,
-  animationType: AnimationType.fromTop,
-  position: MotionToastPosition.top,
-).show(context);
+void toastDelete({required BuildContext context, required String text}) =>
+    MotionToast.delete(
+      title: paragraphText(text: "Deleted successfully!"),
+      description: paragraphText(text: text),
+      animationType: AnimationType.fromTop,
+      position: MotionToastPosition.top,
+    ).show(context);
 
-void toastInfo({
-  required BuildContext context,
-  required String text
-}) => MotionToast.info(
+void toastInfo({required BuildContext context, required String text}) =>
+    MotionToast.info(
       title: paragraphText(text: "Success!"),
       description: paragraphText(text: text),
       position: MotionToastPosition.center,
@@ -569,17 +566,12 @@ void toastInfo({
       dismissable: true,
     ).show(context);
 
-void showSnackBar({
-  required context,
-  required text,
-  color
-}) => ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
+void showSnackBar({required context, required text, color}) =>
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: subTitleText(text: text),
       duration: const Duration(seconds: 2),
       backgroundColor: color ?? Colors.grey[700],
-    )
-);
+    ));
 
 Widget buildDaysOfWeek(void Function(DateTime) function) {
   return Column(

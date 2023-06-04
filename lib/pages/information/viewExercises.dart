@@ -93,9 +93,10 @@ class InformationDetails extends StatelessWidget {
                                             exerciseBodyPart: searchList[i].exerciseBodyPart,
                                             exerciseEquipment: searchList[i].exerciseEquipment,
                                             exerciseLevel: searchList[i].exerciseLevel,
+                                            exerciseImage: searchList[i].exerciseImage,
                                           ));
                                     },
-                                    image: 'searchList[i].exerciseImage',
+                                    image: searchList[i].exerciseImage,
                                     title: searchList[i].exerciseName, //$exercise name
                                     width: width(context, .5)
                                 );

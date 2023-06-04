@@ -183,8 +183,7 @@ class ExistExercise extends StatelessWidget {
                                         titleText(text: gym.exercisePanelName)
                                       ]),
                                       Row(children: [
-                                        subTitleText(
-                                            text: gym.exercisePanelType)
+                                        subTitleText(text: gym.exercisePanelId)
                                       ]),
                                       Container(
                                         padding: const EdgeInsets.symmetric(
@@ -233,29 +232,30 @@ class ExistExercise extends StatelessWidget {
                                       // ),
                                       DefaultButton(
                                           function: () {
-                                            gym.addWorkouts(
-                                                exerciseId: gym.exercisePanelId,
-                                                context: context);
-                                            //     .then((value) {
-                                            //   print('ahma $value');
-                                            //   if (value ==
-                                            //       "this exercise already added in your workoutPlan") {
-                                            //     toastWarning(
-                                            //         context: context,
-                                            //         text:
-                                            //             "this exercise already added in your workoutPlan");
-                                            //     print("value1$value");
-                                            //   } else {
-                                            //     print("value2$value");
-                                            //     toastSuccess(
-                                            //         context: context,
-                                            //         text:
-                                            //             "Exercise added to Workout Plan");
-                                            //   }
-                                            // }).catchError((e) {
-                                            //   toastError(
-                                            //       context: context, text: e);
-                                            // });
+                                            gym
+                                                .addWorkouts(
+                                                    exerciseId:
+                                                        gym.exercisePanelId)
+                                                .then((value) {
+                                              print('ahma $value');
+                                              if (value ==
+                                                  "this exercise already added in your workoutPlan") {
+                                                toastWarning(
+                                                    context: context,
+                                                    text:
+                                                        "this exercise already added in your workoutPlan");
+                                                print("value1$value");
+                                              } else {
+                                                print("value2$value");
+                                                toastSuccess(
+                                                    context: context,
+                                                    text:
+                                                        "Exercise added to Workout Plan");
+                                              }
+                                            }).catchError((e) {
+                                              toastError(
+                                                  context: context, text: e);
+                                            });
                                           },
                                           borderRadius: 20,
                                           text: "Add")

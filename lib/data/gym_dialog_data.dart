@@ -1,6 +1,7 @@
 import 'package:final_packet_trainer/data/userData.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/pages/gym/gymRecommendedPlan.dart';
+import 'package:final_packet_trainer/shared/network/local/shared.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
@@ -81,20 +82,22 @@ class GymDialogs {
   }
 }
 
-void popAndShowNext({required BuildContext context, required dialog, required cubit}){
+void popAndShowNext(
+    {required BuildContext context, required dialog, required cubit}) {
   Navigator.pop(context);
   showAnimatedDialog(
     context: context,
     barrierDismissible: false,
     builder: (context) =>
         StatefulBuilder(builder: (context, StateSetter setState) {
-          return dialog(context, cubit);
-        }),
+      return dialog(context, cubit);
+    }),
     animationType: DialogTransitionType.sizeFade,
     curve: Curves.fastOutSlowIn,
     duration: const Duration(seconds: 1),
   );
 }
+
 bool isWorkoutPlanEmpty = true;
 
 bool isExerciseTaken = (isWorkoutPlanEmpty) ? false : true;
@@ -135,17 +138,20 @@ Widget openDialogExperience(BuildContext context, gym) => StatefulBuilder(
                 case 0:
                   requirements.removeAt(0);
                   requirements.insert(0, dialogDataG[0].subtitle![0]);
-                  popAndShowNext(context: context, dialog: openDialogGoal, cubit: gym);
+                  popAndShowNext(
+                      context: context, dialog: openDialogGoal, cubit: gym);
                   break;
                 case 1:
                   requirements.removeAt(0);
                   requirements.insert(0, dialogDataG[0].subtitle![1]);
-                  popAndShowNext(context: context, dialog: openDialogGoal, cubit: gym);
+                  popAndShowNext(
+                      context: context, dialog: openDialogGoal, cubit: gym);
                   break;
                 case 2:
                   requirements.removeAt(0);
                   requirements.insert(0, dialogDataG[0].subtitle![2]);
-                  popAndShowNext(context: context, dialog: openDialogGoal, cubit: gym);
+                  popAndShowNext(
+                      context: context, dialog: openDialogGoal, cubit: gym);
                   break;
                 default:
                   const snackBar = SnackBar(
@@ -164,8 +170,7 @@ Widget openDialogExperience(BuildContext context, gym) => StatefulBuilder(
           setBackIcon: false,
           setNextIcon: true,
           cancelButton: false,
-        )
-);
+        ));
 
 final List<bool> selectedButtonG = List.generate(3, (i) => false);
 Widget openDialogGoal(BuildContext context, gym) => StatefulBuilder(
@@ -203,7 +208,8 @@ Widget openDialogGoal(BuildContext context, gym) => StatefulBuilder(
         prevDialog: () {
           requirements[0] = "";
           print(requirements);
-          popAndShowNext(context: context, dialog: openDialogExperience, cubit: gym);
+          popAndShowNext(
+              context: context, dialog: openDialogExperience, cubit: gym);
         },
         nextDialog: () {
           setState(() {
@@ -211,17 +217,20 @@ Widget openDialogGoal(BuildContext context, gym) => StatefulBuilder(
               case 0:
                 requirements.removeAt(1);
                 requirements.insert(1, dialogDataG[1].subtitle![0]);
-                popAndShowNext(context: context, dialog: openDialogDate, cubit: gym);
+                popAndShowNext(
+                    context: context, dialog: openDialogDate, cubit: gym);
                 break;
               case 1:
                 requirements.removeAt(1);
                 requirements.insert(1, dialogDataG[1].subtitle![1]);
-                popAndShowNext(context: context, dialog: openDialogDate, cubit: gym);
+                popAndShowNext(
+                    context: context, dialog: openDialogDate, cubit: gym);
                 break;
               case 2:
                 requirements.removeAt(1);
                 requirements.insert(1, dialogDataG[1].subtitle![2]);
-                popAndShowNext(context: context, dialog: openDialogDate, cubit: gym);
+                popAndShowNext(
+                    context: context, dialog: openDialogDate, cubit: gym);
                 break;
               default:
                 const snackBar = SnackBar(
@@ -235,19 +244,18 @@ Widget openDialogGoal(BuildContext context, gym) => StatefulBuilder(
             }
             print("requirements from goal $requirements");
           });
-        })
-);
+        }));
 
 List selectedDays = [];
 List daysOfTraining = [];
 List<MultiSelectCard<Object?>> weekdays = [
-  MultiSelectCard(value: 'Saturday', label: dialogDataG[2].content[0]),
-  MultiSelectCard(value: 'Sunday', label: dialogDataG[2].content[1]),
   MultiSelectCard(value: 'Monday', label: dialogDataG[2].content[2]),
   MultiSelectCard(value: 'Tuesday', label: dialogDataG[2].content[3]),
   MultiSelectCard(value: 'Wednesday', label: dialogDataG[2].content[4]),
   MultiSelectCard(value: 'Thursday', label: dialogDataG[2].content[5]),
   MultiSelectCard(value: 'Friday', label: dialogDataG[2].content[6]),
+  MultiSelectCard(value: 'Saturday', label: dialogDataG[2].content[0]),
+  MultiSelectCard(value: 'Sunday', label: dialogDataG[2].content[1]),
 ];
 var allWeekdays = weekdays.map((item) => item.value).toList();
 
@@ -301,87 +309,84 @@ Widget openDialogDate(BuildContext context, gym) => defaultDialog(
           requirements.removeAt(2);
           requirements.insert(2, daysOfTraining);
           print("requirements from date $requirements");
-          popAndShowNext(context: context, dialog: openDialogWorkoutTools, cubit: gym);
+          popAndShowNext(
+              context: context, dialog: openDialogWorkoutTools, cubit: gym);
         }
       },
     );
 
 bool fromHome = true;
-Widget openDialogWorkoutTools(BuildContext context, gym) =>  StatefulBuilder(
+Widget openDialogWorkoutTools(BuildContext context, gym) => StatefulBuilder(
     builder: (context, StateSetter setState) => defaultDialog(
-    context: context,
-    title: subTitleText(text: dialogDataG[3].title[0], maxLines: 2),
-    body: Column(
-      children: [
-        paragraphText(text: dialogDataG[3].title[0], maxLines: 2),
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: InkWell(
-              onTap: () {
-                setState((){
-                  fromHome = false;
-                  print(fromHome);
-                });
-              },
-              child: Container(
-                width: width(context, 1),
-                padding: const EdgeInsets.all(30.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      color: (!fromHome)
-                          ? BackgroundColors.selectedButton
-                          : BackgroundColors.whiteBG,
-                      width: (!fromHome) ? 3 : 1,
-                    )
-                ),
-                child: subTitleText(text: dialogDataG[3].content[0]),
-              ),
-            )
+        context: context,
+        title: subTitleText(text: dialogDataG[3].title[0], maxLines: 2),
+        body: Column(
+          children: [
+            paragraphText(text: dialogDataG[3].title[0], maxLines: 2),
+            Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      fromHome = false;
+                      print(fromHome);
+                    });
+                  },
+                  child: Container(
+                    width: width(context, 1),
+                    padding: const EdgeInsets.all(30.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: (!fromHome)
+                              ? BackgroundColors.selectedButton
+                              : BackgroundColors.whiteBG,
+                          width: (!fromHome) ? 3 : 1,
+                        )),
+                    child: subTitleText(text: dialogDataG[3].content[0]),
+                  ),
+                )),
+            Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      fromHome = true;
+                      print(fromHome);
+                    });
+                  },
+                  child: Container(
+                    width: width(context, 1),
+                    padding: const EdgeInsets.all(30.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: (fromHome)
+                              ? BackgroundColors.selectedButton
+                              : BackgroundColors.whiteBG,
+                          width: (fromHome) ? 3 : 1,
+                        )),
+                    child: subTitleText(text: dialogDataG[3].content[1]),
+                  ),
+                )),
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: InkWell(
-              onTap: () {
-                setState((){
-                  fromHome = true;
-                  print(fromHome);
-                });
-              },
-              child: Container(
-                width: width(context, 1),
-                padding: const EdgeInsets.all(30.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      color: (fromHome)
-                          ? BackgroundColors.selectedButton
-                          : BackgroundColors.whiteBG,
-                      width: (fromHome) ? 3 : 1,
-                    )
-                ),
-                child: subTitleText(text: dialogDataG[3].content[1]),
-              ),
-            )
-        ),
-      ],
-    ),
-    quickExit: false,
-    setBackIcon: true,
-    setNextIcon: true,
-    cancelButton: true,
-    prevDialog: () {
-      requirements[2] = [];
-      daysOfTraining = [];
-      print(requirements);
-      popAndShowNext(context: context, dialog: openDialogDate, cubit: gym);
-    },
-    nextDialog: () {
-        requirements.removeAt(3);
-        requirements.insert(3, (fromHome) ? "Home" : "Gym");
-        print("requirements from tools $requirements");
-        popAndShowNext(context: context, dialog: openDialogHW, cubit: gym);
-    }));
+        quickExit: false,
+        setBackIcon: true,
+        setNextIcon: true,
+        cancelButton: true,
+        prevDialog: () {
+          requirements[2] = [];
+          daysOfTraining = [];
+          print(requirements);
+          popAndShowNext(context: context, dialog: openDialogDate, cubit: gym);
+        },
+        nextDialog: () {
+          requirements.removeAt(3);
+          requirements.insert(3, (fromHome) ? "Home" : "Gym");
+          print("requirements from tools $requirements");
+          popAndShowNext(context: context, dialog: openDialogHW, cubit: gym);
+        }));
 
 TextEditingController addHeight = TextEditingController();
 TextEditingController addWeight = TextEditingController();
@@ -428,10 +433,11 @@ Widget openDialogHW(BuildContext context, gym) => defaultDialog(
       setNextIcon: true,
       cancelButton: true,
       prevDialog: () {
-        popAndShowNext(context: context, dialog: openDialogWorkoutTools, cubit: gym);
+        popAndShowNext(
+            context: context, dialog: openDialogWorkoutTools, cubit: gym);
       },
       nextDialog: () {
-        if(addHeight.text.isEmpty || addWeight.text.isEmpty){
+        if (addHeight.text.isEmpty || addWeight.text.isEmpty) {
           const snackBar = SnackBar(
             content: Text(
               "add height and weight",
@@ -439,17 +445,18 @@ Widget openDialogHW(BuildContext context, gym) => defaultDialog(
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }else{
+        } else {
           requirements.removeAt(4);
           requirements.insert(4, [addHeight.text, addWeight.text]);
           print("requirements from H&W $requirements");
-          popAndShowNext(context: context, dialog: openDialogInjuries, cubit: gym);
+          popAndShowNext(
+              context: context, dialog: openDialogInjuries, cubit: gym);
         }
       },
     );
 
 List<String> selectedInjuries = [];
-Widget openDialogInjuries(BuildContext context, gym) =>defaultDialog(
+Widget openDialogInjuries(BuildContext context, gym) => defaultDialog(
       context: context,
       title: subTitleText(text: dialogDataG[5].title[0], maxLines: 2),
       body: Column(
@@ -511,18 +518,20 @@ Widget openDialogInjuries(BuildContext context, gym) =>defaultDialog(
                 function: () {
                   requirements.removeAt(5);
                   requirements.insert(5, selectedInjuries);
-                  // print("requirements from injuries $requirements");
-                  print("momomomo ${User.currentUser!.workoutPlan}");
-                    createWorkoutPlan(requirements[0], requirements[1], requirements[3]).then((value) {
-                      isExerciseTaken = true;
-                      Navigator.pop(context);
-                      gym.requirements(isExerciseTaken);
-                      pageNavigator(context, GymRecommendedPlan(requirements: requirements));
-                      print('workout added bombom');
-                    }).catchError((e){
-                      print('workout crashed bombom');
-                      throw e;
-                    });
+                  createWorkoutPlan(
+                          requirements[0], requirements[1], requirements[3])
+                      .then((value) {
+                    saveList(requirements);
+                    isExerciseTaken = true;
+                    Navigator.pop(context);
+                    gym.requirements(isExerciseTaken);
+                    pageNavigator(context,
+                        GymRecommendedPlan(requirements: requirements));
+                    print('workout added bombom');
+                  }).catchError((e) {
+                    print('workout crashed bombom');
+                    throw e;
+                  });
                 },
                 borderRadius: 30,
                 text: "save",

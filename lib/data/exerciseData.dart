@@ -23,7 +23,7 @@ class Exercise {
   // String exerciseTips;
   // String exerciseRepetition;
   // String exerciseSets;
-  // String exerciseImage;
+  String exerciseImage;
 
   Exercise({
     required this.exerciseId,
@@ -37,7 +37,7 @@ class Exercise {
     // required this.exerciseTips,
     // required this.exerciseRepetition,
     // required this.exerciseSets,
-    // required this.exerciseImage,
+    required this.exerciseImage,
   });
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
@@ -53,7 +53,7 @@ class Exercise {
       // exerciseTips: json["tips"] ?? "",
       // exerciseRepetition: json["repetition"] ?? "",
       // exerciseSets: json["sets"] ?? "",
-      // exerciseImage: json["imageUrl"] ?? "",
+      exerciseImage: json["imageUrl"] ?? "",
     );
   }
 }
@@ -318,10 +318,7 @@ Future<List> getStretchesValues({String? key}) async {
 }
 
 Future<Map<String, dynamic>> getWorkoutPlan() async {
-  var workout = await http.get(
-    Uri.parse('$url/workoutplan'),
-    headers: {"Authorization": "Bearer ${User.token}"},
-  );
+  var workout = await http.get(Uri.parse('$url/workoutplan'), headers: {"Authorization": "Bearer ${User.token}"});
   if (workout.statusCode == 200) {
     var data = json.decode(workout.body);
     return data;
