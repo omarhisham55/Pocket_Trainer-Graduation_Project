@@ -32,6 +32,7 @@ class ExerciseDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BackgroundColors.background,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0.0,
@@ -40,56 +41,55 @@ class ExerciseDetails extends StatelessWidget {
           Icon(Icons.notifications_on, color: Colors.transparent, size: 45)
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.network(
-            exerciseImage ?? "can't get data",
-            width: double.infinity,
-            // height: MediaQuery.of(context).size.height*.3,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: titleText(
-                text: exerciseName ?? "can't get data",
-                color: TextColors.blackText), //$exercise name
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: paragraphText(
-                text: exerciseInfo ?? "can't get data",
-                color: TextColors.blackText,
-                textAlign: TextAlign.left), //$exercise content
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: paragraphText(
-                text: exerciseType ?? "can't get data",
-                color: TextColors.blackText,
-                textAlign: TextAlign.left), //$exercise content
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: paragraphText(
-                text: exerciseLevel ?? "can't get data",
-                color: TextColors.blackText,
-                textAlign: TextAlign.left), //$exercise content
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: paragraphText(
-                text: exerciseEquipment ?? "can't get data",
-                color: TextColors.blackText,
-                textAlign: TextAlign.left), //$exercise content
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: paragraphText(
-                text: exerciseBodyPart ?? "can't get data",
-                color: TextColors.blackText,
-                textAlign: TextAlign.left), //$exercise content
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Image.network(
+                exerciseImage ?? "can't get data",
+                width: double.infinity,
+                // height: MediaQuery.of(context).size.height*.3,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: titleText(
+                  text: exerciseName ?? "can't get data"), //$exercise name
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: paragraphText(
+                  text: exerciseInfo ?? "can't get data",
+                  textAlign: TextAlign.left), //$exercise content
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: paragraphText(
+                  text: exerciseType ?? "can't get data",
+                  textAlign: TextAlign.left), //$exercise content
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: paragraphText(
+                  text: exerciseLevel ?? "can't get data",
+                  textAlign: TextAlign.left), //$exercise content
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: paragraphText(
+                  text: exerciseEquipment ?? "can't get data",
+                  textAlign: TextAlign.left), //$exercise content
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: paragraphText(
+                  text: exerciseBodyPart ?? "can't get data",
+                  textAlign: TextAlign.left), //$exercise content
+            ),
+          ],
+        ),
       ),
     );
   }

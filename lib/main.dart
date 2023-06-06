@@ -13,6 +13,7 @@ import 'shared/blocObserver.dart';
 
 void main() {
   Bloc.observer = MyBlocObserver();
+  // getBackExercises().then((value) => print('lolo')).catchError((e)=>print('popo $e'));
   getDataMapValues(allValues: true).then((value) {
     print("successful exercise data from ${value.length}");
     getBreakfast().then((value) {

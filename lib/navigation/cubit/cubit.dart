@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:convert';
+import 'package:email_otp/email_otp.dart';
 import 'package:final_packet_trainer/data/gym_dialog_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:final_packet_trainer/data/exerciseData.dart';
@@ -114,6 +115,7 @@ class CubitManager extends Cubit<MainStateManager> {
   TextEditingController passController = TextEditingController();
   TextEditingController confirmPassController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  EmailOTP myAuth = EmailOTP();
 
   List<Widget> screens() {
     return [
@@ -426,8 +428,7 @@ class CubitManager extends Cubit<MainStateManager> {
     emit(GetExerciseDataToPanel());
   }
 
-  Future addWorkouts(
-      {required String exerciseId}) async {
+  Future addWorkouts({required String exerciseId}) async {
     print(exerciseId);
     final response = await http.post(
       Uri.parse('$url/workoutplan/add/chest/exercise/$exerciseId'),

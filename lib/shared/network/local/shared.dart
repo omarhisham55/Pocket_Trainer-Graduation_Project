@@ -9,11 +9,11 @@ void saveList(List<dynamic> requirements) async {
 }
 
 // Retrieving the list
-Future<List<String>> getList() async {
+Future<List<dynamic>> getList() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String jsonList = prefs.getString('requirements')!;
   if (jsonList.isNotEmpty) {
-    return List<String>.from(jsonDecode(jsonList));
+    return List<dynamic>.from(jsonDecode(jsonList));
   }
   return [];
 }

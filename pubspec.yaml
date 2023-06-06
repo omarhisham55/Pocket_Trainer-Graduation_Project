@@ -63,6 +63,12 @@ dependencies:
   process_run: ^0.13.0
   path: ^1.8.3
   shared_preferences: ^2.1.1
+  # flutter_socket_io: ^0.6.0
+  email_validator: '^2.1.16'
+  email_otp: ^2.0.1
+  image_picker: ^0.8.7+5
+  permission_handler: ^10.2.0
+
 
 
 dev_dependencies:

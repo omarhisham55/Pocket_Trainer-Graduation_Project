@@ -84,7 +84,7 @@ Future<List> getBackExercises() async {
 
     return dataList;
   } else {
-    throw Exception('Failed to load data');
+    return ['Failed to load data ${backExercises.body} ${backExercises.statusCode}'];
   }
 }
 

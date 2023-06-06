@@ -11,7 +11,8 @@ import '../../shared/styles/colors.dart';
 class GymRecommendedPlan extends StatelessWidget {
   final List? requirements;
   final bool? fromHome;
-  const GymRecommendedPlan({Key? key, this.requirements, this.fromHome}) : super(key: key);
+  const GymRecommendedPlan({Key? key, this.requirements, this.fromHome})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,13 @@ class GymRecommendedPlan extends StatelessWidget {
       child: BlocConsumer<CubitManager, MainStateManager>(
         listener: (_, s) {},
         builder: (_, s) {
+          List trainingDays = [];
           var isFromHome = fromHome ?? false;
+          for (var value in requirements![2]) {
+            if (value == "Working Day") {
+              trainingDays.add(value);
+            }
+          }
           return WillPopScope(
             onWillPop: () async {
               return false; // Prevent back navigation
@@ -50,14 +57,16 @@ class GymRecommendedPlan extends StatelessWidget {
               body: Stack(
                 children: [
                   Image.asset(GymImages.gymBg,
-                      width: double.infinity, fit: BoxFit.fitWidth),
+                      width: double.infinity,
+                      fit: BoxFit.fitWidth,
+                      height: height(context, .3)),
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.only(top: 200),
                     decoration: const BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(30))),
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(30))),
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: SizedBox(
@@ -72,8 +81,7 @@ class GymRecommendedPlan extends StatelessWidget {
                             Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     //number of days
                                     Row(
@@ -84,8 +92,9 @@ class GymRecommendedPlan extends StatelessWidget {
                                           fontWeight: FontWeight.w700,
                                         ),
                                         paragraphText(
-                                          text: "${requirements![2].length.toString()} days",
-                                          color: TextColors.recommendedText,
+                                          text:
+                                              "${trainingDays.length.toString()} days",
+                                          color: BackgroundColors.offers,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ],
@@ -101,7 +110,7 @@ class GymRecommendedPlan extends StatelessWidget {
                                         ),
                                         paragraphText(
                                           text: requirements![1].toString(),
-                                          color: TextColors.recommendedText,
+                                          color: BackgroundColors.offers,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ],
@@ -116,7 +125,7 @@ class GymRecommendedPlan extends StatelessWidget {
                                         ),
                                         paragraphText(
                                           text: requirements![3].toString(),
-                                          color: TextColors.recommendedText,
+                                          color: BackgroundColors.offers,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ],
@@ -132,7 +141,7 @@ class GymRecommendedPlan extends StatelessWidget {
                                         ),
                                         paragraphText(
                                           text: requirements![0].toString(),
-                                          color: BackgroundColors.extraButton,
+                                          color: BackgroundColors.offers,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ],
@@ -143,13 +152,12 @@ class GymRecommendedPlan extends StatelessWidget {
                                       children: [
                                         paragraphText(
                                           text:
-                                          "General instructions for the plan: ",
+                                              "General instructions for the plan: ",
                                           color: TextColors.blackText,
                                           fontWeight: FontWeight.w700,
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.all(
-                                              10.0),
+                                          padding: const EdgeInsets.all(10.0),
                                           child: paragraphText(
                                               text: "generalData",
                                               color: TextColors.blackText,
@@ -160,8 +168,7 @@ class GymRecommendedPlan extends StatelessWidget {
                                       ],
                                     ),
                                   ],
-                                )
-                            ),
+                                )),
                           ],
                         ),
                       ),
@@ -175,7 +182,8 @@ class GymRecommendedPlan extends StatelessWidget {
                       visible: (isFromHome) ? false : true,
                       child: DefaultButton(
                           function: () {
-                            Navigator.pop(context);},
+                            Navigator.pop(context, requirements);
+                          },
                           width: width(context, .5),
                           borderRadius: 30,
                           text: 'Set as default'),

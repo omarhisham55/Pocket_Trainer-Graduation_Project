@@ -1,4 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
+import 'package:email_otp/email_otp.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:final_packet_trainer/data/userData.dart';
+import 'package:final_packet_trainer/login_signup/otp.dart';
+import 'package:final_packet_trainer/shared/network/local/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../navigation/cubit/cubit.dart';
@@ -11,6 +19,7 @@ import '../../shared/styles/colors.dart';
 //Done
 class Login extends StatelessWidget {
   const Login({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -19,6 +28,8 @@ class Login extends StatelessWidget {
         listener: (_, state) {},
         builder: (_, state) {
           CubitManager signUpLoginChangeable = CubitManager.get(_);
+          bool isValid = false;
+          File imageData = File('');
           List<Widget> loginSignUpScreens = [
             //SignUp
             Form(
@@ -49,7 +60,9 @@ class Login extends StatelessWidget {
                       controller: signUpLoginChangeable.emailController,
                       hint: "Email",
                       validator: (value) {
-                        if (value!.isEmpty) {
+                        isValid = EmailValidator.validate(
+                            signUpLoginChangeable.emailController.text);
+                        if (value!.isEmpty || !isValid) {
                           return "Enter Valid email";
                         } else if (!value.contains("@")) {
                           return "Email invalid missing @";
@@ -135,7 +148,8 @@ class Login extends StatelessWidget {
                     children: [
                       paragraphText(text: "add profile picture"),
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () async => User.getImageFromGallery()
+                              .then((value) => imageData = value!),
                           icon: const Icon(
                             Icons.upload_file,
                             color: BackgroundColors.whiteBG,
@@ -151,7 +165,7 @@ class Login extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       DefaultButton(
-                        function: () {
+                        function: () async {
                           if (signUpLoginChangeable.signupKey.currentState!
                               .validate()) {
                             User.signUp(
@@ -161,12 +175,43 @@ class Login extends StatelessWidget {
                                         .emailController.text,
                                     password: signUpLoginChangeable
                                         .passController.text,
+                                    imageData: imageData,
                                     context: context)
                                 .then((value) {
+                              Navigator.pop(context);
                               signUpLoginChangeable.pushToLogin();
+                              toastSuccess(
+                                  context: context,
+                                  text: "Verification Complete");
                             }).catchError((e) {
                               throw e;
                             });
+                            // signUpLoginChangeable.myAuth.setConfig(
+                            //     appEmail: 'omarHishamho@gmail.com',
+                            //     appName: 'Email Verification',
+                            //     userEmail:
+                            //         signUpLoginChangeable.emailController.text,
+                            //     otpLength: 6,
+                            //     otpType: OTPType.digitsOnly);
+                            // if (await signUpLoginChangeable.myAuth.sendOTP() ==
+                            //     true) {
+                            //   print(signUpLoginChangeable.myAuth.sendOTP());
+                            // pageNavigator(
+                            //     context,
+                            //     OtpVerification(
+                            //         myauth: signUpLoginChangeable.myAuth,
+                            //         email: signUpLoginChangeable.emailController.text,
+                            //         name: signUpLoginChangeable.userController.text,
+                            //         password: signUpLoginChangeable.passController.text,
+                            //         ));
+                            //   toastSuccess(
+                            //       context: context,
+                            //       text: "Verification code is sent");
+                            // } else {
+                            //   toastError(
+                            //       context: context,
+                            //       text: "Verification error!");
+                            // }
                             signUpLoginChangeable.signupKey.currentState!
                                 .save();
                             // Perform action (e.g. send data to a server)
@@ -252,6 +297,7 @@ class Login extends StatelessWidget {
                                       blocContest: _)
                                   .then((value) {
                                 User.getProfile().then((value) {
+                                  getList();
                                   homeNavigator(context, const Navigation());
                                   toastSuccess(
                                       context: context,

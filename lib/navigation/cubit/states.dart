@@ -60,6 +60,8 @@ class ChangeDateState extends MainStateManager{}
 
 class CreateWorkoutPlan extends MainStateManager{}
 
+class ChangeUserStats extends MainStateManager{}
+
 
 
 

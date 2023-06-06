@@ -7,6 +7,7 @@ import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:final_packet_trainer/pages/gym/AddExercise.dart';
 import 'package:final_packet_trainer/poseDetectionModel/poseDetection.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
+import 'package:final_packet_trainer/shared/network/local/shared.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -215,208 +216,388 @@ class GymHome extends StatelessWidget {
                               ),
                             ),
                           ),
-                      body: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: 6,
-                        itemBuilder: (context, index) {
-                          final date =
-                              DateTime.now().add(Duration(days: index));
-                          if (date.day == gym.selectedDate.day &&
-                              date.month == gym.selectedDate.month &&
-                              date.year == gym.selectedDate.year) {
-                            return (gym.weekdayOfIndex == "Off Day")
-                                ? Column(
-                                    children: [
-                                      Image.asset(MainImages.restDay),
-                                      titleText(text: "Day Off"),
-                                    ],
-                                  )
-                                : InkWell(
-                                    onTap: () {
-                                      gym.exercisePanelController.close();
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 250.0,
-                                          top: 10.0,
-                                          right: 10.0,
-                                          left: 10.0),
-                                      child: ListView(
-                                        shrinkWrap: true,
-                                        physics: const BouncingScrollPhysics(),
-                                        children: [
-                                          FutureBuilder(
-                                            future: getWorkoutPlan(),
-                                            builder: (_, snapshot) {
-                                              if (snapshot.hasData) {
-                                                Map<String, dynamic>
-                                                    allWorkout = snapshot.data!;
-                                                List workout = allWorkout[
-                                                    allWorkout.keys
-                                                        .toList()[index]];
-                                                return Visibility(
-                                                  visible: (workout.isEmpty)
-                                                      ? false
-                                                      : true,
-                                                  child: Column(
+                      body: FutureBuilder(
+                          future: getWorkoutPlan(),
+                          builder: (_, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: 6,
+                                itemBuilder: (context, index) {
+                                  final date = DateTime.now().add(Duration(days: index));
+                                  if (date.day == gym.selectedDate.day &&
+                                      date.month == gym.selectedDate.month &&
+                                      date.year == gym.selectedDate.year) {
+                                    return (gym.weekdayOfIndex == "Off Day")
+                                        ? Column(
+                                            children: [
+                                              Image.asset(MainImages.restDay),
+                                              titleText(text: "Day Off"),
+                                            ],
+                                          )
+                                        : Column(
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  gym.exercisePanelController
+                                                      .close();
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      10.0),
+                                                  child: ListView(
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const BouncingScrollPhysics(),
                                                     children: [
-                                                      Row(
-                                                        children: [
-                                                          const CircleAvatar(
-                                                            radius: 5,
-                                                            backgroundColor:
-                                                                Colors.green,
-                                                          ),
-                                                          const SizedBox(
-                                                              width: 7),
-                                                          paragraphText(
-                                                              text: titles[0]),
-                                                        ],
-                                                      ),
-                                                      Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color:
-                                                              BackgroundColors
-                                                                  .inkWellBG,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
-                                                        ),
-                                                        child:
-                                                            ListView.separated(
-                                                          physics:
-                                                              const NeverScrollableScrollPhysics(),
-                                                          shrinkWrap: true,
-                                                          itemBuilder: (_, i) {
-                                                            return defaultInkWell(
-                                                              context: context,
-                                                              remove: gym
-                                                                  .deleteButtonFood,
-                                                              removeFunction:
-                                                                  () {
-                                                                gym
-                                                                    .deleteWorkouts(
-                                                                        exerciseId: workout[i]
-                                                                            [
-                                                                            'exerciseId'])
-                                                                    .then(
-                                                                        (value) {
-                                                                  toastSuccess(
-                                                                    context:
-                                                                        context,
-                                                                    text:
-                                                                        "${workout[i]['name']} has been deleted",
-                                                                  );
-                                                                });
-                                                              },
-                                                              image: workout[i]
-                                                                  ['imageUrl'],
-                                                              title: workout[i][
-                                                                      'Title'] ??
-                                                                  "not found",
-                                                              subtitle: [
-                                                                subTitleText(
-                                                                    text: workout[
-                                                                            i][
-                                                                        "BodyPart"]),
-                                                              ],
-                                                              child: Row(
+                                                      FutureBuilder(
+                                                        future:
+                                                            getWorkoutPlan(),
+                                                        builder: (_, snapshot) {
+                                                          if (snapshot
+                                                              .hasData) {
+                                                            Map<String, dynamic>
+                                                                allWorkout =
+                                                                snapshot.data!;
+                                                            List workout =
+                                                                allWorkout[allWorkout
+                                                                        .keys
+                                                                        .toList()[
+                                                                    index]];
+                                                            workout = workout
+                                                                .where((element) =>
+                                                                    element['Type']
+                                                                        .contains(
+                                                                            'Stretching'))
+                                                                .toList();
+                                                                // if(daysOfTraining[index] == "Off Day"){
+                                                                //   workout[index] = continue;
+                                                                // }
+                                                            return Visibility(
+                                                              visible: (workout
+                                                                      .isEmpty)
+                                                                  ? false
+                                                                  : true,
+                                                              child: Column(
                                                                 children: [
-                                                                  paragraphText(
-                                                                      text:
-                                                                          "Sets: "),
-                                                                  const SizedBox(
-                                                                      width:
-                                                                          15.0),
-                                                                  paragraphText(
-                                                                      text:
-                                                                          "Reps: "),
+                                                                  Row(
+                                                                    children: [
+                                                                      const CircleAvatar(
+                                                                        radius:
+                                                                            5,
+                                                                        backgroundColor:
+                                                                            Colors.green,
+                                                                      ),
+                                                                      const SizedBox(
+                                                                          width:
+                                                                              7),
+                                                                      paragraphText(
+                                                                          text:
+                                                                              titles[2]),
+                                                                    ],
+                                                                  ),
+                                                                  Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: BackgroundColors
+                                                                          .inkWellBG,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              20),
+                                                                    ),
+                                                                    child: ListView
+                                                                        .separated(
+                                                                      physics:
+                                                                          const NeverScrollableScrollPhysics(),
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      itemBuilder:
+                                                                          (_, i) {
+                                                                        return defaultInkWell(
+                                                                          context:
+                                                                              context,
+                                                                          remove:
+                                                                              gym.deleteButtonFood,
+                                                                          removeFunction:
+                                                                              () {
+                                                                            gym.deleteWorkouts(exerciseId: workout[i]['exerciseId']).then((value) {
+                                                                              toastSuccess(
+                                                                                context: context,
+                                                                                text: "${workout[i]['name']} has been deleted",
+                                                                              );
+                                                                            });
+                                                                          },
+                                                                          image:
+                                                                              workout[i]['imageUrl'],
+                                                                          title:
+                                                                              workout[i]['Title'] ?? "not found",
+                                                                          subtitle: [
+                                                                            subTitleText(text: workout[i]["BodyPart"]),
+                                                                          ],
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              paragraphText(text: "Sets: "),
+                                                                              const SizedBox(width: 15.0),
+                                                                              paragraphText(text: "Reps: "),
+                                                                            ],
+                                                                          ),
+                                                                          function:
+                                                                              () {
+                                                                            print(workout);
+                                                                            print(requirements);
+                                                                            gym.addExerciseName(
+                                                                              workout[i]["exerciseId"],
+                                                                              workout[i]["Title"],
+                                                                              type: workout[i]["BodyPart"],
+                                                                              image: workout[i]['imageUrl'],
+                                                                              sets: workout[i]["sets"],
+                                                                              reps: workout[i]["repetition"],
+                                                                            );
+                                                                            (gym.exercisePanelController.isPanelClosed)
+                                                                                ? gym.exercisePanelController.open()
+                                                                                : gym.exercisePanelController.close();
+                                                                          },
+                                                                        );
+                                                                      },
+                                                                      separatorBuilder:
+                                                                          (_, i) =>
+                                                                              Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.symmetric(horizontal: 20),
+                                                                        child:
+                                                                            Container(
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            border:
+                                                                                Border.all(
+                                                                              width: 1,
+                                                                              color: BackgroundColors.background,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      itemCount:
+                                                                          workout
+                                                                              .length,
+                                                                    ),
+                                                                  ),
                                                                 ],
                                                               ),
-                                                              function: () {
-                                                                print(
-                                                                    requirements);
-                                                                gym.addExerciseName(
-                                                                  workout[i][
-                                                                      "exerciseId"],
-                                                                  workout[i]
-                                                                      ["Title"],
-                                                                  type: workout[
-                                                                          i][
-                                                                      "BodyPart"],
-                                                                  image: workout[
-                                                                          i][
-                                                                      'imageUrl'],
-                                                                  sets: workout[
-                                                                          i]
-                                                                      ["sets"],
-                                                                  reps: workout[
-                                                                          i][
-                                                                      "repetition"],
-                                                                );
-                                                                (gym.exercisePanelController
-                                                                        .isPanelClosed)
-                                                                    ? gym
-                                                                        .exercisePanelController
-                                                                        .open()
-                                                                    : gym
-                                                                        .exercisePanelController
-                                                                        .close();
-                                                              },
                                                             );
-                                                          },
-                                                          separatorBuilder:
-                                                              (_, i) => Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        20),
-                                                            child: Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                border:
-                                                                    Border.all(
-                                                                  width: 1,
-                                                                  color: BackgroundColors
-                                                                      .background,
-                                                                ),
+                                                          } else if (snapshot
+                                                              .hasError) {
+                                                            return Center(
+                                                              child: titleText(
+                                                                text:
+                                                                    "Error fetching data ${snapshot.error}",
                                                               ),
-                                                            ),
-                                                          ),
-                                                          itemCount:
-                                                              workout.length,
-                                                        ),
+                                                            );
+                                                          } else {
+                                                            return const Center(
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            );
+                                                          }
+                                                        },
                                                       ),
+                                                      const SizedBox(
+                                                          height: 10.0),
                                                     ],
                                                   ),
-                                                );
-                                              } else if (snapshot.hasError) {
-                                                return Center(
-                                                  child: titleText(
-                                                    text:
-                                                        "Error fetching data ${snapshot.error}",
+                                                ),
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  gym.exercisePanelController
+                                                      .close();
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 250.0,
+                                                          top: 10.0,
+                                                          right: 10.0,
+                                                          left: 10.0),
+                                                  child: ListView(
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const BouncingScrollPhysics(),
+                                                    children: [
+                                                      FutureBuilder(
+                                                        future:
+                                                            getWorkoutPlan(),
+                                                        builder: (_, snapshot) {
+                                                          if (snapshot
+                                                              .hasData) {
+                                                            Map<String, dynamic>
+                                                                allWorkout =
+                                                                snapshot.data!;
+                                                            List workout =
+                                                                allWorkout[allWorkout
+                                                                        .keys
+                                                                        .toList()[
+                                                                    index]];
+                                                            workout = workout
+                                                                .where((element) =>
+                                                                    !element[
+                                                                            'Type']
+                                                                        .contains(
+                                                                            'Stretching'))
+                                                                .toList();
+                                                            return Visibility(
+                                                              visible: (workout
+                                                                      .isEmpty)
+                                                                  ? false
+                                                                  : true,
+                                                              child: Column(
+                                                                children: [
+                                                                  Row(
+                                                                    children: [
+                                                                      const CircleAvatar(
+                                                                        radius:
+                                                                            5,
+                                                                        backgroundColor:
+                                                                            Colors.green,
+                                                                      ),
+                                                                      const SizedBox(
+                                                                          width:
+                                                                              7),
+                                                                      paragraphText(
+                                                                          text:
+                                                                              titles[0]),
+                                                                    ],
+                                                                  ),
+                                                                  Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: BackgroundColors
+                                                                          .inkWellBG,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              20),
+                                                                    ),
+                                                                    child: ListView
+                                                                        .separated(
+                                                                      physics:
+                                                                          const NeverScrollableScrollPhysics(),
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      itemBuilder:
+                                                                          (_, i) {
+                                                                        return defaultInkWell(
+                                                                          context:
+                                                                              context,
+                                                                          remove:
+                                                                              gym.deleteButtonFood,
+                                                                          removeFunction:
+                                                                              () {
+                                                                            gym.deleteWorkouts(exerciseId: workout[i]['exerciseId']).then((value) {
+                                                                              toastSuccess(
+                                                                                context: context,
+                                                                                text: "${workout[i]['name']} has been deleted",
+                                                                              );
+                                                                            });
+                                                                          },
+                                                                          image:
+                                                                              workout[i]['imageUrl'],
+                                                                          title:
+                                                                              workout[i]['Title'] ?? "not found",
+                                                                          subtitle: [
+                                                                            subTitleText(text: workout[i]["BodyPart"]),
+                                                                          ],
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              paragraphText(text: "Sets: "),
+                                                                              const SizedBox(width: 15.0),
+                                                                              paragraphText(text: "Reps: "),
+                                                                            ],
+                                                                          ),
+                                                                          function:
+                                                                              () {
+                                                                            print(workout);
+                                                                            print(requirements);
+                                                                            gym.addExerciseName(
+                                                                              workout[i]["exerciseId"],
+                                                                              workout[i]["Title"],
+                                                                              type: workout[i]["BodyPart"],
+                                                                              image: workout[i]['imageUrl'],
+                                                                              sets: workout[i]["sets"],
+                                                                              reps: workout[i]["repetition"],
+                                                                            );
+                                                                            (gym.exercisePanelController.isPanelClosed)
+                                                                                ? gym.exercisePanelController.open()
+                                                                                : gym.exercisePanelController.close();
+                                                                          },
+                                                                        );
+                                                                      },
+                                                                      separatorBuilder:
+                                                                          (_, i) =>
+                                                                              Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.symmetric(horizontal: 20),
+                                                                        child:
+                                                                            Container(
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            border:
+                                                                                Border.all(
+                                                                              width: 1,
+                                                                              color: BackgroundColors.background,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      itemCount:
+                                                                          workout
+                                                                              .length,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            );
+                                                          } else if (snapshot
+                                                              .hasError) {
+                                                            return Center(
+                                                              child: titleText(
+                                                                text:
+                                                                    "Error fetching data ${snapshot.error}",
+                                                              ),
+                                                            );
+                                                          } else {
+                                                            return const Center(
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            );
+                                                          }
+                                                        },
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 10.0),
+                                                    ],
                                                   ),
-                                                );
-                                              } else {
-                                                return const Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                );
-                                              }
-                                            },
-                                          ),
-                                          const SizedBox(height: 10.0),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      )),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                  } else {
+                                    return Container();
+                                  }
+                                },
+                              );
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                child: titleText(
+                                  text: "Error fetching data ${snapshot.error}",
+                                ),
+                              );
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          })),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20.0),

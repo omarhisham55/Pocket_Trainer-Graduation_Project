@@ -523,7 +523,7 @@ Widget openDialogInjuries(BuildContext context, gym) => defaultDialog(
                       .then((value) {
                     saveList(requirements);
                     isExerciseTaken = true;
-                    Navigator.pop(context);
+                    Navigator.pop(context, requirements);
                     gym.requirements(isExerciseTaken);
                     pageNavigator(context,
                         GymRecommendedPlan(requirements: requirements));
