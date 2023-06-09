@@ -29,6 +29,11 @@ class CubitManager extends Cubit<MainStateManager> {
   CubitManager() : super(InitialState());
 
   static CubitManager get(context) => BlocProvider.of<CubitManager>(context);
+
+  Future<void> falseEmit() async{
+    emit(InitialState());
+  }
+
   //signUp changeable
   bool isPassword = true;
   bool isConfirmPassword = true;
@@ -567,7 +572,7 @@ class CubitManager extends Cubit<MainStateManager> {
     Duration duration = const Duration(seconds: 1);
     Timer.periodic(duration, (timer) {
       timeLeft = seconds;
-      if(timeLeft == 0){
+      if (timeLeft == 0) {
         print('done');
       }
       emit(StretchesCountDown());

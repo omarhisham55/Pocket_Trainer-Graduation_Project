@@ -281,6 +281,12 @@ class Login extends StatelessWidget {
                         return null;
                       },
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: TextButton(onPressed: (){
+                    
+                      }, child: paragraphText(text: 'forgot password?')),
+                    ),
                     // const Spacer(),
                     const SizedBox(height: 240),
                     //confirm button

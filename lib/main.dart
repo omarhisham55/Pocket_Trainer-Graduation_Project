@@ -1,7 +1,9 @@
 // ignore_for_file: avoid_print
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:final_packet_trainer/data/exerciseData.dart';
+import 'package:final_packet_trainer/data/nutrition_dialog_data.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:final_packet_trainer/shared/styles/images.dart';
@@ -9,10 +11,33 @@ import 'package:flutter/material.dart';
 import 'data/nutritionData.dart';
 import 'login_signup/login_signup.dart';
 import 'navigation/routes.dart';
+import 'notification/notification_initialize.dart';
 import 'shared/blocObserver.dart';
 
 void main() {
   Bloc.observer = MyBlocObserver();
+  AwesomeNotifications()
+      .initialize(
+          null,
+          [
+            NotificationChannel(
+                channelKey: 'pocket01',
+                channelName: 'Pocket Trainer',
+                channelDescription: 'Smart Gym App')
+          ],
+          debug: true)
+      .then((value) {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+      
+        NotificationService().scheduleNotifications();
+      
+    }).catchError((e) {
+      print('lola $e');
+    });
+  });
   // getBackExercises().then((value) => print('lolo')).catchError((e)=>print('popo $e'));
   getDataMapValues(allValues: true).then((value) {
     print("successful exercise data from ${value.length}");
