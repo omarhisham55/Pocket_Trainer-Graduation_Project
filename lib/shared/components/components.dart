@@ -536,6 +536,7 @@ void toastSuccess(
       description: paragraphText(text: text),
       layoutOrientation: ToastOrientation.rtl,
       animationType: AnimationType.fromRight,
+      position: MotionToastPosition.top,
       dismissable: true,
       toastDuration: Duration(seconds: duration ?? 2),
     ).show(context);

@@ -168,50 +168,53 @@ class Login extends StatelessWidget {
                         function: () async {
                           if (signUpLoginChangeable.signupKey.currentState!
                               .validate()) {
-                            User.signUp(
-                                    username: signUpLoginChangeable
-                                        .userController.text,
-                                    email: signUpLoginChangeable
-                                        .emailController.text,
-                                    password: signUpLoginChangeable
-                                        .passController.text,
-                                    imageData: imageData,
-                                    context: context)
-                                .then((value) {
-                              Navigator.pop(context);
-                              signUpLoginChangeable.pushToLogin();
-                              toastSuccess(
-                                  context: context,
-                                  text: "Verification Complete");
-                            }).catchError((e) {
-                              throw e;
-                            });
-                            // signUpLoginChangeable.myAuth.setConfig(
-                            //     appEmail: 'omarHishamho@gmail.com',
-                            //     appName: 'Email Verification',
-                            //     userEmail:
-                            //         signUpLoginChangeable.emailController.text,
-                            //     otpLength: 6,
-                            //     otpType: OTPType.digitsOnly);
-                            // if (await signUpLoginChangeable.myAuth.sendOTP() ==
-                            //     true) {
-                            //   print(signUpLoginChangeable.myAuth.sendOTP());
-                            // pageNavigator(
-                            //     context,
-                            //     OtpVerification(
-                            //         myauth: signUpLoginChangeable.myAuth,
-                            //         email: signUpLoginChangeable.emailController.text,
-                            //         name: signUpLoginChangeable.userController.text,
-                            //         password: signUpLoginChangeable.passController.text,
-                            //         ));
+                            // User.signUp(
+                            //         username: signUpLoginChangeable
+                            //             .userController.text,
+                            //         email: signUpLoginChangeable
+                            //             .emailController.text,
+                            //         password: signUpLoginChangeable
+                            //             .passController.text,
+                            //         imageData: imageData,
+                            //         context: context)
+                            //     .then((value) {
+                            //   Navigator.pop(context);
+                            //   signUpLoginChangeable.pushToLogin();
                             //   toastSuccess(
                             //       context: context,
-                            //       text: "Verification code is sent");
-                            // } else {
-                            //   toastError(
-                            //       context: context,
-                            //       text: "Verification error!");
-                            // }
+                            //       text: "Verification Complete");
+                            // }).catchError((e) {
+                            //   throw e;
+                            // });
+
+
+
+                            signUpLoginChangeable.myAuth.setConfig(
+                                appEmail: 'omarHishamho@gmail.com',
+                                appName: 'Email Verification Poket Trainer',
+                                userEmail:
+                                    signUpLoginChangeable.emailController.text,
+                                otpLength: 6,
+                                otpType: OTPType.digitsOnly);
+                            if (await signUpLoginChangeable.myAuth.sendOTP() ==
+                                true) {
+                              print(signUpLoginChangeable.myAuth.sendOTP());
+                            pageNavigator(
+                                context,
+                                OtpVerification(
+                                    myauth: signUpLoginChangeable.myAuth,
+                                    email: signUpLoginChangeable.emailController.text,
+                                    name: signUpLoginChangeable.userController.text,
+                                    password: signUpLoginChangeable.passController.text,
+                                    ));
+                              toastSuccess(
+                                  context: context,
+                                  text: "Verification code is sent");
+                            } else {
+                              toastError(
+                                  context: context,
+                                  text: "Verification error!");
+                            }
                             signUpLoginChangeable.signupKey.currentState!
                                 .save();
                             // Perform action (e.g. send data to a server)
@@ -296,7 +299,7 @@ class Login extends StatelessWidget {
                                       context: context,
                                       blocContest: _)
                                   .then((value) {
-                                User.getProfile().then((value) {
+                                signUpLoginChangeable.getProfile(context).then((value) {
                                   getList();
                                   homeNavigator(context, const Navigation());
                                   toastSuccess(

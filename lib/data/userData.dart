@@ -55,9 +55,7 @@ class User {
       toastSuccess(context: context, text: response.body);
       return response.body;
     } else if (response.statusCode == 409) {
-      toastError(
-          context: context,
-          text: "Failed to create an account, ${response.body}");
+      toastWarning(context: context, text: response.body);
       throw Exception('Failed to create account ${response.statusCode}');
     } else {
       toastError(
@@ -71,7 +69,8 @@ class User {
       {required String username,
       required String password,
       required BuildContext context,
-      required blocContest}) async {
+      required blocContest,
+      }) async {
     // ignore: unused_local_variable
     final response = await http
         .post(
@@ -87,7 +86,7 @@ class User {
         final user = jsonDecode(value.body);
         token = user["token"];
         print(token);
-        getProfile()
+        CubitManager.get(blocContest).getProfile(context)
             .then((value) => CubitManager.get(blocContest).changeToNotEmpty());
       } else {
         toastError(context: context, text: value.body);
@@ -96,7 +95,7 @@ class User {
     });
   }
 
-  static Future<Map<String, dynamic>> getProfile() async {
+  Future<Map<String, dynamic>> getProfile() async {
     final profile = await http.get(Uri.parse('$url/profile'),
         headers: {"Authorization": "Bearer ${User.token}"});
     if (profile.statusCode == 200) {
@@ -117,12 +116,32 @@ class User {
     }
   }
 
+  static Future deleteProfile(context) async {
+    final profile =
+        await http.delete(Uri.parse('$url/delete/profile'), headers: {
+      "Authorization": "Bearer ${User.token}",
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "$url/*"
+    });
+    if (profile.statusCode != 200) {
+      toastError(
+          context: context, text: "${profile.body} ${profile.statusCode}");
+    } else {
+      toastDelete(
+          context: context, text: "${profile.body} ${profile.statusCode}");
+    }
+  }
+
   static Future<File?> getImageFromGallery() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
+      List<int>? imageBytes = await imageFile.readAsBytes();
+      print("sasha ${imageFile.path}");
+      print("bombom $imageFile");
+      print("bombom $imageBytes");
       return imageFile;
     }
 

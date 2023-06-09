@@ -17,12 +17,14 @@ class OtpVerification extends StatelessWidget {
   final String name;
   final String email;
   final String password;
+  final bool? fromEdit;
   OtpVerification(
       {Key? key,
       required this.myauth,
       required this.name,
       required this.email,
-      required this.password})
+      required this.password,
+      this.fromEdit})
       : super(key: key);
   TextEditingController otp1Controller = TextEditingController();
 
@@ -90,12 +92,14 @@ class OtpVerification extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () async {
-                        myauth.setConfig(
+                        signUpLoginChangeable.myAuth.setConfig(
                             appEmail: 'omarHishamho@gmail.com',
                             appName: 'Email Verification',
-                            userEmail: email,
+                            userEmail: User.currentUser!.email,
                             otpLength: 6,
                             otpType: OTPType.digitsOnly);
+
+                        print(signUpLoginChangeable.myAuth.toString());
                         if (await signUpLoginChangeable.myAuth.sendOTP() ==
                             true) {
                           toastSuccess(context: context, text: "code resent");
@@ -120,20 +124,22 @@ class OtpVerification extends StatelessWidget {
                                     otp5Controller.text +
                                     otp6Controller.text) ==
                             true) {
-                          User.signUp(
-                                  username: name,
-                                  email: email,
-                                  password: password,
-                                  context: context)
-                              .then((value) {
-                            Navigator.pop(context);
-                            signUpLoginChangeable.pushToLogin();
-                            toastSuccess(
-                                context: context,
-                                text: "Verification Complete");
-                          }).catchError((e) {
-                            throw e;
-                          });
+                          (fromEdit ?? false)
+                              ? Navigator.pop(context)
+                              : User.signUp(
+                                      username: name,
+                                      email: email,
+                                      password: password,
+                                      context: context)
+                                  .then((value) {
+                                  Navigator.pop(context);
+                                  signUpLoginChangeable.pushToLogin();
+                                  toastSuccess(
+                                      context: context,
+                                      text: "Verification Complete");
+                                }).catchError((e) {
+                                  throw e;
+                                });
                         } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(

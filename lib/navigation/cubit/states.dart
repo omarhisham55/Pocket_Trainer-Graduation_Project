@@ -62,6 +62,6 @@ class CreateWorkoutPlan extends MainStateManager{}
 
 class ChangeUserStats extends MainStateManager{}
 
+class EditUser extends MainStateManager{}
 
-
-
+class GetUser extends MainStateManager{}

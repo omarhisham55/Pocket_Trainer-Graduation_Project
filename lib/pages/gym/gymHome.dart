@@ -11,6 +11,7 @@ import 'package:final_packet_trainer/shared/network/local/shared.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flython/flython.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -194,14 +195,22 @@ class GymHome extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: DefaultButton(
-                                        function: () {
-                                          PoseDetectionModel()
-                                              .model()
-                                              .then((value) {
-                                            print("model opened");
-                                          }).catchError((e) {
-                                            print('error at $e');
-                                          });
+                                        function: () async {
+                                          print(
+                                              'object clicked open camera hooooo');
+                                          PoseDetectionModel().model();
+                                          // PoseDetectionModel().openCamera();
+
+                                          // await Flython()
+                                          //     .initialize(
+                                          //         'python',
+                                          //         '../../../bodyRecognitionModel//khalid/exercises-tracker-main/exercise.py',
+                                          //         false)
+                                          //     .then((value) {
+                                          //   print('success');
+                                          // }).catchError((e) {
+                                          //   print('erroe $e');
+                                          // });
                                           gym.exercisePanelController.close();
                                         },
                                         text: "Start",
@@ -224,7 +233,8 @@ class GymHome extends StatelessWidget {
                                 physics: const BouncingScrollPhysics(),
                                 itemCount: 6,
                                 itemBuilder: (context, index) {
-                                  final date = DateTime.now().add(Duration(days: index));
+                                  final date =
+                                      DateTime.now().add(Duration(days: index));
                                   if (date.day == gym.selectedDate.day &&
                                       date.month == gym.selectedDate.month &&
                                       date.year == gym.selectedDate.year) {
@@ -270,9 +280,9 @@ class GymHome extends StatelessWidget {
                                                                         .contains(
                                                                             'Stretching'))
                                                                 .toList();
-                                                                // if(daysOfTraining[index] == "Off Day"){
-                                                                //   workout[index] = continue;
-                                                                // }
+                                                            // if(daysOfTraining[index] == "Off Day"){
+                                                            //   workout[index] = continue;
+                                                            // }
                                                             return Visibility(
                                                               visible: (workout
                                                                       .isEmpty)

@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:io';
 import 'package:email_otp/email_otp.dart';
 import 'package:final_packet_trainer/data/gym_dialog_data.dart';
 import 'package:http/http.dart' as http;
@@ -61,7 +62,7 @@ class CubitManager extends Cubit<MainStateManager> {
 
   void pushToLogin() {
     signup = !signup;
-    loginKey.currentState!.reset();
+    // loginKey.currentState!.reset();
     signupKey.currentState!.reset();
     emit(LoginState());
   }
@@ -428,8 +429,10 @@ class CubitManager extends Cubit<MainStateManager> {
     emit(GetExerciseDataToPanel());
   }
 
-  Future addWorkouts({required String exerciseId}) async {
+  Future<int> addWorkouts(
+      {required BuildContext context, required String exerciseId}) async {
     print(exerciseId);
+    int statusCode = 0;
     final response = await http.post(
       Uri.parse('$url/workoutplan/add/chest/exercise/$exerciseId'),
       headers: {
@@ -438,13 +441,9 @@ class CubitManager extends Cubit<MainStateManager> {
       },
       // body: jsonEncode({"test": exerciseId})
     );
-    if (response.statusCode == 201) {
-      emit(AddExerciseState());
-      return response.body;
-    } else {
-      print(response.statusCode);
-      return response.body;
-    }
+    statusCode = response.statusCode;
+    emit(AddExerciseState());
+    return statusCode;
   }
 
   //delete workout from database
@@ -486,6 +485,61 @@ class CubitManager extends Cubit<MainStateManager> {
     emit(RemoveExerciseState());
   }
 
+  //get profile
+  Future<Map<String, dynamic>> getProfile(context) async {
+    final profile = await http.get(Uri.parse('$url/profile'),
+        headers: {"Authorization": "Bearer ${User.token}"});
+    if (profile.statusCode == 200) {
+      var user = json.decode(profile.body);
+      User.currentUser = User(
+        name: user["name"] ?? "",
+        email: user["email"] ?? "",
+        password: user["password"] ?? "",
+        urlPhotoData: user["photo"] != null && user["photo"]["data"] != null
+            ? user["photo"]["data"]["data"].toString()
+            : null.toString(),
+        workoutPlan: user["workoutPlan"] ?? {},
+        nutritionPlan: user["NutritionPlan"] ?? {},
+      );
+      // emit(GetUser());
+      return user;
+    } else {
+      toastError(context: context, text: profile.body);
+      throw Exception("Failed to load data");
+    }
+  }
+
+  //edit profile
+  Future<Map<String, dynamic>> editProfile({
+    required BuildContext context,
+    String? username,
+    String? email,
+    String? password,
+    File? imageData,
+  }) async {
+    final profile = await http.patch(Uri.parse('$url/edit/profile'),
+        headers: {
+          "Authorization": "Bearer ${User.token}",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "$url/*"
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': username,
+          'email': email,
+          'password': password,
+          'photo': {'contentType': 'image/jpg', 'data': imageData}
+        }));
+    if (profile.statusCode == 200) {
+      var user = json.decode(profile.body);
+      getProfile(context).then((v) {
+        emit(EditUser());
+      });
+      return user;
+    } else {
+      throw Exception("Failed to load data");
+    }
+  }
+
   //date
   DateTime selectedDate = DateTime.now();
   void onSelectedDate(date) {
@@ -505,10 +559,9 @@ class CubitManager extends Cubit<MainStateManager> {
     currentDateIndex = index;
     emit(ChangeDateState());
   }
-
-  //create workoutplan
 }
 
+//create workoutplan
 Future<Map<String, dynamic>> createWorkoutPlan(
     level, goal, trainingLocation) async {
   var workout = await http.post(

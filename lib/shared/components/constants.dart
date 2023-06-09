@@ -12,7 +12,7 @@ PageTransitionAnimation sizeUp = PageTransitionAnimation.sizeUp;
 void notificationNavigator(context, page){
   Navigator.of(context).push(NotificationAnimation(page: page));
 }
-void pageNavigator(context, page){
+Future<void> pageNavigator(context, page) async {
   Navigator.of(context).push(PageAnimation(page: page));
 }
 void homeNavigator(context, page){

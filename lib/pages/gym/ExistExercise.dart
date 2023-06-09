@@ -130,7 +130,7 @@ class ExistExercise extends StatelessWidget {
                                                   exerciseInfo: gymData[i]
                                                       .exerciseDescription,
                                                   exerciseImage:
-                                                      'gymData[i].exerciseImage',
+                                                      gymData[i].exerciseImage,
                                                   exerciseType:
                                                       gymData[i].exerciseType,
                                                   exerciseLevel:
@@ -138,7 +138,7 @@ class ExistExercise extends StatelessWidget {
                                                   exerciseEquipment: gymData[i]
                                                       .exerciseEquipment,
                                                   exerciseBodyPart: gymData[i]
-                                                      .exercisebodyPart,
+                                                      .exerciseBodyPart,
                                                   // exerciseTarget: gymData[i].exerciseTarget,
                                                   // exerciseTips: gymData[i].exerciseTips,
                                                   // exerciseRepetition: gymData[i].exerciseRepetition,
@@ -146,7 +146,7 @@ class ExistExercise extends StatelessWidget {
                                                 ));
                                       },
                                       width: width(context, .5),
-                                      image: 'gymData[i].exerciseImage',
+                                      image: gymData[i].exerciseImage,
                                       title: gymData[i].exerciseName,
                                       addCardButton: true,
                                       addFunction: () {
@@ -180,10 +180,17 @@ class ExistExercise extends StatelessWidget {
                                     children: [
                                       titleText(text: "Add exercise"),
                                       Row(children: [
-                                        titleText(text: gym.exercisePanelName)
+                                        SizedBox(
+                                          width: width(context, .8),
+                                          child: titleText(
+                                              text: gym.exercisePanelName,
+                                              textAlign: TextAlign.start,
+                                              maxLines: 2),
+                                        )
                                       ]),
                                       Row(children: [
-                                        subTitleText(text: gym.exercisePanelId)
+                                        subTitleText(
+                                            text: gym.exercisePanelType)
                                       ]),
                                       Container(
                                         padding: const EdgeInsets.symmetric(
@@ -232,29 +239,14 @@ class ExistExercise extends StatelessWidget {
                                       // ),
                                       DefaultButton(
                                           function: () {
-                                            gym
-                                                .addWorkouts(
-                                                    exerciseId:
-                                                        gym.exercisePanelId)
-                                                .then((value) {
-                                              print('ahma $value');
-                                              if (value ==
-                                                  "this exercise already added in your workoutPlan") {
+                                            gym.addWorkouts(context: context, exerciseId: gym.exercisePanelId).then((value) {
+                                              if (value == 200) {
                                                 toastWarning(
                                                     context: context,
-                                                    text:
-                                                        "this exercise already added in your workoutPlan");
-                                                print("value1$value");
+                                                    text: "this exercise already added in your workoutPlan");
                                               } else {
-                                                print("value2$value");
-                                                toastSuccess(
-                                                    context: context,
-                                                    text:
-                                                        "Exercise added to Workout Plan");
+                                                toastSuccess(context: context, text: "Exercise added to Workout Plan");
                                               }
-                                            }).catchError((e) {
-                                              toastError(
-                                                  context: context, text: e);
                                             });
                                           },
                                           borderRadius: 20,

@@ -1,7 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:email_otp/email_otp.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:final_packet_trainer/data/nutrition_dialog_data.dart';
 import 'package:final_packet_trainer/data/userData.dart';
 import 'package:final_packet_trainer/main.dart';
@@ -17,6 +21,7 @@ import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../login_signup/otp.dart';
 import '../../navigation/cubit/cubit.dart';
 import '../../shared/components/components.dart';
 
@@ -35,14 +40,18 @@ class Profile extends StatelessWidget {
                   ? Uint8List.fromList(baseImage.cast<int>())
                   : null;
               Random random = Random();
+              bool isValid = false;
+              CubitManager userData = CubitManager.get(_);
+              GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
               return Scaffold(
+                  key: scaffoldKey,
+                  resizeToAvoidBottomInset: true,
                   backgroundColor: BackgroundColors.background,
                   appBar: notificationAppBar(context, "Profile"),
                   body: FutureBuilder(
-                      future: User.getProfile(),
+                      future: userData.getProfile(context),
                       builder: (_, snapshot) {
                         if (snapshot.hasData) {
-                          CubitManager userData = CubitManager.get(_);
                           var user = snapshot.data!;
                           return FutureBuilder(
                               future: getList(),
@@ -124,7 +133,112 @@ class Profile extends StatelessWidget {
                                                     child: Column(
                                                       children: [
                                                         IconButton(
-                                                            onPressed: () {},
+                                                            onPressed: () {
+                                                              scaffoldKey
+                                                                  .currentState!
+                                                                  .showBottomSheet(
+                                                                      (context) {
+                                                                return Container(
+                                                                  color: BackgroundColors
+                                                                      .background,
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .all(
+                                                                        20.0),
+                                                                    child: Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.min,
+                                                                        children: [
+                                                                          //username
+                                                                          defaultTextFormField(
+                                                                              controller: userData.userController,
+                                                                              hint: "Username",
+                                                                              validator: (value) {
+                                                                                if (value!.isEmpty) {
+                                                                                  return "Enter Valid Username";
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG))),
+                                                                          const SizedBox(
+                                                                              height: 20),
+                                                                          //email
+                                                                          defaultTextFormField(
+                                                                              controller: userData.emailController,
+                                                                              hint: "Email",
+                                                                              validator: (value) {
+                                                                                isValid = EmailValidator.validate(userData.emailController.text);
+                                                                                if (value!.isEmpty || !isValid) {
+                                                                                  return "Enter Valid email";
+                                                                                } else if (!value.contains("@")) {
+                                                                                  return "Email invalid missing @";
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG))),
+                                                                          //password
+                                                                          defaultTextFormField(
+                                                                              controller: userData.passController,
+                                                                              hint: "Password",
+                                                                              suffix: true,
+                                                                              isPassword: userData.isPassword,
+                                                                              validator: (value) {
+                                                                                if (value!.isEmpty || value.length < 6) {
+                                                                                  return 'Password must be at least 6 characters';
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG)),
+                                                                              suffixPressed: () {
+                                                                                userData.isPasswordCheck();
+                                                                              }),
+                                                                          const SizedBox(
+                                                                              height: 20),
+                                                                          //confirm password
+                                                                          defaultTextFormField(
+                                                                              controller: userData.confirmPassController,
+                                                                              hint: "Confirm Password",
+                                                                              isPassword: userData.isConfirmPassword,
+                                                                              border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG)),
+                                                                              suffix: true,
+                                                                              validator: (value) {
+                                                                                if (userData.passController.text != userData.confirmPassController.text) {
+                                                                                  print('pass cont = ${userData.passController.text}');
+                                                                                  print('confirm pass cont = ${userData.confirmPassController.text}');
+                                                                                  return "Passwords doesn't match";
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              suffixPressed: () {
+                                                                                userData.isConfirmPasswordCheck();
+                                                                              }),
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.all(20.0),
+                                                                            child:
+                                                                                DefaultButton(
+                                                                              function: () async {
+                                                                                print(userData.passController.text);
+                                                                                userData.myAuth.setConfig(appEmail: 'omarHishamho@gmail.com', appName: 'Email Verification Poket Trainer', userEmail: User.currentUser!.email, otpLength: 6, otpType: OTPType.digitsOnly);
+                                                                                if (await userData.myAuth.sendOTP() == true) {
+                                                                                  print("${userData.emailController} ${userData.passController} ${userData.userController}");
+                                                                                  pageNavigator(context, OtpVerification(myauth: userData.myAuth, email: userData.emailController.text, name: userData.userController.text, password: userData.passController.text, fromEdit: true)).then((value) {
+                                                                                    userData.editProfile(context: context, username: userData.userController.text, email: userData.emailController.text, password: userData.passController.text);
+                                                                                  });
+                                                                                  toastInfo(context: context, text: "Email verification pending");
+                                                                                } else {
+                                                                                  toastError(context: context, text: "Verification error!");
+                                                                                }
+                                                                              },
+                                                                              text: "Save changes",
+                                                                            ),
+                                                                          ),
+                                                                        ]),
+                                                                  ),
+                                                                );
+                                                              });
+                                                            },
                                                             icon: const Icon(
                                                               FontAwesomeIcons
                                                                   .edit,
@@ -156,7 +270,12 @@ class Profile extends StatelessWidget {
                                                                                 const EdgeInsets.symmetric(horizontal: 10.0),
                                                                             child:
                                                                                 DefaultButton(
-                                                                              function: () {},
+                                                                              function: () {
+                                                                                User.deleteProfile(context).then((value) {
+                                                                                  Navigator.pop(context);
+                                                                                  pageNavigator(context, const Login());
+                                                                                });
+                                                                              },
                                                                               text: "Yes",
                                                                               backgroundColor: Colors.red,
                                                                               width: width(context, .3),
