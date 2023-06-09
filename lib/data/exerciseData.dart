@@ -21,8 +21,8 @@ class Exercise {
   // String exerciseTarget;
   String exerciseDescription;
   // String exerciseTips;
-  // String exerciseRepetition;
-  // String exerciseSets;
+  String exerciseRepetition;
+  String exerciseSets;
   String exerciseImage;
 
   Exercise({
@@ -35,8 +35,8 @@ class Exercise {
     // required this.exerciseTarget,
     required this.exerciseDescription,
     // required this.exerciseTips,
-    // required this.exerciseRepetition,
-    // required this.exerciseSets,
+    required this.exerciseRepetition,
+    required this.exerciseSets,
     required this.exerciseImage,
   });
 
@@ -51,8 +51,8 @@ class Exercise {
       exerciseLevel: json["Level"] ?? "",
       exerciseEquipment: json["Equipment"] ?? "",
       // exerciseTips: json["tips"] ?? "",
-      // exerciseRepetition: json["repetition"] ?? "",
-      // exerciseSets: json["sets"] ?? "",
+      exerciseRepetition: json["Reps"] ?? "",
+      exerciseSets: json["Sets"] ?? "",
       exerciseImage: json["imageUrl"] ?? "",
     );
   }

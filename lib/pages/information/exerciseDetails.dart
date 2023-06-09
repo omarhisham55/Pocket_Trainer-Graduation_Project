@@ -56,7 +56,7 @@ class ExerciseDetails extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: titleText(
-                  text: exerciseName ?? "can't get data"), //$exercise name
+                  text: exerciseName ?? "can't get data", maxLines: 3, textAlign: TextAlign.start), //$exercise name
             ),
             Padding(
               padding: const EdgeInsets.all(15.0),

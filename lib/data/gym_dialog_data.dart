@@ -518,7 +518,7 @@ Widget openDialogInjuries(BuildContext context, gym) => defaultDialog(
                 function: () {
                   requirements.removeAt(5);
                   requirements.insert(5, selectedInjuries);
-                  createWorkoutPlan(
+                  gym.createWorkoutPlan(
                           requirements[0], requirements[1], requirements[3])
                       .then((value) {
                     saveList(requirements);

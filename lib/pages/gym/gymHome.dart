@@ -5,6 +5,7 @@ import 'package:final_packet_trainer/data/gym_dialog_data.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:final_packet_trainer/pages/gym/AddExercise.dart';
+import 'package:final_packet_trainer/pages/information/exerciseDetails.dart';
 import 'package:final_packet_trainer/poseDetectionModel/poseDetection.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/network/local/shared.dart';
@@ -283,6 +284,44 @@ class GymHome extends StatelessWidget {
                                                             // if(daysOfTraining[index] == "Off Day"){
                                                             //   workout[index] = continue;
                                                             // }
+                                                            List<int>
+                                                                stretchDuration =
+                                                                List.generate(
+                                                                    workout
+                                                                        .length,
+                                                                    (value) =>
+                                                                        generateStretchDuration());
+                                                            void startTimer(
+                                                                BuildContext
+                                                                    context,
+                                                                int i) {
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  return AlertDialog(
+                                                                    title: Text(
+                                                                        'Timer'),
+                                                                    content: Text(
+                                                                        'Start timer for ${gym.timeLeft} seconds'),
+                                                                    actions: <Widget>[
+                                                                      TextButton(
+                                                                        child: Text(
+                                                                            'Start'),
+                                                                        onPressed:
+                                                                            () {
+                                                                          // Navigator.of(context).pop();
+                                                                          gym.countdownTimer(stretchDuration[i]);
+                                                                        },
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                },
+                                                              );
+                                                            }
+
                                                             return Visibility(
                                                               visible: (workout
                                                                       .isEmpty)
@@ -324,6 +363,17 @@ class GymHome extends StatelessWidget {
                                                                       itemBuilder:
                                                                           (_, i) {
                                                                         return defaultInkWell(
+                                                                          onLongPress: () => pageNavigator(
+                                                                              context,
+                                                                              ExerciseDetails(
+                                                                                exerciseName: workout[i]['Title'],
+                                                                                exerciseInfo: workout[i]['Desc'],
+                                                                                exerciseImage: workout[i]['imageUrl'],
+                                                                                exerciseType: workout[i]['Type'],
+                                                                                exerciseLevel: workout[i]['Level'],
+                                                                                exerciseEquipment: workout[i]['Equipment'],
+                                                                                exerciseBodyPart: workout[i]['BodyPart'],
+                                                                              )),
                                                                           context:
                                                                               context,
                                                                           remove:
@@ -333,7 +383,7 @@ class GymHome extends StatelessWidget {
                                                                             gym.deleteWorkouts(exerciseId: workout[i]['exerciseId']).then((value) {
                                                                               toastSuccess(
                                                                                 context: context,
-                                                                                text: "${workout[i]['name']} has been deleted",
+                                                                                text: "${workout[i]['Title']} has been deleted",
                                                                               );
                                                                             });
                                                                           },
@@ -345,15 +395,11 @@ class GymHome extends StatelessWidget {
                                                                             subTitleText(text: workout[i]["BodyPart"]),
                                                                           ],
                                                                           child:
-                                                                              Row(
-                                                                            children: [
-                                                                              paragraphText(text: "Sets: "),
-                                                                              const SizedBox(width: 15.0),
-                                                                              paragraphText(text: "Reps: "),
-                                                                            ],
-                                                                          ),
+                                                                              subTitleText(text: "${stretchDuration[i]} sec"),
                                                                           function:
                                                                               () {
+                                                                            startTimer(context,
+                                                                                i);
                                                                             print(workout);
                                                                             print(requirements);
                                                                             gym.addExerciseName(
@@ -361,8 +407,8 @@ class GymHome extends StatelessWidget {
                                                                               workout[i]["Title"],
                                                                               type: workout[i]["BodyPart"],
                                                                               image: workout[i]['imageUrl'],
-                                                                              sets: workout[i]["sets"],
-                                                                              reps: workout[i]["repetition"],
+                                                                              sets: workout[i]["Sets"],
+                                                                              reps: workout[i]["Reps"],
                                                                             );
                                                                             (gym.exercisePanelController.isPanelClosed)
                                                                                 ? gym.exercisePanelController.open()
@@ -496,6 +542,17 @@ class GymHome extends StatelessWidget {
                                                                       itemBuilder:
                                                                           (_, i) {
                                                                         return defaultInkWell(
+                                                                          onLongPress: () => pageNavigator(
+                                                                              context,
+                                                                              ExerciseDetails(
+                                                                                exerciseName: workout[i]['Title'],
+                                                                                exerciseInfo: workout[i]['Desc'],
+                                                                                exerciseImage: workout[i]['imageUrl'],
+                                                                                exerciseType: workout[i]['Type'],
+                                                                                exerciseLevel: workout[i]['Level'],
+                                                                                exerciseEquipment: workout[i]['Equipment'],
+                                                                                exerciseBodyPart: workout[i]['BodyPart'],
+                                                                              )),
                                                                           context:
                                                                               context,
                                                                           remove:
@@ -505,7 +562,7 @@ class GymHome extends StatelessWidget {
                                                                             gym.deleteWorkouts(exerciseId: workout[i]['exerciseId']).then((value) {
                                                                               toastSuccess(
                                                                                 context: context,
-                                                                                text: "${workout[i]['name']} has been deleted",
+                                                                                text: "${workout[i]['Title']} has been deleted",
                                                                               );
                                                                             });
                                                                           },
@@ -519,9 +576,9 @@ class GymHome extends StatelessWidget {
                                                                           child:
                                                                               Row(
                                                                             children: [
-                                                                              paragraphText(text: "Sets: "),
+                                                                              paragraphText(text: "Sets: ${workout[i]["Sets"]}"),
                                                                               const SizedBox(width: 15.0),
-                                                                              paragraphText(text: "Reps: "),
+                                                                              paragraphText(text: "Reps: ${workout[i]["Reps"]}"),
                                                                             ],
                                                                           ),
                                                                           function:
@@ -533,8 +590,8 @@ class GymHome extends StatelessWidget {
                                                                               workout[i]["Title"],
                                                                               type: workout[i]["BodyPart"],
                                                                               image: workout[i]['imageUrl'],
-                                                                              sets: workout[i]["sets"],
-                                                                              reps: workout[i]["repetition"],
+                                                                              sets: workout[i]["Sets"],
+                                                                              reps: workout[i]["Reps"],
                                                                             );
                                                                             (gym.exercisePanelController.isPanelClosed)
                                                                                 ? gym.exercisePanelController.open()

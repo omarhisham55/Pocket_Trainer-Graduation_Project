@@ -204,6 +204,7 @@ Widget defaultInkWell({
   required final List<Widget> subtitle,
   required final Widget child,
   required final Function() function,
+  final Function()? onLongPress,
   Function()? removeFunction,
   Color? iconColor,
   bool? recommended = false,
@@ -213,6 +214,7 @@ Widget defaultInkWell({
       alignment: Alignment.topRight,
       children: [
         InkWell(
+          onLongPress: onLongPress,
           onTap: function,
           child: Container(
             decoration: BoxDecoration(

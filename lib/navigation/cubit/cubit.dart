@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:email_otp/email_otp.dart';
@@ -419,7 +420,7 @@ class CubitManager extends Cubit<MainStateManager> {
   String exercisePanelSets = "";
   String exercisePanelReps = "";
   void addExerciseName(id, name,
-      {String? type, String? image, int? sets, int? reps}) {
+      {String? type, String? image, String? sets, String? reps}) {
     exercisePanelId = id;
     exercisePanelName = name.toString();
     exercisePanelType = type.toString();
@@ -559,31 +560,44 @@ class CubitManager extends Cubit<MainStateManager> {
     currentDateIndex = index;
     emit(ChangeDateState());
   }
-}
+
+//stretches countdown
+  int timeLeft = 0;
+  void countdownTimer(int seconds) {
+    Duration duration = const Duration(seconds: 1);
+    Timer.periodic(duration, (timer) {
+      timeLeft = seconds;
+      if(timeLeft == 0){
+        print('done');
+      }
+      emit(StretchesCountDown());
+    });
+  }
 
 //create workoutplan
-Future<Map<String, dynamic>> createWorkoutPlan(
-    level, goal, trainingLocation) async {
-  var workout = await http.post(
-    Uri.parse('$url/wourkoutplan-recommendation'),
-    headers: {
-      "Authorization": "Bearer ${User.token}",
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "$url/*"
-    },
-    body: jsonEncode(<String, String>{
-      'level': level,
-      'goal': goal,
-      'training_location': trainingLocation,
-    }),
-  );
-  print("create plan dodo");
-  if (workout.statusCode == 200) {
-    var data = json.decode(workout.body);
-    // print("created workout plan $data");
-    // emit(CreateWorkoutPlan());
-    return data;
-  } else {
-    throw Exception("Failed to load data ${workout.statusCode}");
+  Future<Map<String, dynamic>> createWorkoutPlan(
+      level, goal, trainingLocation) async {
+    var workout = await http.post(
+      Uri.parse('$url/wourkoutplan-recommendation'),
+      headers: {
+        "Authorization": "Bearer ${User.token}",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "$url/*"
+      },
+      body: jsonEncode(<String, String>{
+        'level': level,
+        'goal': goal,
+        'training_location': trainingLocation,
+      }),
+    );
+    print("create plan dodo");
+    if (workout.statusCode == 200) {
+      var data = json.decode(workout.body);
+      // print("created workout plan $data");
+      // emit(CreateWorkoutPlan());
+      return data;
+    } else {
+      throw Exception("Failed to load data ${workout.statusCode}");
+    }
   }
 }
