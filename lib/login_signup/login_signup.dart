@@ -246,13 +246,12 @@ class Login extends StatelessWidget {
                 key: signUpLoginChangeable.loginKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     //Login title
-                    Text(signUpLoginChangeable.title[0],
-                        style: const TextStyle(
-                            color: TextColors.whiteText,
-                            fontSize: 70,
-                            fontWeight: FontWeight.bold)),
+                    SizedBox(
+                      width: width(context, 1),
+                      child: titleText(text: signUpLoginChangeable.title[0], size: 70.0)),
                     const SizedBox(height: 60),
                     defaultTextFormField(
                         controller: signUpLoginChangeable.emailController,
