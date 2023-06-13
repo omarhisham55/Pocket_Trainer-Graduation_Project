@@ -14,7 +14,10 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../information/exerciseDetails.dart';
 
 class ExistExercise extends StatelessWidget {
-  ExistExercise({super.key});
+  bool? isChange;
+  String? bodyPart;
+  String? oldId;
+  ExistExercise({super.key, this.isChange, this.bodyPart, this.oldId});
   String suggestion = "Choose category";
   final panelController = PanelController();
   TextEditingController sets = TextEditingController();
@@ -88,23 +91,26 @@ class ExistExercise extends StatelessWidget {
                       defaultPanelState: PanelState.CLOSED,
                       body: Column(
                         children: [
-                          Container(
-                            color: BackgroundColors.inkWellBG,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: QudsPopupButton(
-                                      tooltip: 'search filter',
-                                      items: gym
-                                          .getSearchFilterItems(snapshot.data),
-                                      child: subTitleText(
-                                          text:
-                                              "${(gym.exerciseType == "") ? "All Exercises" : gym.exerciseType} / ${gym.dropDownSubHint}")),
-                                )
-                              ],
+                          Visibility(
+                            visible: (isChange ?? false) ? false : true,
+                            child: Container(
+                              color: BackgroundColors.inkWellBG,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10.0),
+                                    child: QudsPopupButton(
+                                        tooltip: 'search filter',
+                                        items: gym.getSearchFilterItems(
+                                            snapshot.data),
+                                        child: subTitleText(
+                                            text:
+                                                "${(gym.exerciseType == "") ? "All Exercises" : gym.exerciseType} / ${gym.dropDownSubHint}")),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                           Expanded(
@@ -150,13 +156,19 @@ class ExistExercise extends StatelessWidget {
                                       title: gymData[i].exerciseName,
                                       addCardButton: true,
                                       addFunction: () {
-                                        gym.addExerciseName(
-                                            gymData[i].exerciseId,
-                                            gymData[i].exerciseName,
-                                            type: gymData[i].exerciseBodyPart);
-                                        (panelController.isPanelClosed)
-                                            ? panelController.open()
-                                            : panelController.close();
+                                        if (isChange ?? false) {
+                                          gym.changeExercise(
+                                              oldId: oldId ?? 'not found', newId: gymData[i].exerciseId);
+                                        } else {
+                                          gym.addExerciseName(
+                                              gymData[i].exerciseId,
+                                              gymData[i].exerciseName,
+                                              type:
+                                                  gymData[i].exerciseBodyPart);
+                                          (panelController.isPanelClosed)
+                                              ? panelController.open()
+                                              : panelController.close();
+                                        }
                                       })),
                             ),
                           )
@@ -239,13 +251,22 @@ class ExistExercise extends StatelessWidget {
                                       // ),
                                       DefaultButton(
                                           function: () {
-                                            gym.addWorkouts(context: context, exerciseId: gym.exercisePanelId).then((value) {
+                                            gym
+                                                .addWorkouts(
+                                                    context: context,
+                                                    exerciseId:
+                                                        gym.exercisePanelId)
+                                                .then((value) {
                                               if (value == 200) {
                                                 toastWarning(
                                                     context: context,
-                                                    text: "this exercise already added in your workoutPlan");
+                                                    text:
+                                                        "this exercise already added in your workoutPlan");
                                               } else {
-                                                toastSuccess(context: context, text: "Exercise added to Workout Plan");
+                                                toastSuccess(
+                                                    context: context,
+                                                    text:
+                                                        "Exercise added to Workout Plan");
                                               }
                                             });
                                           },

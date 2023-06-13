@@ -3,7 +3,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:final_packet_trainer/data/exerciseData.dart';
-import 'package:final_packet_trainer/data/nutrition_dialog_data.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:final_packet_trainer/shared/styles/images.dart';

@@ -30,7 +30,7 @@ class CubitManager extends Cubit<MainStateManager> {
 
   static CubitManager get(context) => BlocProvider.of<CubitManager>(context);
 
-  Future<void> falseEmit() async{
+  Future<void> falseEmit() async {
     emit(InitialState());
   }
 
@@ -516,13 +516,14 @@ class CubitManager extends Cubit<MainStateManager> {
   }
 
   //edit profile
-  Future<Map<String, dynamic>> editProfile({
+  Future editProfile({
     required BuildContext context,
     String? username,
     String? email,
     String? password,
     File? imageData,
   }) async {
+    print('edit profile opened');
     final profile = await http.patch(Uri.parse('$url/edit/profile'),
         headers: {
           "Authorization": "Bearer ${User.token}",
@@ -534,15 +535,33 @@ class CubitManager extends Cubit<MainStateManager> {
           'email': email,
           'password': password,
           'photo': {'contentType': 'image/jpg', 'data': imageData}
-        }));
-    if (profile.statusCode == 200) {
-      var user = json.decode(profile.body);
-      getProfile(context).then((v) {
-        emit(EditUser());
-      });
-      return user;
+        })).then((value) => print('success ${value.statusCode}, ${value.body}')).catchError((e)=> print('error at $e'));
+    // if (profile.statusCode == 200) {
+    //   var user = json.decode(profile.body);
+    //   getProfile(context).then((v) {
+    //     emit(EditUser());
+    //   });
+    //   return user;
+    // } else {
+    //   throw Exception("Failed to load data ${profile.statusCode}");
+    // }
+  }
+
+  //change Exercise
+  Future changeExercise({required String oldId, required String newId}) async {
+    print('oldid $oldId / newId $newId');
+    var changeResponse = await http.patch(Uri.parse('$url/replace/exercise'),
+        headers: {
+          "Authorization": "Bearer ${User.token}",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "$url/*"
+        },
+        body: jsonEncode({'OldExerciseId': oldId, 'NewExerciseId': newId}));
+    if (changeResponse.statusCode != 200) {
+      emit(ChangeExercise());
+      print('success');
     } else {
-      throw Exception("Failed to load data");
+      print('error ${changeResponse.statusCode}');
     }
   }
 

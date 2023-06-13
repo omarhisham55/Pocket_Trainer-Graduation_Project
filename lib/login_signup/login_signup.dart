@@ -187,8 +187,6 @@ class Login extends StatelessWidget {
                             //   throw e;
                             // });
 
-
-
                             signUpLoginChangeable.myAuth.setConfig(
                                 appEmail: 'omarHishamho@gmail.com',
                                 appName: 'Email Verification Poket Trainer',
@@ -199,14 +197,17 @@ class Login extends StatelessWidget {
                             if (await signUpLoginChangeable.myAuth.sendOTP() ==
                                 true) {
                               print(signUpLoginChangeable.myAuth.sendOTP());
-                            pageNavigator(
-                                context,
-                                OtpVerification(
+                              pageNavigator(
+                                  context,
+                                  OtpVerification(
                                     myauth: signUpLoginChangeable.myAuth,
-                                    email: signUpLoginChangeable.emailController.text,
-                                    name: signUpLoginChangeable.userController.text,
-                                    password: signUpLoginChangeable.passController.text,
-                                    ));
+                                    email: signUpLoginChangeable
+                                        .emailController.text,
+                                    name: signUpLoginChangeable
+                                        .userController.text,
+                                    password: signUpLoginChangeable
+                                        .passController.text,
+                                  ));
                               toastSuccess(
                                   context: context,
                                   text: "Verification code is sent");
@@ -250,8 +251,9 @@ class Login extends StatelessWidget {
                   children: [
                     //Login title
                     SizedBox(
-                      width: width(context, 1),
-                      child: titleText(text: signUpLoginChangeable.title[0], size: 70.0)),
+                        width: width(context, 1),
+                        child: titleText(
+                            text: signUpLoginChangeable.title[0], size: 70.0)),
                     const SizedBox(height: 60),
                     defaultTextFormField(
                         controller: signUpLoginChangeable.emailController,
@@ -280,11 +282,151 @@ class Login extends StatelessWidget {
                         return null;
                       },
                     ),
+                    //forgrt password
                     Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: TextButton(onPressed: (){
-                    
-                      }, child: paragraphText(text: 'forgot password?')),
+                      child: TextButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    actionsAlignment: MainAxisAlignment.center,
+                                    backgroundColor: BackgroundColors.dialogBG,
+                                    content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          titleText(text: "Enter your email"),
+                                          defaultTextFormField(
+                                              controller: signUpLoginChangeable
+                                                  .emailController,
+                                              isPassword: false,
+                                              hint: "Email",
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return "Enter Valid Email";
+                                                }
+                                                return null;
+                                              })
+                                        ]),
+                                    actions: [
+                                      DefaultButton(
+                                          function: () async {
+                                            signUpLoginChangeable.myAuth.setConfig(
+                                                appEmail:
+                                                    'omarHishamho@gmail.com',
+                                                appName:
+                                                    'Email Verification Poket Trainer',
+                                                userEmail: signUpLoginChangeable
+                                                    .emailController.text,
+                                                otpLength: 6,
+                                                otpType: OTPType.digitsOnly);
+                                            if (await signUpLoginChangeable
+                                                    .myAuth
+                                                    .sendOTP() ==
+                                                true) {
+                                              print(
+                                                  "${signUpLoginChangeable.emailController} ${signUpLoginChangeable.passController} ${signUpLoginChangeable.userController}");
+                                              pageNavigator(
+                                                      context,
+                                                      OtpVerification(
+                                                          myauth:
+                                                              signUpLoginChangeable
+                                                                  .myAuth,
+                                                          email:
+                                                              signUpLoginChangeable
+                                                                  .emailController
+                                                                  .text,
+                                                          fromForget: true))
+                                                  .then((value) {
+                                                return showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                    content: Column(children: [
+                                                      titleText(
+                                                          text:
+                                                              'Change password'),
+                                                      //password
+                                                      defaultTextFormField(
+                                                          controller:
+                                                              signUpLoginChangeable
+                                                                  .passController,
+                                                          hint: "Password",
+                                                          suffix: true,
+                                                          isPassword:
+                                                              signUpLoginChangeable
+                                                                  .isPassword,
+                                                          validator: (value) {
+                                                            if (value!
+                                                                    .isEmpty ||
+                                                                value.length <
+                                                                    6) {
+                                                              return 'Password must be at least 6 characters';
+                                                            }
+                                                            return null;
+                                                          },
+                                                          suffixPressed: () {
+                                                            signUpLoginChangeable
+                                                                .isPasswordCheck();
+                                                          }),
+                                                      const SizedBox(
+                                                          height: 20),
+                                                      //confirm password
+                                                      defaultTextFormField(
+                                                          controller:
+                                                              signUpLoginChangeable
+                                                                  .confirmPassController,
+                                                          hint:
+                                                              "Confirm Password",
+                                                          isPassword:
+                                                              signUpLoginChangeable
+                                                                  .isConfirmPassword,
+                                                          suffix: true,
+                                                          validator: (value) {
+                                                            if (signUpLoginChangeable
+                                                                    .passController
+                                                                    .text !=
+                                                                signUpLoginChangeable
+                                                                    .confirmPassController
+                                                                    .text) {
+                                                              print(
+                                                                  'pass cont = ${signUpLoginChangeable.passController.text}');
+                                                              print(
+                                                                  'confirm pass cont = ${signUpLoginChangeable.confirmPassController.text}');
+                                                              return "Passwords doesn't match";
+                                                            }
+                                                            return null;
+                                                          },
+                                                          suffixPressed: () {
+                                                            signUpLoginChangeable
+                                                                .isConfirmPasswordCheck();
+                                                          }),
+                                                    ]),
+                                                    actions: [
+                                                      DefaultButton(function: (){
+                                                        signUpLoginChangeable.editProfile(context: context, password: signUpLoginChangeable.passController.text);
+                                                      }, text: 'change password')
+                                                    ],
+                                                  );
+                                                    });
+                                              });
+                                              toastInfo(
+                                                  context: context,
+                                                  text:
+                                                      "Email verification pending");
+                                            } else {
+                                              toastError(
+                                                  context: context,
+                                                  text: "Verification error!");
+                                            }
+                                          },
+                                          text: 'check')
+                                    ],
+                                  );
+                                });
+                          },
+                          child: paragraphText(text: 'forgot password?')),
                     ),
                     // const Spacer(),
                     const SizedBox(height: 240),
@@ -304,7 +446,9 @@ class Login extends StatelessWidget {
                                       context: context,
                                       blocContest: _)
                                   .then((value) {
-                                signUpLoginChangeable.getProfile(context).then((value) {
+                                signUpLoginChangeable
+                                    .getProfile(context)
+                                    .then((value) {
                                   getList();
                                   homeNavigator(context, const Navigation());
                                   toastSuccess(

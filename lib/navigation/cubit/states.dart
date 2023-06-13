@@ -67,3 +67,5 @@ class EditUser extends MainStateManager{}
 class GetUser extends MainStateManager{}
 
 class StretchesCountDown extends MainStateManager{}
+
+class ChangeExercise extends MainStateManager{}

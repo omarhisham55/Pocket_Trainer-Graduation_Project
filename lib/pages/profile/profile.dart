@@ -219,13 +219,10 @@ class Profile extends StatelessWidget {
                                                                             child:
                                                                                 DefaultButton(
                                                                               function: () async {
-                                                                                print(userData.passController.text);
+                                                                                print(User.currentUser!.email);
                                                                                 userData.myAuth.setConfig(appEmail: 'omarHishamho@gmail.com', appName: 'Email Verification Poket Trainer', userEmail: User.currentUser!.email, otpLength: 6, otpType: OTPType.digitsOnly);
                                                                                 if (await userData.myAuth.sendOTP() == true) {
-                                                                                  print("${userData.emailController} ${userData.passController} ${userData.userController}");
-                                                                                  pageNavigator(context, OtpVerification(myauth: userData.myAuth, email: userData.emailController.text, name: userData.userController.text, password: userData.passController.text, fromEdit: true)).then((value) {
-                                                                                    userData.editProfile(context: context, username: userData.userController.text, email: userData.emailController.text, password: userData.passController.text);
-                                                                                  });
+                                                                                  pageNavigator(context, OtpVerification(myauth: userData.myAuth, email: userData.emailController.text, name: userData.userController.text, password: userData.passController.text, fromEdit: true));
                                                                                   toastInfo(context: context, text: "Email verification pending");
                                                                                 } else {
                                                                                   toastError(context: context, text: "Verification error!");

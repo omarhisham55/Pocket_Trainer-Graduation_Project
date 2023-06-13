@@ -2,6 +2,7 @@ import 'package:calender_picker/date_picker_widget.dart';
 import 'package:final_packet_trainer/data/gym_dialog_data.dart';
 import 'package:flutter/material.dart';
 import 'package:circle_button/circle_button.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import '../../notification/notification.dart';
@@ -206,6 +207,7 @@ Widget defaultInkWell({
   required final Function() function,
   final Function()? onLongPress,
   Function()? removeFunction,
+  Function()? changeFunction,
   Color? iconColor,
   bool? recommended = false,
   bool? remove = false,
@@ -213,76 +215,85 @@ Widget defaultInkWell({
     Stack(
       alignment: Alignment.topRight,
       children: [
-        InkWell(
-          onLongPress: onLongPress,
-          onTap: function,
-          child: Container(
-            decoration: BoxDecoration(
-                color: BackgroundColors.inkWellBG,
-                borderRadius: BorderRadius.circular(10)),
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Row(
+        Stack(
+          alignment: Alignment.topRight,
+          children: [
+            InkWell(
+              onLongPress: onLongPress,
+              onTap: function,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: BackgroundColors.inkWellBG,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Stack(
+                  alignment: Alignment.topRight,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(10.0),
-                      width: 120,
-                      child: Image.network(image, fit: BoxFit.cover),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10.0),
+                          width: 120,
+                          child: Image.network(image, fit: BoxFit.cover),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: width(context, .5),
+                                child: subTitleText(
+                                    text: title,
+                                    textAlign: TextAlign.left,
+                                    textOverflow: TextOverflow.ellipsis,
+                                    maxLines: 1),
+                              ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                width: width(context, .63),
+                                child: Wrap(
+                                  children: subtitle,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              child
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: 220,
-                            child: subTitleText(
-                                text: title,
-                                textAlign: TextAlign.left,
-                                textOverflow: TextOverflow.ellipsis,
-                                maxLines: 1),
-                          ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            width: width(context, .63),
-                            child: Wrap(
-                              children: subtitle,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          child
-                        ],
-                      ),
-                    ),
+                      padding: const EdgeInsets.all(10.0),
+                      child: Visibility(
+                          visible: (recommended!) ? true : false,
+                          child: paragraphText(
+                              text: "Recommended",
+                              color: TextColors.recommendedText)),
+                    )
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Visibility(
-                      visible: (recommended!) ? true : false,
-                      child: paragraphText(
-                          text: "Recommended",
-                          color: TextColors.recommendedText)),
-                )
-              ],
+              ),
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Visibility(
+                  visible: (remove ?? false) ? true : false,
+                  child: CircleButton(
+                    onTap: removeFunction ?? () {},
+                    backgroundColor: Colors.red,
+                    width: 30,
+                    child: const Padding(
+                      padding: EdgeInsets.only(bottom: 15),
+                      child: Icon(Icons.minimize_sharp),
+                    ),
+                  )),
+            ),
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Visibility(
-              visible: (remove ?? false) ? true : false,
-              child: CircleButton(
-                onTap: removeFunction ?? () {},
-                backgroundColor: Colors.red,
-                width: 30,
-                child: const Padding(
-                  padding: EdgeInsets.only(bottom: 15),
-                  child: Icon(Icons.minimize_sharp),
-                ),
-              )),
-        ),
+        Visibility(
+          visible: (remove ?? false) ? false : true,
+          child: IconButton(onPressed: changeFunction, icon: const Icon(FontAwesomeIcons.arrowsRotate), color: BackgroundColors.whiteBG,),
+        )
       ],
     );
 
@@ -404,6 +415,7 @@ Widget dialogButton(
       ),
     );
 
+// ignore: must_be_immutable
 class DefaultButton extends StatefulWidget {
   final Function() function;
   final String text;

@@ -14,18 +14,20 @@ import '../data/userData.dart';
 // ignore: must_be_immutable
 class OtpVerification extends StatelessWidget {
   final EmailOTP myauth;
-  final String name;
-  final String email;
-  final String password;
+  final String? name;
+  final String? email;
+  final String? password;
   final bool? fromEdit;
-  OtpVerification(
-      {Key? key,
-      required this.myauth,
-      required this.name,
-      required this.email,
-      required this.password,
-      this.fromEdit})
-      : super(key: key);
+  final bool? fromForget;
+  OtpVerification({
+    Key? key,
+    required this.myauth,
+    this.name,
+    this.email,
+    this.password,
+    this.fromEdit,
+    this.fromForget,
+  }) : super(key: key);
   TextEditingController otp1Controller = TextEditingController();
 
   TextEditingController otp2Controller = TextEditingController();
@@ -124,22 +126,102 @@ class OtpVerification extends StatelessWidget {
                                     otp5Controller.text +
                                     otp6Controller.text) ==
                             true) {
-                          (fromEdit ?? false)
-                              ? Navigator.pop(context)
-                              : User.signUp(
-                                      username: name,
-                                      email: email,
-                                      password: password,
-                                      context: context)
-                                  .then((value) {
-                                  Navigator.pop(context);
-                                  signUpLoginChangeable.pushToLogin();
-                                  toastSuccess(
-                                      context: context,
-                                      text: "Verification Complete");
-                                }).catchError((e) {
-                                  throw e;
+                          if (fromEdit ?? false) {
+                            signUpLoginChangeable
+                                .editProfile(
+                                    context: context,
+                                    username: signUpLoginChangeable
+                                        .userController.text,
+                                    email: signUpLoginChangeable
+                                        .emailController.text,
+                                    password: signUpLoginChangeable
+                                        .passController.text)
+                                .then((value) => Navigator.pop(context));
+                          } else if (fromForget ?? false) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    backgroundColor: BackgroundColors.dialogBG,
+                                    content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          titleText(text: 'Change password'),
+                                          //password
+                                          defaultTextFormField(
+                                              controller: signUpLoginChangeable
+                                                  .passController,
+                                              hint: "Password",
+                                              suffix: true,
+                                              isPassword: signUpLoginChangeable
+                                                  .isPassword,
+                                              validator: (value) {
+                                                if (value!.isEmpty ||
+                                                    value.length < 6) {
+                                                  return 'Password must be at least 6 characters';
+                                                }
+                                                return null;
+                                              },
+                                              suffixPressed: () {
+                                                signUpLoginChangeable
+                                                    .isPasswordCheck();
+                                              }),
+                                          const SizedBox(height: 20),
+                                          //confirm password
+                                          defaultTextFormField(
+                                              controller: signUpLoginChangeable
+                                                  .confirmPassController,
+                                              hint: "Confirm Password",
+                                              isPassword: signUpLoginChangeable
+                                                  .isConfirmPassword,
+                                              suffix: true,
+                                              validator: (value) {
+                                                if (signUpLoginChangeable
+                                                        .passController.text !=
+                                                    signUpLoginChangeable
+                                                        .confirmPassController
+                                                        .text) {
+                                                  print(
+                                                      'pass cont = ${signUpLoginChangeable.passController.text}');
+                                                  print(
+                                                      'confirm pass cont = ${signUpLoginChangeable.confirmPassController.text}');
+                                                  return "Passwords doesn't match";
+                                                }
+                                                return null;
+                                              },
+                                              suffixPressed: () {
+                                                signUpLoginChangeable
+                                                    .isConfirmPasswordCheck();
+                                              }),
+                                        ]),
+                                    actions: [
+                                      DefaultButton(
+                                          function: () {
+                                            signUpLoginChangeable.editProfile(
+                                                context: context,
+                                                password: signUpLoginChangeable
+                                                    .passController.text);
+                                          },
+                                          text: 'change password')
+                                    ],
+                                  );
                                 });
+                          } else {
+                            User.signUp(
+                                    username: name.toString(),
+                                    email: email.toString(),
+                                    password: password.toString(),
+                                    context: context)
+                                .then((value) {
+                              Navigator.pop(context);
+                              signUpLoginChangeable.pushToLogin();
+                              toastSuccess(
+                                  context: context,
+                                  text: "Verification Complete");
+                            }).catchError((e) {
+                              throw e;
+                            });
+                          }
                         } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
