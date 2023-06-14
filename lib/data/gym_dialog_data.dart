@@ -518,15 +518,14 @@ Widget openDialogInjuries(BuildContext context, gym) => defaultDialog(
                 function: () {
                   requirements.removeAt(5);
                   requirements.insert(5, selectedInjuries);
-                  gym.createWorkoutPlan(
+                  gym.createWorkoutPlan(context, 
                           requirements[0], requirements[1], requirements[3])
                       .then((value) {
                     saveList(requirements);
                     isExerciseTaken = true;
                     Navigator.pop(context, requirements);
                     gym.requirements(isExerciseTaken);
-                    pageNavigator(context,
-                        GymRecommendedPlan(requirements: requirements));
+                    pageNavigator(context, const GymRecommendedPlan());
                     print('workout added bombom');
                   }).catchError((e) {
                     print('workout crashed bombom');

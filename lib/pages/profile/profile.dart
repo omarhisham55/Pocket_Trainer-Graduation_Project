@@ -10,6 +10,7 @@ import 'package:final_packet_trainer/data/nutrition_dialog_data.dart';
 import 'package:final_packet_trainer/data/userData.dart';
 import 'package:final_packet_trainer/main.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
+import 'package:final_packet_trainer/pages/gym/gymRecommendedPlan.dart';
 import 'package:final_packet_trainer/shared/network/local/shared.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -322,25 +323,11 @@ class Profile extends StatelessWidget {
                                               MediaQuery.of(context).size.width,
                                           backgroundColor: Colors.transparent,
                                           function: () {
-                                            print(requirements);
-                                            showAnimatedDialog(
-                                              context: context,
-                                              barrierDismissible: true,
-                                              builder: (context) =>
-                                                  StatefulBuilder(
-                                                      builder: (context,
-                                                              StateSetter
-                                                                  setState) =>
-                                                          openDialogExperience(
-                                                              context,
-                                                              CubitManager.get(
-                                                                  _))),
-                                              animationType:
-                                                  DialogTransitionType.sizeFade,
-                                              curve: Curves.fastOutSlowIn,
-                                              duration:
-                                                  const Duration(seconds: 1),
-                                            );
+                                            pageNavigator(
+                                                context,
+                                                const GymRecommendedPlan(
+                                                  fromProfile: true,
+                                                ));
                                           },
                                           borderRadius: 30,
                                           text: "Current Program",

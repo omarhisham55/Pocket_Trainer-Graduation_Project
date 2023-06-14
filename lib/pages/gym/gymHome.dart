@@ -84,8 +84,7 @@ class GymHome extends StatelessWidget {
                             title: const Text('Exercise info'),
                             onPressed: () {
                               Navigator.of(context).push(PremiumAnimation(
-                                  page: GymRecommendedPlan(
-                                      requirements: reqs, fromHome: true)));
+                                  page: const GymRecommendedPlan(fromHome: true)));
                             }),
                       ];
                     }

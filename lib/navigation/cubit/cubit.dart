@@ -525,18 +525,21 @@ class CubitManager extends Cubit<MainStateManager> {
     File? imageData,
   }) async {
     print('edit profile opened');
-    final profile = await http.patch(Uri.parse('$url/edit/profile'),
-        headers: {
-          "Authorization": "Bearer ${User.token}",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "$url/*"
-        },
-        body: jsonEncode(<String, dynamic>{
-          'name': username,
-          'email': email,
-          'password': password,
-          'photo': {'contentType': 'image/jpg', 'data': imageData}
-        })).then((value) => print('success ${value.statusCode}, ${value.body}')).catchError((e)=> print('error at $e'));
+    final profile = await http
+        .patch(Uri.parse('$url/edit/profile'),
+            headers: {
+              "Authorization": "Bearer ${User.token}",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "$url/*"
+            },
+            body: jsonEncode(<String, dynamic>{
+              'name': username,
+              'email': email,
+              'password': password,
+              'photo': {'contentType': 'image/jpg', 'data': imageData}
+            }))
+        .then((value) => print('success ${value.statusCode}, ${value.body}'))
+        .catchError((e) => print('error at $e'));
     // if (profile.statusCode == 200) {
     //   var user = json.decode(profile.body);
     //   getProfile(context).then((v) {
@@ -600,7 +603,7 @@ class CubitManager extends Cubit<MainStateManager> {
   }
 
 //create workoutplan
-  Future<Map<String, dynamic>> createWorkoutPlan(
+  Future<Map<String, dynamic>> createWorkoutPlan(context,
       level, goal, trainingLocation) async {
     var workout = await http.post(
       Uri.parse('$url/wourkoutplan-recommendation'),
@@ -618,8 +621,10 @@ class CubitManager extends Cubit<MainStateManager> {
     print("create plan dodo");
     if (workout.statusCode == 200) {
       var data = json.decode(workout.body);
+      getProfile(context);
+      getWorkoutPlan();
       // print("created workout plan $data");
-      // emit(CreateWorkoutPlan());
+      emit(CreateWorkoutPlan());
       return data;
     } else {
       throw Exception("Failed to load data ${workout.statusCode}");

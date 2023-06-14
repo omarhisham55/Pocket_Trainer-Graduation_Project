@@ -334,18 +334,18 @@ Future replaceExercise(
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "$url/*"
   });
-  pageNavigator(
-      context,
-      ExistExercise(
-        isChange: true,
-        oldId: oldId,
-      ));
   if (replace.statusCode != 200) {
     print('object no');
     toastError(context: context, text: replace.body);
   } else {
     var data = jsonDecode(replace.body);
-    toastSuccess(context: context, text: data);
+    pageNavigator(
+        context,
+        ExistExercise(
+          isChange: true,
+          exercises: data,
+          oldId: oldId,
+        ));
     print(data);
     return data;
   }

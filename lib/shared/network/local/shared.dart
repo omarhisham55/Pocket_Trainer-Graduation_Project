@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Saving the list
 void saveList(List<dynamic> requirements) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.clear();
   String jsonList = jsonEncode(requirements);
   prefs.setString('requirements', jsonList);
 }
