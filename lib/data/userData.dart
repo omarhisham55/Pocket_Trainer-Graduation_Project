@@ -26,6 +26,7 @@ class User {
   static User? currentUser;
   // ignore: prefer_typing_uninitialized_variables
   static var token;
+  static var tempToken;
 
   String? email;
   String? name;
@@ -65,12 +66,12 @@ class User {
     }
   }
 
-  static Future<void> login(
-      {required String username,
-      required String password,
-      required BuildContext context,
-      required blocContest,
-      }) async {
+  static Future<void> login({
+    required String username,
+    required String password,
+    required BuildContext context,
+    required blocContest,
+  }) async {
     // ignore: unused_local_variable
     final response = await http
         .post(
@@ -86,7 +87,8 @@ class User {
         final user = jsonDecode(value.body);
         token = user["token"];
         print(token);
-        CubitManager.get(blocContest).getProfile(context)
+        CubitManager.get(blocContest)
+            .getProfile(context)
             .then((value) => CubitManager.get(blocContest).changeToNotEmpty());
       } else {
         toastError(context: context, text: value.body);
@@ -129,6 +131,44 @@ class User {
     } else {
       toastDelete(
           context: context, text: "${profile.body} ${profile.statusCode}");
+    }
+  }
+
+  static Future forgetPassword(
+      {required BuildContext context, required String email}) async {
+    var forget = await http.patch(Uri.parse('$url/forget/password'),
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "$url/*"
+        },
+        body: jsonEncode({'email': email}));
+    if (forget.statusCode != 200) {
+      toastError(context: context, text: 'from forget ${forget.body}');
+    } else {
+      tempToken = jsonDecode(forget.body)['token'];
+      print('forget ${forget.body}');
+    }
+  }
+
+  static Future resetPassword(
+      {required BuildContext context,
+      required String tempToken,
+      required String password}) async {
+    var reset = await http.patch(Uri.parse('$url/reset/password/$tempToken'),
+        headers: {
+          "Authorization": "Bearer ${User.tempToken}",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "$url/*"
+        },
+        body: jsonEncode({'password': password}));
+      
+    print(password);
+    print(tempToken);
+    if (reset.statusCode != 200) {
+      toastError(context: context, text: 'from reset ${reset.statusCode}');
+      print('zaza ${reset.body}');
+    } else {
+      return reset.body;
     }
   }
 

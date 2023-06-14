@@ -41,6 +41,7 @@ class CubitManager extends Cubit<MainStateManager> {
   var radioVal = 'gender';
   GlobalKey<FormState> loginKey = GlobalKey<FormState>();
   GlobalKey<FormState> signupKey = GlobalKey<FormState>();
+  GlobalKey<FormState> changePasswordKey = GlobalKey<FormState>();
   bool signup = false;
   bool fromHome = false;
   void changeBool(value) {

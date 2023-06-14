@@ -1,6 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:final_packet_trainer/shared/components/components.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../pages/gym/ExistExercise.dart';
+import '../shared/components/constants.dart';
 import 'userData.dart';
 
 class Exercise2 {
@@ -316,5 +322,31 @@ Future<Map<String, dynamic>> getWorkoutPlan() async {
     return data;
   } else {
     throw Exception("Failed to load data ${workout.statusCode}");
+  }
+}
+
+Future replaceExercise(
+    {required BuildContext context, required String oldId}) async {
+  print('oldid $oldId');
+  var replace =
+      await http.get(Uri.parse('$url/similar/exercises/$oldId'), headers: {
+    "Authorization": "Bearer ${User.token}",
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "$url/*"
+  });
+  pageNavigator(
+      context,
+      ExistExercise(
+        isChange: true,
+        oldId: oldId,
+      ));
+  if (replace.statusCode != 200) {
+    print('object no');
+    toastError(context: context, text: replace.body);
+  } else {
+    var data = jsonDecode(replace.body);
+    toastSuccess(context: context, text: data);
+    print(data);
+    return data;
   }
 }

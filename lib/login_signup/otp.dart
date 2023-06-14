@@ -4,6 +4,7 @@ import 'package:email_otp/email_otp.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
 import 'package:final_packet_trainer/shared/components/components.dart';
+import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -138,74 +139,98 @@ class OtpVerification extends StatelessWidget {
                                         .passController.text)
                                 .then((value) => Navigator.pop(context));
                           } else if (fromForget ?? false) {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    backgroundColor: BackgroundColors.dialogBG,
-                                    content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          titleText(text: 'Change password'),
-                                          //password
-                                          defaultTextFormField(
-                                              controller: signUpLoginChangeable
-                                                  .passController,
-                                              hint: "Password",
-                                              suffix: true,
-                                              isPassword: signUpLoginChangeable
-                                                  .isPassword,
-                                              validator: (value) {
-                                                if (value!.isEmpty ||
-                                                    value.length < 6) {
-                                                  return 'Password must be at least 6 characters';
-                                                }
-                                                return null;
-                                              },
-                                              suffixPressed: () {
-                                                signUpLoginChangeable
-                                                    .isPasswordCheck();
-                                              }),
-                                          const SizedBox(height: 20),
-                                          //confirm password
-                                          defaultTextFormField(
-                                              controller: signUpLoginChangeable
-                                                  .confirmPassController,
-                                              hint: "Confirm Password",
-                                              isPassword: signUpLoginChangeable
-                                                  .isConfirmPassword,
-                                              suffix: true,
-                                              validator: (value) {
-                                                if (signUpLoginChangeable
-                                                        .passController.text !=
+                            User.forgetPassword(context: context, email: email!)
+                                .then((value) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      backgroundColor:
+                                          BackgroundColors.dialogBG,
+                                      content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            titleText(text: 'Change password'),
+                                            //password
+                                            defaultTextFormField(
+                                                controller:
                                                     signUpLoginChangeable
-                                                        .confirmPassController
-                                                        .text) {
-                                                  print(
-                                                      'pass cont = ${signUpLoginChangeable.passController.text}');
-                                                  print(
-                                                      'confirm pass cont = ${signUpLoginChangeable.confirmPassController.text}');
-                                                  return "Passwords doesn't match";
-                                                }
-                                                return null;
-                                              },
-                                              suffixPressed: () {
-                                                signUpLoginChangeable
-                                                    .isConfirmPasswordCheck();
-                                              }),
-                                        ]),
-                                    actions: [
-                                      DefaultButton(
-                                          function: () {
-                                            signUpLoginChangeable.editProfile(
-                                                context: context,
-                                                password: signUpLoginChangeable
-                                                    .passController.text);
-                                          },
-                                          text: 'change password')
-                                    ],
-                                  );
-                                });
+                                                        .passController,
+                                                hint: "Password",
+                                                suffix: true,
+                                                isPassword:
+                                                    signUpLoginChangeable
+                                                        .isPassword,
+                                                validator: (value) {
+                                                  if (value!.isEmpty ||
+                                                      value.length < 6) {
+                                                    return 'Password must be at least 6 characters';
+                                                  }
+                                                  return null;
+                                                },
+                                                suffixPressed: () {
+                                                  signUpLoginChangeable
+                                                      .isPasswordCheck();
+                                                }),
+                                            const SizedBox(height: 20),
+                                            //confirm password
+                                            defaultTextFormField(
+                                                controller:
+                                                    signUpLoginChangeable
+                                                        .confirmPassController,
+                                                hint: "Confirm Password",
+                                                isPassword:
+                                                    signUpLoginChangeable
+                                                        .isConfirmPassword,
+                                                suffix: true,
+                                                validator: (value) {
+                                                  if (signUpLoginChangeable
+                                                          .passController
+                                                          .text !=
+                                                      signUpLoginChangeable
+                                                          .confirmPassController
+                                                          .text) {
+                                                    print(
+                                                        'pass cont = ${signUpLoginChangeable.passController.text}');
+                                                    print(
+                                                        'confirm pass cont = ${signUpLoginChangeable.confirmPassController.text}');
+                                                    return "Passwords doesn't match";
+                                                  }
+                                                  return null;
+                                                },
+                                                suffixPressed: () {
+                                                  signUpLoginChangeable
+                                                      .isConfirmPasswordCheck();
+                                                }),
+                                          ]),
+                                      actions: [
+                                        DefaultButton(
+                                            function: () {
+                                              User.resetPassword(
+                                                      context: context,
+                                                      tempToken: User.tempToken,
+                                                      password:
+                                                          signUpLoginChangeable
+                                                              .passController
+                                                              .text)
+                                                  .then((value) {
+                                                toastSuccess(
+                                                    context: context,
+                                                    text: 'password changed');
+                                                Navigator.pop(context);
+                                              }).catchError((e) {
+                                                print(e);
+                                                toastError(
+                                                    context: context, text: e);
+                                              });
+                                            },
+                                            text: 'change password')
+                                      ],
+                                    );
+                                  });
+                            }).catchError((e) {
+                              toastError(context: context, text: e);
+                            });
                           } else {
                             User.signUp(
                                     username: name.toString(),
