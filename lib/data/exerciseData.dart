@@ -7,6 +7,7 @@ import 'dart:convert';
 
 import '../pages/gym/ExistExercise.dart';
 import '../shared/components/constants.dart';
+import '../shared/network/local/shared.dart';
 import 'userData.dart';
 
 class Exercise2 {
@@ -326,27 +327,31 @@ Future<Map<String, dynamic>> getWorkoutPlan() async {
 }
 
 Future replaceExercise(
-    {required BuildContext context, required String oldName}) async {
-  var replace = await http.get(
-    Uri.parse('$url/similar/exercises'), 
-    headers: {
-    "Authorization": "Bearer ${User.token}",
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "$url/*"
-  },);
-  if (replace.statusCode != 200) {
-    print('object no');
-    toastError(context: context, text: replace.body);
-  } else {
-    var data = jsonDecode(replace.body);
-    pageNavigator(
-        context,
-        ExistExercise(
-          isChange: true,
-          exercises: data,
-          oldName: oldName,
-        ));
-    print(data);
-    return data;
-  }
+    {required BuildContext context, required String oldName, String? oldId}) async {
+  getList().then((value) async{
+    var replace = await http.get(
+      Uri.parse('$url/similar/exercises/$oldName/${value[3]}/${value[1]}/${value[0]}'),
+      headers: {
+        "Authorization": "Bearer ${User.token}",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "$url/*"
+      },
+    );
+    if (replace.statusCode != 200) {
+      print('object no');
+      toastError(context: context, text: replace.body);
+    } else {
+      var data = jsonDecode(replace.body);
+      pageNavigator(
+          context,
+          ExistExercise(
+            isChange: true,
+            exercises: data,
+            oldName: oldName,
+            oldId: oldId,
+          ));
+      print(data);
+      return data;
+    }
+  });
 }

@@ -17,7 +17,9 @@ class ExistExercise extends StatelessWidget {
   List? exercises;
   bool? isChange;
   String? oldName;
-  ExistExercise({super.key, this.isChange, this.oldName, this.exercises});
+  String? oldId;
+  ExistExercise(
+      {super.key, this.isChange, this.oldName, this.exercises, this.oldId});
   String suggestion = "Choose category";
   final panelController = PanelController();
   TextEditingController sets = TextEditingController();
@@ -26,6 +28,7 @@ class ExistExercise extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List searchList = [];
+    print('lola ${searchList.length}');
     return BlocProvider(
       create: (_) => CubitManager(),
       child: BlocConsumer<CubitManager, MainStateManager>(
@@ -33,10 +36,11 @@ class ExistExercise extends StatelessWidget {
           if (s is AddExerciseState) {
             Navigator.popUntil(context, (route) => route.isFirst);
           }
-          if (isChange ?? false) {
+          if (s is ChangeSearchState) {
+            searchList = s.filteredList;
           } else {
-            if (s is ChangeSearchState) {
-              searchList = s.filteredList;
+            if (isChange ?? false) {
+              searchList = exercises!;
             } else {
               getDataMapValues(allValues: true, key: "").then((value) {
                 searchList = value;
@@ -58,6 +62,8 @@ class ExistExercise extends StatelessWidget {
                   : (gym.isSearchOpened)
                       ? searchList
                       : snapshot.data!;
+              print('zaza $gymData');
+
               if (snapshot.hasData) {
                 return Scaffold(
                     backgroundColor: BackgroundColors.background,
@@ -85,11 +91,12 @@ class ExistExercise extends StatelessWidget {
                                 : const Icon(Icons.search,
                                     color: BackgroundColors.whiteBG),
                             onPressed: () {
-                              gym.changeSearchIcon(searchList: snapshot.data);
+                              gym.changeSearchIcon(
+                                  searchList: isChange ?? false
+                                      ? exercises
+                                      : snapshot.data);
                               if (!gym.isSearchOpened) gym.searchQuery.clear();
                               gym.searchQueryExerciseListener(snapshot.data);
-                              print(
-                                  "snapshot data from categories ${snapshot.data}");
                             },
                           ),
                         ]),
@@ -140,9 +147,13 @@ class ExistExercise extends StatelessWidget {
                                           title: gymData[i]['Title'],
                                           addCardButton: true,
                                           addFunction: () {
-                                            // gym.changeExercise(
-                                            //       oldId: oldId ?? 'not found', newId: gymData[i].exerciseId);
-                                            print('okay');
+                                            gym
+                                                .changeExercise(
+                                                    oldId: oldId ?? 'not found',
+                                                    newId: gymData[i]['_id'])
+                                                .then((value) =>
+                                                    Navigator.pop(context))
+                                                .catchError((e) => throw e);
                                           })),
                                 ),
                               )

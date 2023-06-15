@@ -28,6 +28,8 @@ class Login extends StatelessWidget {
         listener: (_, state) {},
         builder: (_, state) {
           CubitManager signUpLoginChangeable = CubitManager.get(_);
+          // signUpLoginChangeable.loginKey.currentState!.reset();
+          // signUpLoginChangeable.signupKey.currentState!.reset();
           bool isValid = false;
           File imageData = File('');
           List<Widget> loginSignUpScreens = [
@@ -155,7 +157,11 @@ class Login extends StatelessWidget {
                             color: BackgroundColors.whiteBG,
                           )),
                       const Spacer(),
-                      paragraphText(text: "optional", color: Colors.grey)
+                      paragraphText(
+                          text: "optional",
+                          color: (imageData.path == (''))
+                              ? Colors.grey
+                              : BackgroundColors.background)
                     ],
                   ),
                   // const Spacer(),
@@ -196,7 +202,6 @@ class Login extends StatelessWidget {
                                 otpType: OTPType.digitsOnly);
                             if (await signUpLoginChangeable.myAuth.sendOTP() ==
                                 true) {
-                              print(signUpLoginChangeable.myAuth.sendOTP());
                               pageNavigator(
                                   context,
                                   OtpVerification(
@@ -207,6 +212,7 @@ class Login extends StatelessWidget {
                                         .userController.text,
                                     password: signUpLoginChangeable
                                         .passController.text,
+                                    imagefile: imageData,
                                   ));
                               toastSuccess(
                                   context: context,
@@ -230,8 +236,8 @@ class Login extends StatelessWidget {
                           paragraphText(text: 'Already have an account ?'),
                           TextButton(
                               onPressed: () {
+                                print(imageData.path);
                                 signUpLoginChangeable.pushToLogin();
-                                // Navigator.of(context).push(SlideToNav(page: const Login()));
                               },
                               child: paragraphText(
                                   text: "Login", color: TextColors.dataText))
@@ -328,16 +334,16 @@ class Login extends StatelessWidget {
                                               print(
                                                   "${signUpLoginChangeable.emailController} ${signUpLoginChangeable.passController} ${signUpLoginChangeable.userController}");
                                               pageNavigator(
-                                                      context,
-                                                      OtpVerification(
-                                                          myauth:
-                                                              signUpLoginChangeable
-                                                                  .myAuth,
-                                                          email:
-                                                              signUpLoginChangeable
-                                                                  .emailController
-                                                                  .text,
-                                                          fromForget: true));
+                                                  context,
+                                                  OtpVerification(
+                                                      myauth:
+                                                          signUpLoginChangeable
+                                                              .myAuth,
+                                                      email:
+                                                          signUpLoginChangeable
+                                                              .emailController
+                                                              .text,
+                                                      fromForget: true));
                                               toastInfo(
                                                   context: context,
                                                   text:
@@ -376,7 +382,6 @@ class Login extends StatelessWidget {
                                 signUpLoginChangeable
                                     .getProfile(context)
                                     .then((value) {
-                                  getList();
                                   homeNavigator(context, const Navigation());
                                   toastSuccess(
                                       context: context,

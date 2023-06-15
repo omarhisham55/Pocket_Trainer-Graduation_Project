@@ -36,8 +36,6 @@ class GymHome extends StatelessWidget {
           if (snapshot.hasData) {
             var data = snapshot.data![0] as Map;
             var reqs = snapshot.data![1] as List;
-            print(reqs[2]);
-            print(data);
             return BlocProvider(
                 create: (_) => CubitManager(),
                 child: BlocConsumer<CubitManager, MainStateManager>(
@@ -121,7 +119,6 @@ class GymHome extends StatelessWidget {
                                         .toString();
                                     return GestureDetector(
                                       onTap: () {
-                                        print(week);
                                         gym.onSelectedDate(date);
                                         gym.getWeekday(index);
                                       },
@@ -415,8 +412,6 @@ class GymHome extends StatelessWidget {
                                                                             function:
                                                                                 () {
                                                                               startTimer(context, i);
-                                                                              print(workout);
-                                                                              print(requirements);
                                                                               gym.addExerciseName(
                                                                                 workout[i]["exerciseId"],
                                                                                 workout[i]["Title"],
@@ -550,7 +545,7 @@ class GymHome extends StatelessWidget {
                                                                           return defaultInkWell(
                                                                             changeFunction:
                                                                                 () {
-                                                                              replaceExercise(context: context, oldName: workout[i]['Title']).then((value) => print('click'));
+                                                                              replaceExercise(context: context, oldName: workout[i]['Title'], oldId: workout[i]['exerciseId']);
                                                                             },
                                                                             onLongPress: () => pageNavigator(
                                                                                 context,
@@ -593,8 +588,6 @@ class GymHome extends StatelessWidget {
                                                                             ),
                                                                             function:
                                                                                 () {
-                                                                              print(workout);
-                                                                              print(requirements);
                                                                               gym.addExerciseName(
                                                                                 workout[i]["exerciseId"],
                                                                                 workout[i]["Title"],

@@ -31,6 +31,10 @@ void logoNavigator(context, page) {
   Navigator.of(context).push(LogoAnimation(page: page));
 }
 
+Future<void> popPage(context) async {
+  Navigator.pop(context);
+}
+
 void pushReplacement(context, page) {
   Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => page));
 }
@@ -73,5 +77,3 @@ int generateStretchDuration() {
 
   return number;
 }
-
-

@@ -69,8 +69,6 @@ class CubitManager extends Cubit<MainStateManager> {
 
   void pushToLogin() {
     signup = !signup;
-    // loginKey.currentState!.reset();
-    signupKey.currentState!.reset();
     emit(LoginState());
   }
 
@@ -266,11 +264,10 @@ class CubitManager extends Cubit<MainStateManager> {
   }
 
   void changeToNotEmpty() {
-    for (var workoutList in User.currentUser!.workoutPlan!.values) {
-      if (workoutList.isNotEmpty) {
-        isWorkoutPlanEmpty = false;
-        continue;
-      }
+    if (User.currentUser!.workoutPlan!.values.isEmpty) {
+      isWorkoutPlanEmpty = true;
+    } else {
+      isWorkoutPlanEmpty = false;
     }
     emit(Requirements());
   }
@@ -524,31 +521,31 @@ class CubitManager extends Cubit<MainStateManager> {
     String? password,
     File? imageData,
   }) async {
-    print('edit profile opened');
-    final profile = await http
-        .patch(Uri.parse('$url/edit/profile'),
-            headers: {
-              "Authorization": "Bearer ${User.token}",
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "$url/*"
-            },
-            body: jsonEncode(<String, dynamic>{
-              'name': username,
-              'email': email,
-              'password': password,
-              'photo': {'contentType': 'image/jpg', 'data': imageData}
-            }))
-        .then((value) => print('success ${value.statusCode}, ${value.body}'))
-        .catchError((e) => print('error at $e'));
-    // if (profile.statusCode == 200) {
-    //   var user = json.decode(profile.body);
-    //   getProfile(context).then((v) {
-    //     emit(EditUser());
-    //   });
-    //   return user;
-    // } else {
-    //   throw Exception("Failed to load data ${profile.statusCode}");
-    // }
+    print('edit profile opened $username');
+    final profile = await http.put(Uri.parse('$url/edit/profile'),
+        headers: {
+          "Authorization": "Bearer ${User.token}",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "$url/*"
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': username,
+          // 'email': email,
+          // 'password': password,
+          // 'photo': {'contentType': 'image/jpg', 'data': imageData}
+        }));
+    // .then((value) => print('success ${value.statusCode}, ${value.body}'))
+    // .catchError((e) => print('error at $e'));
+    if (profile.statusCode == 200) {
+      var user = json.decode(profile.body);
+      print(user);
+      getProfile(context).then((v) {
+        emit(EditUser());
+      });
+      return user;
+    } else {
+      throw Exception("Failed to load data ${profile.body}");
+    }
   }
 
   //change Exercise
@@ -603,8 +600,8 @@ class CubitManager extends Cubit<MainStateManager> {
   }
 
 //create workoutplan
-  Future<Map<String, dynamic>> createWorkoutPlan(context,
-      level, goal, trainingLocation) async {
+  Future<Map<String, dynamic>> createWorkoutPlan(
+      context, level, goal, trainingLocation) async {
     var workout = await http.post(
       Uri.parse('$url/wourkoutplan-recommendation'),
       headers: {
