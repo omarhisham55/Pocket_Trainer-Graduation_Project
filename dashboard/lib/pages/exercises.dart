@@ -103,10 +103,10 @@ class Exercises extends StatelessWidget {
           }
 
           return FutureBuilder(
-              // future: getExerciseData(),
+              future: getExerciseData(),
               builder: (context, snapshot) {
                 if(snapshot.data!.isEmpty){
-                  // getDataMapValues(allValues: true).then((value) => saveExerciseData(value));
+                  getDataMapValues(allValues: true).then((value) => saveExerciseData(value));
                 }
                 if (snapshot.hasData) {
                   List<Future<Exercise>> exerciseData = snapshot.data!.cast<Future<Exercise>>();
