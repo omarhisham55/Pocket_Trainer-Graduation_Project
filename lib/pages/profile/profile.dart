@@ -58,6 +58,8 @@ class Profile extends StatelessWidget {
                               future: getList(),
                               builder: (_, snapReqs) {
                                 if (snapReqs.hasData) {
+                                  print(snapshot.data);
+                                  debugPrint('qq ${snapReqs.data}');
                                   return SafeArea(
                                     child: Column(children: [
                                       //heading section
@@ -178,6 +180,8 @@ class Profile extends StatelessWidget {
                                                                                 return null;
                                                                               },
                                                                               border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG))),
+                                                                          const SizedBox(
+                                                                              height: 20),
                                                                           //password
                                                                           defaultTextFormField(
                                                                               controller: userData.passController,
@@ -220,7 +224,6 @@ class Profile extends StatelessWidget {
                                                                             child:
                                                                                 DefaultButton(
                                                                               function: () async {
-                                                                                print(User.currentUser!.email);
                                                                                 userData.myAuth.setConfig(appEmail: 'omarHishamho@gmail.com', appName: 'Email Verification Poket Trainer', userEmail: User.currentUser!.email, otpLength: 6, otpType: OTPType.digitsOnly);
                                                                                 if (await userData.myAuth.sendOTP() == true) {
                                                                                   pageNavigator(context, OtpVerification(myauth: userData.myAuth, email: userData.emailController.text, name: userData.userController.text, password: userData.passController.text, fromEdit: true));

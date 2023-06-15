@@ -42,6 +42,7 @@ class User {
       required String password,
       File? imageData,
       context}) async {
+    print(imageData!.path);
     final response = await http.post(
       Uri.parse('$url/signup'),
       headers: {'Content-Type': 'application/json'},
@@ -49,7 +50,7 @@ class User {
         'name': username,
         'email': email,
         'password': password,
-        'photo': {'contentType': 'image/jpeg', 'data': imageData}
+        'photo': imageData.path
       }),
     );
     if (response.statusCode == 201) {
@@ -143,10 +144,9 @@ class User {
         },
         body: jsonEncode({'email': email}));
     if (forget.statusCode != 200) {
-      toastError(context: context, text: 'from forget ${forget.body}');
+      toastError(context: context, text: jsonDecode(forget.body)['status']);
     } else {
       tempToken = jsonDecode(forget.body)['token'];
-      print('forget ${forget.body}');
     }
   }
 
@@ -161,14 +161,13 @@ class User {
           "Access-Control-Allow-Origin": "$url/*"
         },
         body: jsonEncode({'password': password}));
-      
+
     print(password);
     print(tempToken);
     if (reset.statusCode != 200) {
-      toastError(context: context, text: 'from reset ${reset.statusCode}');
-      print('zaza ${reset.body}');
+      toastError(context: context, text: jsonDecode(reset.body)['message']);
     } else {
-      return reset.body;
+      toastSuccess(context: context, text: 'Password changed');
     }
   }
 

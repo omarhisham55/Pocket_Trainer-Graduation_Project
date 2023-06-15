@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:email_otp/email_otp.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
@@ -18,6 +20,7 @@ class OtpVerification extends StatelessWidget {
   final String? name;
   final String? email;
   final String? password;
+  final File? imagefile;
   final bool? fromEdit;
   final bool? fromForget;
   OtpVerification({
@@ -26,6 +29,7 @@ class OtpVerification extends StatelessWidget {
     this.name,
     this.email,
     this.password,
+    this.imagefile,
     this.fromEdit,
     this.fromForget,
   }) : super(key: key);
@@ -128,16 +132,14 @@ class OtpVerification extends StatelessWidget {
                                     otp6Controller.text) ==
                             true) {
                           if (fromEdit ?? false) {
-                            signUpLoginChangeable
-                                .editProfile(
-                                    context: context,
-                                    username: signUpLoginChangeable
-                                        .userController.text,
-                                    email: signUpLoginChangeable
-                                        .emailController.text,
-                                    password: signUpLoginChangeable
-                                        .passController.text)
-                                .then((value) => Navigator.pop(context));
+                            signUpLoginChangeable.editProfile(
+                                context: context,
+                                username:
+                                    signUpLoginChangeable.userController.text,
+                                email:
+                                    signUpLoginChangeable.emailController.text,
+                                password:
+                                    signUpLoginChangeable.passController.text);
                           } else if (fromForget ?? false) {
                             User.forgetPassword(context: context, email: email!)
                                 .then((value) {
@@ -236,6 +238,7 @@ class OtpVerification extends StatelessWidget {
                                     username: name.toString(),
                                     email: email.toString(),
                                     password: password.toString(),
+                                    imageData: imagefile,
                                     context: context)
                                 .then((value) {
                               Navigator.pop(context);
