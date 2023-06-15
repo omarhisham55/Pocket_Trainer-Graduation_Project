@@ -306,8 +306,7 @@ Widget openDialogDate(BuildContext context, gym) => defaultDialog(
               daysOfTraining.add('Off Day');
             }
           }
-          requirements.removeAt(2);
-          requirements.insert(2, daysOfTraining);
+          requirements[2] = daysOfTraining;
           print("requirements from date $requirements");
           popAndShowNext(
               context: context, dialog: openDialogWorkoutTools, cubit: gym);
@@ -518,17 +517,19 @@ Widget openDialogInjuries(BuildContext context, gym) => defaultDialog(
                 function: () {
                   requirements.removeAt(5);
                   requirements.insert(5, selectedInjuries);
-                  gym.createWorkoutPlan(context, 
-                          requirements[0], requirements[1], requirements[3])
+                  updateAllList(requirements);
+                  gym
+                      .createWorkoutPlan(context, requirements[0],
+                          requirements[1], requirements[3])
                       .then((value) {
-                    saveList(requirements);
                     isExerciseTaken = true;
                     Navigator.pop(context, requirements);
                     gym.requirements(isExerciseTaken);
                     pageNavigator(context, const GymRecommendedPlan());
-                    print('workout added bombom');
+
+                    debugPrint('workout created');
                   }).catchError((e) {
-                    print('workout crashed bombom');
+                    debugPrint('workout crashed');
                     throw e;
                   });
                 },

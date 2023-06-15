@@ -16,8 +16,8 @@ import '../information/exerciseDetails.dart';
 class ExistExercise extends StatelessWidget {
   List? exercises;
   bool? isChange;
-  String? oldId;
-  ExistExercise({super.key, this.isChange, this.oldId, this.exercises});
+  String? oldName;
+  ExistExercise({super.key, this.isChange, this.oldName, this.exercises});
   String suggestion = "Choose category";
   final panelController = PanelController();
   TextEditingController sets = TextEditingController();
@@ -33,7 +33,8 @@ class ExistExercise extends StatelessWidget {
           if (s is AddExerciseState) {
             Navigator.popUntil(context, (route) => route.isFirst);
           }
-          if (isChange ?? false) {}else{
+          if (isChange ?? false) {
+          } else {
             if (s is ChangeSearchState) {
               searchList = s.filteredList;
             } else {
@@ -109,36 +110,34 @@ class ExistExercise extends StatelessWidget {
                                       itemCount: gymData.length,
                                       itemBuilder: (_, i) => exerciseCard(
                                           function: () {
-                                            (panelController.isPanelOpen)
-                                                ? panelController.close()
-                                                : pageNavigator(
-                                                    context,
-                                                    ExerciseDetails(
-                                                      exerciseName: gymData[i]
-                                                          .exerciseName,
-                                                      exerciseInfo: gymData[i]
-                                                          .exerciseDescription,
-                                                      exerciseImage: gymData[i]
-                                                          .exerciseImage,
-                                                      exerciseType: gymData[i]
-                                                          .exerciseType,
-                                                      exerciseLevel: gymData[i]
-                                                          .exerciseLevel,
-                                                      exerciseEquipment:
-                                                          gymData[i]
-                                                              .exerciseEquipment,
-                                                      exerciseBodyPart:
-                                                          gymData[i]
-                                                              .exerciseBodyPart,
-                                                      // exerciseTarget: gymData[i].exerciseTarget,
-                                                      // exerciseTips: gymData[i].exerciseTips,
-                                                      // exerciseRepetition: gymData[i].exerciseRepetition,
-                                                      // exerciseSets: gymData[i].exerciseSets,
-                                                    ));
+                                            //  pageNavigator(
+                                            //     context,
+                                            //     ExerciseDetails(
+                                            //       exerciseName: gymData[i]
+                                            //           .exerciseName,
+                                            //       exerciseInfo: gymData[i]
+                                            //           .exerciseDescription,
+                                            //       exerciseImage: gymData[i]
+                                            //           .exerciseImage,
+                                            //       exerciseType: gymData[i]
+                                            //           .exerciseType,
+                                            //       exerciseLevel: gymData[i]
+                                            //           .exerciseLevel,
+                                            //       exerciseEquipment:
+                                            //           gymData[i]
+                                            //               .exerciseEquipment,
+                                            //       exerciseBodyPart:
+                                            //           gymData[i]
+                                            //               .exerciseBodyPart,
+                                            //       // exerciseTarget: gymData[i].exerciseTarget,
+                                            //       // exerciseTips: gymData[i].exerciseTips,
+                                            //       // exerciseRepetition: gymData[i].exerciseRepetition,
+                                            //       // exerciseSets: gymData[i].exerciseSets,
+                                            //     ));
                                           },
                                           width: width(context, .5),
-                                          image: gymData[i].exerciseImage,
-                                          title: gymData[i].exerciseName,
+                                          image: gymData[i]['imageUrl'],
+                                          title: gymData[i]['Title'],
                                           addCardButton: true,
                                           addFunction: () {
                                             // gym.changeExercise(

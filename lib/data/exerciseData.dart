@@ -326,14 +326,14 @@ Future<Map<String, dynamic>> getWorkoutPlan() async {
 }
 
 Future replaceExercise(
-    {required BuildContext context, required String oldId}) async {
-  print('oldid $oldId');
-  var replace =
-      await http.get(Uri.parse('$url/similar/exercises/$oldId'), headers: {
+    {required BuildContext context, required String oldName}) async {
+  var replace = await http.get(
+    Uri.parse('$url/similar/exercises'), 
+    headers: {
     "Authorization": "Bearer ${User.token}",
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "$url/*"
-  });
+  },);
   if (replace.statusCode != 200) {
     print('object no');
     toastError(context: context, text: replace.body);
@@ -344,7 +344,7 @@ Future replaceExercise(
         ExistExercise(
           isChange: true,
           exercises: data,
-          oldId: oldId,
+          oldName: oldName,
         ));
     print(data);
     return data;

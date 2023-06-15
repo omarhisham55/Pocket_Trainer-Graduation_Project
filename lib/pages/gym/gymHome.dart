@@ -550,7 +550,7 @@ class GymHome extends StatelessWidget {
                                                                           return defaultInkWell(
                                                                             changeFunction:
                                                                                 () {
-                                                                              replaceExercise(context: context, oldId: workout[i]['_id']).then((value) => print('click'));
+                                                                              replaceExercise(context: context, oldName: workout[i]['Title']).then((value) => print('click'));
                                                                             },
                                                                             onLongPress: () => pageNavigator(
                                                                                 context,
