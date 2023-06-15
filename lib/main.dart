@@ -2,6 +2,7 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
+import 'package:camera/camera.dart';
 import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
@@ -13,8 +14,12 @@ import 'navigation/routes.dart';
 import 'notification/notification_initialize.dart';
 import 'shared/blocObserver.dart';
 
-void main() {
+List<CameraDescription>? camera;
+
+void main() async{
   Bloc.observer = MyBlocObserver();
+  WidgetsFlutterBinding.ensureInitialized();
+  camera = await availableCameras();
   AwesomeNotifications()
       .initialize(
           null,
@@ -30,9 +35,8 @@ void main() {
       if (!isAllowed) {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
-      
-        NotificationService().scheduleNotifications();
-      
+
+      NotificationService().scheduleNotifications();
     }).catchError((e) {
       print('lola $e');
     });

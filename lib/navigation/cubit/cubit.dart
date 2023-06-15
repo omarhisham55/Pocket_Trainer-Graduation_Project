@@ -3,8 +3,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:camera/camera.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:final_packet_trainer/data/gym_dialog_data.dart';
+import 'package:final_packet_trainer/poseDetectionModel/poseDetection.dart';
 import 'package:http/http.dart' as http;
 import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/navigation/cubit/states.dart';
@@ -17,6 +19,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../data/offers.dart';
 import '../../data/userData.dart';
+import '../../main.dart';
 import '../../pages/gym/gym.dart';
 import '../../pages/home/home.dart';
 import '../../pages/information/information.dart';
@@ -626,5 +629,19 @@ class CubitManager extends Cubit<MainStateManager> {
     } else {
       throw Exception("Failed to load data ${workout.statusCode}");
     }
+  }
+
+  CameraImage? cameraImage;
+  CameraController? cameraController;
+  String output = 'output';
+  loadCamera() {
+    cameraController = CameraController(camera![0], ResolutionPreset.medium);
+    cameraController!.initialize().then((value) {
+      cameraController!.startImageStream((image) {
+        cameraImage = image;
+        PoseDetectionModel().model();
+        emit(OpenCamera());
+      });
+    }).catchError((e) {});
   }
 }

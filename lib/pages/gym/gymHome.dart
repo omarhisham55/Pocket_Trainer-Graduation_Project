@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:camera/camera.dart';
 import 'package:final_packet_trainer/data/exerciseData.dart';
 import 'package:final_packet_trainer/data/gym_dialog_data.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
@@ -17,6 +18,7 @@ import 'package:flython/flython.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../main.dart';
 import '../../navigation/animationNavigation.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/images.dart';
@@ -82,7 +84,8 @@ class GymHome extends StatelessWidget {
                             title: const Text('Exercise info'),
                             onPressed: () {
                               Navigator.of(context).push(PremiumAnimation(
-                                  page: const GymRecommendedPlan(fromHome: true)));
+                                  page: const GymRecommendedPlan(
+                                      fromHome: true)));
                             }),
                       ];
                     }
