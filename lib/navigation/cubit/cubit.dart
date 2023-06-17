@@ -631,17 +631,8 @@ class CubitManager extends Cubit<MainStateManager> {
     }
   }
 
-  CameraImage? cameraImage;
-  CameraController? cameraController;
-  String output = 'output';
-  loadCamera() {
-    cameraController = CameraController(camera![0], ResolutionPreset.medium);
-    cameraController!.initialize().then((value) {
-      cameraController!.startImageStream((image) {
-        cameraImage = image;
-        PoseDetectionModel().model();
-        emit(OpenCamera());
-      });
-    }).catchError((e) {});
+  addFrames(List frames, frame) {
+    frames.add(frame);
+    emit(OpenCamera());
   }
 }

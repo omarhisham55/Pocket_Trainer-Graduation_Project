@@ -2,9 +2,10 @@
     package="com.example.final_packet_trainer">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="final_packet_trainer"
+        android:label="Pocket Trainer"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo2"
+        android:roundIcon="@mipmap/logo2"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"

@@ -1,9 +1,11 @@
 // ignore_for_file: avoid_print
 
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:final_packet_trainer/data/exerciseData.dart';
+import 'package:final_packet_trainer/poseDetectionModel/poseDetection.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:final_packet_trainer/shared/styles/images.dart';
@@ -14,12 +16,10 @@ import 'navigation/routes.dart';
 import 'notification/notification_initialize.dart';
 import 'shared/blocObserver.dart';
 
-List<CameraDescription>? camera;
 
-void main() async{
+void main() async {
   Bloc.observer = MyBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
-  camera = await availableCameras();
   AwesomeNotifications()
       .initialize(
           null,
@@ -77,8 +77,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: "/splash",
-      routes: routes,
+      theme: ThemeData.dark(),
+      // initialRoute: "/splash",
+      // routes: routes,
+      home: Stack(children: [
+        AnimatedSplashScreen(
+            splash: Container(),
+            duration: 1000,
+            splashTransition: SplashTransition.fadeTransition,
+            // backgroundColor: Colors.blueGrey,
+            nextScreen: const Login()),
+        Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage('Assets/images/logo2.png'))))
+      ]),
     );
   }
 }

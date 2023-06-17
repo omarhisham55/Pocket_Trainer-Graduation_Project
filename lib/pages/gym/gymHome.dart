@@ -17,9 +17,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flython/flython.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
+import 'package:http/http.dart' as http;
 import '../../main.dart';
 import '../../navigation/animationNavigation.dart';
+import '../../poseDetectionModel/camera.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/images.dart';
 import 'gymRecommendedPlan.dart';
@@ -215,22 +216,12 @@ class GymHome extends StatelessWidget {
                                               padding:
                                                   const EdgeInsets.all(5.0),
                                               child: DefaultButton(
-                                                function: () async {
-                                                  print(
-                                                      'object clicked open camera hooooo');
-                                                  PoseDetectionModel().model();
-                                                  // PoseDetectionModel().openCamera();
+                                                function: () async {                                                
 
-                                                  // await Flython()
-                                                  //     .initialize(
-                                                  //         'python',
-                                                  //         '../../../bodyRecognitionModel//khalid/exercises-tracker-main/exercise.py',
-                                                  //         false)
-                                                  //     .then((value) {
-                                                  //   print('success');
-                                                  // }).catchError((e) {
-                                                  //   print('erroe $e');
-                                                  // });
+                                                  // noNavNavigator(
+                                                  //     context, const Camera());
+                                                  PoseDetectionModel()
+                                                      .getVideoFeed('');
                                                   gym.exercisePanelController
                                                       .close();
                                                 },
