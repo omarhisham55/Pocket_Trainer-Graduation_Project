@@ -499,6 +499,7 @@ class CubitManager extends Cubit<MainStateManager> {
     if (profile.statusCode == 200) {
       var user = json.decode(profile.body);
       User.currentUser = User(
+        id: user['_id'],
         name: user["name"] ?? "",
         email: user["email"] ?? "",
         password: user["password"] ?? "",
@@ -525,6 +526,8 @@ class CubitManager extends Cubit<MainStateManager> {
     File? imageData,
   }) async {
     print('edit profile opened $username');
+    print('loloa ${User.currentUser!.id}');
+
     final profile = await http.put(Uri.parse('$url/edit/profile'),
         headers: {
           "Authorization": "Bearer ${User.token}",
@@ -532,6 +535,7 @@ class CubitManager extends Cubit<MainStateManager> {
           "Access-Control-Allow-Origin": "$url/*"
         },
         body: jsonEncode(<String, dynamic>{
+          'userId': User.currentUser!.id,
           'name': username,
           // 'email': email,
           // 'password': password,

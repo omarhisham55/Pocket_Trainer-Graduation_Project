@@ -46,7 +46,7 @@ class Profile extends StatelessWidget {
               GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
               return Scaffold(
                   key: scaffoldKey,
-                  resizeToAvoidBottomInset: true,
+                  resizeToAvoidBottomInset: false,
                   backgroundColor: BackgroundColors.background,
                   appBar: notificationAppBar(context, "Profile"),
                   body: FutureBuilder(
@@ -137,108 +137,110 @@ class Profile extends StatelessWidget {
                                                       children: [
                                                         IconButton(
                                                             onPressed: () {
-                                                              scaffoldKey
-                                                                  .currentState!
-                                                                  .showBottomSheet(
+                                                              showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
                                                                       (context) {
-                                                                return Container(
-                                                                  color: BackgroundColors
-                                                                      .background,
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .all(
-                                                                        20.0),
-                                                                    child: Column(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.min,
-                                                                        children: [
-                                                                          //username
-                                                                          defaultTextFormField(
-                                                                              controller: userData.userController,
-                                                                              hint: "Username",
-                                                                              validator: (value) {
-                                                                                if (value!.isEmpty) {
-                                                                                  return "Enter Valid Username";
-                                                                                }
-                                                                                return null;
-                                                                              },
-                                                                              border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG))),
-                                                                          const SizedBox(
-                                                                              height: 20),
-                                                                          //email
-                                                                          defaultTextFormField(
-                                                                              controller: userData.emailController,
-                                                                              hint: "Email",
-                                                                              validator: (value) {
-                                                                                isValid = EmailValidator.validate(userData.emailController.text);
-                                                                                if (value!.isEmpty || !isValid) {
-                                                                                  return "Enter Valid email";
-                                                                                } else if (!value.contains("@")) {
-                                                                                  return "Email invalid missing @";
-                                                                                }
-                                                                                return null;
-                                                                              },
-                                                                              border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG))),
-                                                                          const SizedBox(
-                                                                              height: 20),
-                                                                          //password
-                                                                          defaultTextFormField(
-                                                                              controller: userData.passController,
-                                                                              hint: "Password",
-                                                                              suffix: true,
-                                                                              isPassword: userData.isPassword,
-                                                                              validator: (value) {
-                                                                                if (value!.isEmpty || value.length < 6) {
-                                                                                  return 'Password must be at least 6 characters';
-                                                                                }
-                                                                                return null;
-                                                                              },
-                                                                              border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG)),
-                                                                              suffixPressed: () {
-                                                                                userData.isPasswordCheck();
-                                                                              }),
-                                                                          const SizedBox(
-                                                                              height: 20),
-                                                                          //confirm password
-                                                                          defaultTextFormField(
-                                                                              controller: userData.confirmPassController,
-                                                                              hint: "Confirm Password",
-                                                                              isPassword: userData.isConfirmPassword,
-                                                                              border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG)),
-                                                                              suffix: true,
-                                                                              validator: (value) {
-                                                                                if (userData.passController.text != userData.confirmPassController.text) {
-                                                                                  print('pass cont = ${userData.passController.text}');
-                                                                                  print('confirm pass cont = ${userData.confirmPassController.text}');
-                                                                                  return "Passwords doesn't match";
-                                                                                }
-                                                                                return null;
-                                                                              },
-                                                                              suffixPressed: () {
-                                                                                userData.isConfirmPasswordCheck();
-                                                                              }),
+                                                                    return Dialog(
+                                                                      backgroundColor:
+                                                                          BackgroundColors
+                                                                              .background,
+                                                                      child:
                                                                           Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.all(20.0),
-                                                                            child:
-                                                                                DefaultButton(
-                                                                              function: () async {
-                                                                                userData.myAuth.setConfig(appEmail: 'omarHishamho@gmail.com', appName: 'Email Verification Poket Trainer', userEmail: User.currentUser!.email, otpLength: 6, otpType: OTPType.digitsOnly);
-                                                                                if (await userData.myAuth.sendOTP() == true) {
-                                                                                  pageNavigator(context, OtpVerification(myauth: userData.myAuth, email: userData.emailController.text, name: userData.userController.text, password: userData.passController.text, fromEdit: true));
-                                                                                  toastInfo(context: context, text: "Email verification pending");
-                                                                                } else {
-                                                                                  toastError(context: context, text: "Verification error!");
-                                                                                }
-                                                                              },
-                                                                              text: "Save changes",
-                                                                            ),
-                                                                          ),
-                                                                        ]),
-                                                                  ),
-                                                                );
-                                                              });
+                                                                        padding:
+                                                                            const EdgeInsets.all(20.0),
+                                                                        child:
+                                                                            SingleChildScrollView(
+                                                                          child: Column(
+                                                                              mainAxisSize: MainAxisSize.min,
+                                                                              children: [
+                                                                                //username
+                                                                                defaultTextFormField(
+                                                                                    controller: userData.userController,
+                                                                                    hint: "Username",
+                                                                                    validator: (value) {
+                                                                                      if (value!.isEmpty) {
+                                                                                        return "Enter Valid Username";
+                                                                                      }
+                                                                                      return null;
+                                                                                    },
+                                                                                    border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG))),
+                                                                                const SizedBox(height: 20),
+                                                                                //email
+                                                                                defaultTextFormField(
+                                                                                    controller: userData.emailController,
+                                                                                    hint: "Email",
+                                                                                    validator: (value) {
+                                                                                      isValid = EmailValidator.validate(userData.emailController.text);
+                                                                                      if (value!.isEmpty || !isValid) {
+                                                                                        return "Enter Valid email";
+                                                                                      } else if (!value.contains("@")) {
+                                                                                        return "Email invalid missing @";
+                                                                                      }
+                                                                                      return null;
+                                                                                    },
+                                                                                    border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG))),
+                                                                                const SizedBox(height: 20),
+                                                                                //password
+                                                                                defaultTextFormField(
+                                                                                    controller: userData.passController,
+                                                                                    hint: "Password",
+                                                                                    suffix: true,
+                                                                                    isPassword: userData.isPassword,
+                                                                                    validator: (value) {
+                                                                                      if (value!.isEmpty || value.length < 6) {
+                                                                                        return 'Password must be at least 6 characters';
+                                                                                      }
+                                                                                      return null;
+                                                                                    },
+                                                                                    border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG)),
+                                                                                    suffixPressed: () {
+                                                                                      userData.isPasswordCheck();
+                                                                                    }),
+                                                                                const SizedBox(height: 20),
+                                                                                //confirm password
+                                                                                defaultTextFormField(
+                                                                                    controller: userData.confirmPassController,
+                                                                                    hint: "Confirm Password",
+                                                                                    isPassword: userData.isConfirmPassword,
+                                                                                    border: const OutlineInputBorder(borderSide: BorderSide(color: BackgroundColors.whiteBG)),
+                                                                                    suffix: true,
+                                                                                    validator: (value) {
+                                                                                      if (userData.passController.text != userData.confirmPassController.text) {
+                                                                                        print('pass cont = ${userData.passController.text}');
+                                                                                        print('confirm pass cont = ${userData.confirmPassController.text}');
+                                                                                        return "Passwords doesn't match";
+                                                                                      }
+                                                                                      return null;
+                                                                                    },
+                                                                                    suffixPressed: () {
+                                                                                      userData.isConfirmPasswordCheck();
+                                                                                    }),
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.all(15.0),
+                                                                                  child: SizedBox(width: width(context, 1), child: paragraphText(text: 'you can change one or more', textAlign: TextAlign.end, color: Colors.yellow)),
+                                                                                ),
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.all(20.0),
+                                                                                  child: DefaultButton(
+                                                                                    function: () async {
+                                                                                      userData.myAuth.setConfig(appEmail: 'omarHishamho@gmail.com', appName: 'Email Verification Poket Trainer', userEmail: User.currentUser!.email, otpLength: 6, otpType: OTPType.digitsOnly);
+                                                                                      if (await userData.myAuth.sendOTP() == true) {
+                                                                                        pageNavigator(context, OtpVerification(myauth: userData.myAuth, email: userData.emailController.text, name: userData.userController.text, password: userData.passController.text, fromEdit: true));
+                                                                                        toastInfo(context: context, text: "Email verification pending");
+                                                                                      } else {
+                                                                                        toastError(context: context, text: "Verification error!");
+                                                                                      }
+                                                                                    },
+                                                                                    text: "Save changes",
+                                                                                  ),
+                                                                                ),
+                                                                              ]),
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  });
                                                             },
                                                             icon: const Icon(
                                                               FontAwesomeIcons

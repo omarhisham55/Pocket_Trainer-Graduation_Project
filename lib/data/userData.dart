@@ -13,21 +13,23 @@ import '../shared/components/components.dart';
 import 'exerciseData.dart';
 
 class User {
-  User({
-    this.name,
-    this.email,
-    this.password,
-    this.urlPhotoData,
-    this.urlPhotoContent,
-    this.workoutPlan,
-    this.nutritionPlan,
-  });
+  User(
+      {this.id,
+      this.name,
+      this.email,
+      this.password,
+      this.urlPhotoData,
+      this.urlPhotoContent,
+      this.workoutPlan,
+      this.nutritionPlan,
+      this.requirements});
 
   static User? currentUser;
   // ignore: prefer_typing_uninitialized_variables
   static var token;
   static var tempToken;
 
+  String? id;
   String? email;
   String? name;
   Map<String, dynamic>? nutritionPlan;
@@ -35,35 +37,45 @@ class User {
   String? urlPhotoContent;
   String? urlPhotoData;
   Map<String, dynamic>? workoutPlan;
+  List? requirements;
 
-  static Future<String> signUp(
-      {required String username,
-      required String email,
-      required String password,
-      File? imageData,
-      context}) async {
-    print(imageData!.path);
-    final response = await http.post(
-      Uri.parse('$url/signup'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(<String, dynamic>{
-        'name': username,
-        'email': email,
-        'password': password,
-        'photo': imageData.path
-      }),
-    );
+  static Future<String> signUp({
+    required String username,
+    required String email,
+    required String password,
+    File? imageData,
+    context,
+  }) async {
+    final request = http.MultipartRequest('POST', Uri.parse('$url/signup'));
+
+    // Add the username to the request.
+    request.fields['name'] = username;
+
+    // Add the email to the request.
+    request.fields['email'] = email;
+
+    // Add the password to the request.
+    request.fields['password'] = password;
+
+    // Add the image data to the request.
+    if (imageData != null) {
+      request.files
+          .add(await http.MultipartFile.fromPath('photo', imageData.path));
+    }
+
+    final response = await request.send();
+
     if (response.statusCode == 201) {
-      toastSuccess(context: context, text: response.body);
-      return response.body;
+      toastSuccess(context: context, text: response.reasonPhrase!);
+      return response.reasonPhrase!;
     } else if (response.statusCode == 409) {
-      toastWarning(context: context, text: response.body);
+      toastWarning(context: context, text: response.reasonPhrase!);
       throw Exception('Failed to create account ${response.statusCode}');
     } else {
       toastError(
           context: context,
-          text: "Failed to create an account, ${response.body}");
-      throw Exception('Failed to create account ${response.statusCode}');
+          text: "Failed to create an account, ${response.reasonPhrase}");
+      throw Exception('Failed to create an account ${response.statusCode}');
     }
   }
 
@@ -104,6 +116,7 @@ class User {
     if (profile.statusCode == 200) {
       var user = json.decode(profile.body);
       currentUser = User(
+        id: user['_id'] ?? "",
         name: user["name"] ?? "",
         email: user["email"] ?? "",
         password: user["password"] ?? "",
@@ -112,7 +125,10 @@ class User {
             : null.toString(),
         workoutPlan: user["workoutPlan"] ?? {},
         nutritionPlan: user["NutritionPlan"] ?? {},
+        requirements: user['ListOfRequirment'] ?? [],
       );
+      print(user);
+      print(currentUser);
       return user;
     } else {
       throw Exception("Failed to load data");

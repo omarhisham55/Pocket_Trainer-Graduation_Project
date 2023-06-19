@@ -132,14 +132,19 @@ class OtpVerification extends StatelessWidget {
                                     otp6Controller.text) ==
                             true) {
                           if (fromEdit ?? false) {
-                            signUpLoginChangeable.editProfile(
-                                context: context,
-                                username:
-                                    signUpLoginChangeable.userController.text,
-                                email:
-                                    signUpLoginChangeable.emailController.text,
-                                password:
-                                    signUpLoginChangeable.passController.text);
+                            signUpLoginChangeable
+                                .editProfile(
+                                    context: context,
+                                    username: signUpLoginChangeable
+                                        .userController.text,
+                                    email: signUpLoginChangeable
+                                        .emailController.text,
+                                    password: signUpLoginChangeable
+                                        .passController.text)
+                                .then((value) {
+                              toastSuccess(context: context, text: 'edited');
+                              Navigator.pop(context);
+                            });
                           } else if (fromForget ?? false) {
                             User.forgetPassword(context: context, email: email!)
                                 .then((value) {

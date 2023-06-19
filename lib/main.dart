@@ -3,9 +3,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
-import 'package:camera/camera.dart';
 import 'package:final_packet_trainer/data/exerciseData.dart';
-import 'package:final_packet_trainer/poseDetectionModel/poseDetection.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:final_packet_trainer/shared/styles/colors.dart';
 import 'package:final_packet_trainer/shared/styles/images.dart';

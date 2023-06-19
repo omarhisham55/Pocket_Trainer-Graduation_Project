@@ -116,7 +116,7 @@ Future<List> getArmExercises() async {
 
     return dataList;
   } else {
-    throw Exception('Failed to load data');
+    throw Exception('Failed to load data ${armExercises.statusCode}');
   }
 }
 
