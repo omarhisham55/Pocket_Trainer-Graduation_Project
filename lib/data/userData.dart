@@ -1,13 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import '../shared/components/components.dart';
 import 'exerciseData.dart';
@@ -47,24 +43,14 @@ class User {
     context,
   }) async {
     final request = http.MultipartRequest('POST', Uri.parse('$url/signup'));
-
-    // Add the username to the request.
     request.fields['name'] = username;
-
-    // Add the email to the request.
     request.fields['email'] = email;
-
-    // Add the password to the request.
     request.fields['password'] = password;
-
-    // Add the image data to the request.
     if (imageData != null) {
       request.files
           .add(await http.MultipartFile.fromPath('photo', imageData.path));
     }
-
     final response = await request.send();
-
     if (response.statusCode == 201) {
       toastSuccess(context: context, text: response.reasonPhrase!);
       return response.reasonPhrase!;
