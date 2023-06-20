@@ -16,56 +16,64 @@ class Camera extends StatelessWidget {
     return FutureBuilder(
         future: PoseDetectionModel().initCameraController(),
         builder: (context, snapshot) {
-          CameraController cameraController = snapshot.data!;
-          return FutureBuilder(
-              future: PoseDetectionModel().getFrames(),
-              builder: (context, f) {
-                print('shakalala $f');
-                return BlocProvider(
-                  create: (context) => CubitManager(),
-                  child: BlocConsumer<CubitManager, MainStateManager>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        CubitManager cam = CubitManager.get(context);
-
-                        CameraImage? cameraImage;
-                        String output = 'output';
-                        if (cameraController == null ||
-                            !cameraController.value.isInitialized) {
-                          return const Scaffold(
-                            body: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-                        return Scaffold(
-                          body: Column(
-                            children: <Widget>[
-                              Expanded(
-                                child: AspectRatio(
-                                  aspectRatio:
-                                      cameraController.value.aspectRatio,
-                                  child: CameraPreview(cameraController),
-                                ),
+          if (snapshot.hasError) {
+            return Center(child: subTitleText(text: snapshot.error.toString()));
+          } else if (snapshot.hasData) {
+            CameraController cameraController = snapshot.data!;
+            return BlocProvider(
+              create: (context) => CubitManager(),
+              child: BlocConsumer<CubitManager, MainStateManager>(
+                  listener: (context, state) {},
+                  builder: (context, state) {
+                    CubitManager cam = CubitManager.get(context);
+                    bool isCameraOpen = false;
+                    bool isModelRunning = false;
+                    CameraImage? cameraImage;
+                    String output = 'output';
+                    return FutureBuilder(
+                        future: PoseDetectionModel().getVideoFeed(),
+                        builder: (context, f) {
+                          if (f.hasError) {
+                            return Center(
+                                child: subTitleText(text: f.error.toString()));
+                          } else if (f.hasData) {
+                            print('shakalala $f');
+                            return Scaffold(
+                              body: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: AspectRatio(
+                                      aspectRatio:
+                                          cameraController.value.aspectRatio,
+                                      child: CameraPreview(cameraController),
+                                    ),
+                                  ),
+                                  DefaultButton(
+                                    function: () async {
+                                      if (cameraController != null &&
+                                          cameraController
+                                              .value.isInitialized) {
+                                        // Take picture and save it to a file
+                                        final image = await cameraController
+                                            .takePicture();
+                                        print('Image saved to ${image.path}');
+                                      }
+                                    },
+                                    text: 'Take Picture',
+                                  ),
+                                ],
                               ),
-                              DefaultButton(
-                                function: () async {
-                                  if (cameraController != null &&
-                                      cameraController.value.isInitialized) {
-                                    // Take picture and save it to a file
-                                    final image =
-                                        await cameraController.takePicture();
-                                    print('Image saved to ${image.path}');
-                                  }
-                                },
-                                text: 'Take Picture',
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                );
-              });
+                            );
+                          } else {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                        });
+                  }),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
         });
   }
 }

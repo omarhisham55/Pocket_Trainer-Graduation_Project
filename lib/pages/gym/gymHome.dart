@@ -38,6 +38,7 @@ class GymHome extends StatelessWidget {
         builder: (_, snapshot) {
           if (snapshot.hasData) {
             var data = snapshot.data![0] as Map;
+            print('zoma $data');
             var reqs = snapshot.data![1] as List;
             return BlocProvider(
                 create: (_) => CubitManager(),
@@ -216,12 +217,11 @@ class GymHome extends StatelessWidget {
                                               padding:
                                                   const EdgeInsets.all(5.0),
                                               child: DefaultButton(
-                                                function: () async {                                                
-
-                                                  // noNavNavigator(
-                                                  //     context, const Camera());
-                                                  PoseDetectionModel()
-                                                      .getVideoFeed('');
+                                                function: () async {
+                                                  noNavNavigator(
+                                                      context, const Camera());
+                                                  // PoseDetectionModel()
+                                                  //     .getVideoFeed();
                                                   gym.exercisePanelController
                                                       .close();
                                                 },

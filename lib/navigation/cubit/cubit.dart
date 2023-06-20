@@ -518,6 +518,53 @@ class CubitManager extends Cubit<MainStateManager> {
   }
 
   //edit profile
+  // Future editProfile({
+  //   required BuildContext context,
+  //   String? username,
+  //   String? email,
+  //   String? password,
+  //   File? imageData,
+  // }) async {
+  //   print('edit profile opened $username');
+  //   print('loloa ${User.currentUser!.id}');
+
+  //   final profile = await http.patch(Uri.parse('$url/edit/profile'),
+  //       headers: {
+  //         "Authorization": "Bearer ${User.token}",
+  //         "Content-Type": "multipart/form-data",
+  //         "Access-Control-Allow-Origin": "$url/*"
+  //       },
+  //       body: jsonEncode(<String, dynamic>{
+  //         'userId': User.currentUser!.id,
+  //         'name': username,
+  //         'email': email,
+  //         'password': password,
+  //         'photo': {'contentType': 'image/jpg', 'data': imageData}
+  //       }));
+  //   // .then((value) => print('success ${value.statusCode}, ${value.body}'))
+  //   // .catchError((e) => print('error at $e'));
+  //   if (profile.statusCode == 200) {
+  //     var user = json.decode(profile.body);
+  //     print(user);
+  //     getProfile(context).then((v) {
+  //       emit(EditUser());
+  //     });
+  //     return user;
+  //   } else {
+  //     throw Exception("Failed to load data ${profile.body}");
+  //   }
+  // }
+
+  Color changeColor(path) {
+    if (path == ('')) {
+      // emit(AddPhoto());
+      return Colors.grey;
+    } else {
+      emit(AddPhoto());
+      return BackgroundColors.background;
+    }
+  }
+
   Future editProfile({
     required BuildContext context,
     String? username,
@@ -528,30 +575,39 @@ class CubitManager extends Cubit<MainStateManager> {
     print('edit profile opened $username');
     print('loloa ${User.currentUser!.id}');
 
-    final profile = await http.put(Uri.parse('$url/edit/profile'),
-        headers: {
-          "Authorization": "Bearer ${User.token}",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "$url/*"
-        },
-        body: jsonEncode(<String, dynamic>{
-          'userId': User.currentUser!.id,
-          'name': username,
-          // 'email': email,
-          // 'password': password,
-          // 'photo': {'contentType': 'image/jpg', 'data': imageData}
-        }));
-    // .then((value) => print('success ${value.statusCode}, ${value.body}'))
-    // .catchError((e) => print('error at $e'));
-    if (profile.statusCode == 200) {
-      var user = json.decode(profile.body);
+    var request =
+        http.MultipartRequest('PATCH', Uri.parse('$url/edit/profile'));
+    request.headers["Authorization"] = "Bearer ${User.token}";
+    request.headers["Access-Control-Allow-Origin"] = "$url/*";
+
+    request.fields['nameId'] = User.currentUser!.id!;
+
+    if (username != null) {
+      request.fields['name'] = username;
+    }
+    if (email != null) {
+      request.fields['email'] = email;
+    }
+    if (password != null) {
+      request.fields['password'] = password;
+    }
+    if (imageData != null) {
+      request.files.add(await http.MultipartFile.fromPath(
+        'photo',
+        imageData.path,
+      ));
+    }
+
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      var responseBody = await response.stream.bytesToString();
+      var user = json.decode(responseBody);
       print(user);
-      getProfile(context).then((v) {
-        emit(EditUser());
-      });
+      await getProfile(context);
+      emit(EditUser());
       return user;
     } else {
-      throw Exception("Failed to load data ${profile.body}");
+      throw Exception("Failed to load data ${response.reasonPhrase}");
     }
   }
 
@@ -635,8 +691,9 @@ class CubitManager extends Cubit<MainStateManager> {
     }
   }
 
-  addFrames(List frames, frame) {
-    frames.add(frame);
+  openCamera(camera, model) {
+    camera = true;
+    model = true;
     emit(OpenCamera());
   }
 }

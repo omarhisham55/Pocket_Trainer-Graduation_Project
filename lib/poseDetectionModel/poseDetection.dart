@@ -21,14 +21,15 @@ class PoseDetectionModel {
   //   }
   // }
 
-  final String baseUrl = 'http://192.168.1.34:5000';
-  void getVideoFeed(String exercise) async {
+  final String baseUrl = 'http://192.168.1.11:5000';
+  getVideoFeed() async {
     print('zaza waiting for response');
     final response =
         await http.get(Uri.parse('$baseUrl/video_feed?exercise=push-ups'));
     if (response.statusCode == 200) {
       final responseData = response.body; // Retrieve response body as a string
       print('zaza $responseData');
+      print('zaza opened');
 
       // Handle the response data as needed
       // ...
@@ -41,7 +42,7 @@ class PoseDetectionModel {
 
   List frames = [];
   Future<void> getFrames() async {
-    final url = 'http://192.168.1.34:5000/video_feed?exercise=push-ups';
+    final url = 'http://192.168.1.11:5000/video_feed?exercise=push-ups';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {

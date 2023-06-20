@@ -71,3 +71,5 @@ class StretchesCountDown extends MainStateManager{}
 class ChangeExercise extends MainStateManager{}
 
 class OpenCamera extends MainStateManager{}
+
+class AddPhoto extends MainStateManager{}

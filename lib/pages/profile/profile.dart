@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:circle_button/circle_button.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:final_packet_trainer/data/nutrition_dialog_data.dart';
@@ -80,33 +81,82 @@ class Profile extends StatelessWidget {
                                                   child: Center(
                                                     child: Column(
                                                       children: [
-                                                        CircleAvatar(
-                                                          radius: 50,
-                                                          backgroundColor: Color
-                                                              .fromRGBO(
-                                                                  random
-                                                                      .nextInt(
-                                                                          256),
-                                                                  random
-                                                                      .nextInt(
-                                                                          256),
-                                                                  random
-                                                                      .nextInt(
-                                                                          256),
-                                                                  1.0),
-                                                          child: (bytes == null)
-                                                              ? titleText(
-                                                                  text: User
-                                                                      .currentUser!
-                                                                      .name![0]
-                                                                      .toUpperCase(),
-                                                                  size: 70.0)
-                                                              : ClipOval(
-                                                                  child: Image.memory(
-                                                                      bytes,
-                                                                      fit: BoxFit
-                                                                          .cover)),
-                                                          // child: Image.memory(bytes),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            if (bytes == null) {
+                                                              showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (context) {
+                                                                    return GestureDetector(
+                                                                      onTap: (){
+                                                                        
+                                                                      },
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets
+                                                                                .only(
+                                                                            top:
+                                                                                100.0),
+                                                                        child:
+                                                                            Dialog(
+                                                                          alignment:
+                                                                              Alignment.topCenter,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.all(15.0),
+                                                                            child:
+                                                                                paragraphText(text: 'add photo'),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  });
+                                                            } else {
+                                                              showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (context) {
+                                                                    return Dialog(
+                                                                      child: paragraphText(
+                                                                          text:
+                                                                              'remove photo'),
+                                                                    );
+                                                                  });
+                                                            }
+                                                          },
+                                                          child: CircleAvatar(
+                                                            radius: 50,
+                                                            backgroundColor:
+                                                                Color.fromRGBO(
+                                                                    random
+                                                                        .nextInt(
+                                                                            256),
+                                                                    random
+                                                                        .nextInt(
+                                                                            256),
+                                                                    random
+                                                                        .nextInt(
+                                                                            256),
+                                                                    1.0),
+                                                            child: (bytes ==
+                                                                    null)
+                                                                ? titleText(
+                                                                    text: User
+                                                                        .currentUser!
+                                                                        .name![
+                                                                            0]
+                                                                        .toUpperCase(),
+                                                                    size: 70.0)
+                                                                : ClipOval(
+                                                                    child: Image.memory(
+                                                                        bytes,
+                                                                        fit: BoxFit
+                                                                            .cover)),
+                                                            // child: Image.memory(bytes),
+                                                          ),
                                                         ),
                                                         const SizedBox(
                                                             height: 10),

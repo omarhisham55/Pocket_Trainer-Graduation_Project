@@ -159,9 +159,8 @@ class Login extends StatelessWidget {
                       const Spacer(),
                       paragraphText(
                           text: "optional",
-                          color: (imageData.path == (''))
-                              ? Colors.grey
-                              : BackgroundColors.background)
+                          color:
+                              signUpLoginChangeable.changeColor(imageData.path))
                     ],
                   ),
                   // const Spacer(),
