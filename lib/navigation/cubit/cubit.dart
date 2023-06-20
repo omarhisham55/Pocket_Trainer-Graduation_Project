@@ -31,22 +31,113 @@ import '../../shared/styles/colors.dart';
 class CubitManager extends Cubit<MainStateManager> {
   CubitManager() : super(InitialState());
 
+  //panel to add meals
+  PanelController addMealController = PanelController();
+
+  int addNumber = 0;
+  GlobalKey<FormState> changePasswordKey = GlobalKey<FormState>();
+  TextEditingController confirmPassController = TextEditingController();
+  late PersistentTabController controller =
+      PersistentTabController(initialIndex: currentIndex);
+
+  int currentDateIndex = 0;
+  //Navigation
+  int currentIndex = 2;
+
+  //Nutrition
+
+  bool deleteButtonFood = false;
+
+  List<String> dropDownFirstLevel = [
+    "All Exercises",
+    "Chest",
+    "Back",
+    "Shoulders",
+    "Biceps",
+    "Triceps",
+    "Legs"
+  ];
+
+  String dropDownHint = "All Exercises";
+  List<String> dropDownSecondLevel = [
+    "All techniques",
+    "Cables",
+    "Dumbbells",
+    "Body Weight",
+    "Barbell",
+    "Machines"
+  ];
+
+  String dropDownSubHint = "All techniques";
+  TextEditingController emailController = TextEditingController();
+  //Gym
+  final exercisePanelController = PanelController();
+
+  String exercisePanelId = "";
+  String exercisePanelImage = "";
+  // void changeFilter({type, technique}){
+  //   emit(FilterState(exerciseType: type));
+  // }
+
+  //add meal to database
+  String exercisePanelName = "";
+
+  String exercisePanelReps = "";
+  String exercisePanelSets = "";
+  String exercisePanelType = "";
+  String exerciseType = "";
+  //panel to show list of selected meals
+  PanelController foodListPanel = PanelController();
+
+  bool fromHome = false;
+  bool isChecked = false;
+  //Premium plans boolean card
+  bool isClicked = true;
+
+  bool isConfirmPassword = true;
+  bool isFrontBody = true;
+  //signUp changeable
+  bool isPassword = true;
+
+  bool isSearchOpened = false;
+  GlobalKey<FormState> loginKey = GlobalKey<FormState>();
+  EmailOTP myAuth = EmailOTP();
+  TextEditingController passController = TextEditingController();
+  //payment checkBox
+  int paymentGroupRadio = 1;
+
+  var radioVal = 'gender';
+  final TextEditingController searchQuery = TextEditingController();
+  String searchText = "";
+  //date
+  DateTime selectedDate = DateTime.now();
+
+  //search
+  List<String> selectedFood = [];
+
+  List selectedMeals = [];
+  String selectedValue = "select meal time";
+  int signUpGroupRadio = 1;
+  bool signup = false;
+  GlobalKey<FormState> signupKey = GlobalKey<FormState>();
+  //HomePage content
+  final List<SpecialOffer> specialOffer = SpecialOffer.offers();
+
+//stretches countdown
+  int timeLeft = 0;
+
+  //login?signUp
+  List<String> title = ["Login", "Sign Up"];
+
+  TextEditingController userController = TextEditingController();
+  String weekdayOfIndex = "";
+
   static CubitManager get(context) => BlocProvider.of<CubitManager>(context);
 
   Future<void> falseEmit() async {
     emit(InitialState());
   }
 
-  //signUp changeable
-  bool isPassword = true;
-  bool isConfirmPassword = true;
-  int signUpGroupRadio = 1;
-  var radioVal = 'gender';
-  GlobalKey<FormState> loginKey = GlobalKey<FormState>();
-  GlobalKey<FormState> signupKey = GlobalKey<FormState>();
-  GlobalKey<FormState> changePasswordKey = GlobalKey<FormState>();
-  bool signup = false;
-  bool fromHome = false;
   void changeBool(value) {
     value = !value;
     fromHome = value;
@@ -75,9 +166,6 @@ class CubitManager extends Cubit<MainStateManager> {
     emit(LoginState());
   }
 
-  //Premium plans boolean card
-  bool isClicked = true;
-
   void isSliverClicked() {
     isClicked = true;
     emit(IsSilverClickedState());
@@ -87,9 +175,6 @@ class CubitManager extends Cubit<MainStateManager> {
     isClicked = false;
     emit(IsGoldClickedState());
   }
-
-  //payment checkBox
-  int paymentGroupRadio = 1;
 
   void changeRadioButton(value) {
     paymentGroupRadio = value;
@@ -112,19 +197,6 @@ class CubitManager extends Cubit<MainStateManager> {
     }
     return payment;
   }
-
-  //Navigation
-  int currentIndex = 2;
-  late PersistentTabController controller =
-      PersistentTabController(initialIndex: currentIndex);
-
-  //login?signUp
-  List<String> title = ["Login", "Sign Up"];
-  TextEditingController userController = TextEditingController();
-  TextEditingController passController = TextEditingController();
-  TextEditingController confirmPassController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  EmailOTP myAuth = EmailOTP();
 
   List<Widget> screens() {
     return [
@@ -171,20 +243,11 @@ class CubitManager extends Cubit<MainStateManager> {
     ];
   }
 
-  //HomePage content
-  final List<SpecialOffer> specialOffer = SpecialOffer.offers();
-  bool isFrontBody = true;
-
   void changeBody() {
     isFrontBody = !isFrontBody;
     emit(GymBodyState());
   }
 
-  //search
-  List<String> selectedFood = [];
-  String searchText = "";
-  bool isSearchOpened = false;
-  final TextEditingController searchQuery = TextEditingController();
   void searchQueryMealListener(searchList) {
     searchQuery.addListener(() {
       if (searchQuery.text.isEmpty) {
@@ -252,15 +315,6 @@ class CubitManager extends Cubit<MainStateManager> {
     emit(ChangeSearchState(filteredList: searchList));
   }
 
-  //Nutrition
-
-  bool deleteButtonFood = false;
-  //panel to add meals
-  PanelController addMealController = PanelController();
-  //panel to show list of selected meals
-  PanelController foodListPanel = PanelController();
-  int addNumber = 0;
-
   void requirements(requirements) {
     requirements = true;
     emit(Requirements());
@@ -285,7 +339,6 @@ class CubitManager extends Cubit<MainStateManager> {
     emit(DropDownState(selectedValue: selectedValue));
   }
 
-  bool isChecked = false;
   bool disableButton() {
     isChecked = true;
     emit(RadioButtonAddMealState());
@@ -306,9 +359,6 @@ class CubitManager extends Cubit<MainStateManager> {
     controller.isPanelOpen ? controller.close() : controller.open();
     emit(HandleSlidingPanelState());
   }
-
-  List selectedMeals = [];
-  String selectedValue = "select meal time";
 
   //add meal to database
   Future<void> addMeals({required String mealId}) async {
@@ -370,10 +420,6 @@ class CubitManager extends Cubit<MainStateManager> {
     emit(RemoveMealState());
   }
 
-  //Gym
-  final exercisePanelController = PanelController();
-
-  String exerciseType = "";
   List<QudsPopupMenuBase> getSearchFilterItems(searchList) {
     return List.generate(dropDownFirstLevel.length, (index) {
       return QudsPopupMenuSection(
@@ -395,36 +441,6 @@ class CubitManager extends Cubit<MainStateManager> {
     });
   }
 
-  List<String> dropDownFirstLevel = [
-    "All Exercises",
-    "Chest",
-    "Back",
-    "Shoulders",
-    "Biceps",
-    "Triceps",
-    "Legs"
-  ];
-  List<String> dropDownSecondLevel = [
-    "All techniques",
-    "Cables",
-    "Dumbbells",
-    "Body Weight",
-    "Barbell",
-    "Machines"
-  ];
-  String dropDownHint = "All Exercises";
-  String dropDownSubHint = "All techniques";
-  // void changeFilter({type, technique}){
-  //   emit(FilterState(exerciseType: type));
-  // }
-
-  //add meal to database
-  String exercisePanelName = "";
-  String exercisePanelType = "";
-  String exercisePanelId = "";
-  String exercisePanelImage = "";
-  String exercisePanelSets = "";
-  String exercisePanelReps = "";
   void addExerciseName(id, name,
       {String? type, String? image, String? sets, String? reps}) {
     exercisePanelId = id;
@@ -528,18 +544,16 @@ class CubitManager extends Cubit<MainStateManager> {
   //   print('edit profile opened $username');
   //   print('loloa ${User.currentUser!.id}');
 
-  //   final profile = await http.patch(Uri.parse('$url/edit/profile'),
+  //   final profile = await http.put(
+  //       Uri.parse('$url/edit/profile/${User.currentUser!.id}'),
   //       headers: {
   //         "Authorization": "Bearer ${User.token}",
-  //         "Content-Type": "multipart/form-data",
   //         "Access-Control-Allow-Origin": "$url/*"
   //       },
   //       body: jsonEncode(<String, dynamic>{
-  //         'userId': User.currentUser!.id,
   //         'name': username,
   //         'email': email,
   //         'password': password,
-  //         'photo': {'contentType': 'image/jpg', 'data': imageData}
   //       }));
   //   // .then((value) => print('success ${value.statusCode}, ${value.body}'))
   //   // .catchError((e) => print('error at $e'));
@@ -547,6 +561,7 @@ class CubitManager extends Cubit<MainStateManager> {
   //     var user = json.decode(profile.body);
   //     print(user);
   //     getProfile(context).then((v) {
+  //       print(v['name']);
   //       emit(EditUser());
   //     });
   //     return user;
@@ -565,6 +580,21 @@ class CubitManager extends Cubit<MainStateManager> {
     }
   }
 
+  Future deletePhoto(context) async {
+    var photo = await http.patch(Uri.parse('$url/delete/profile/photo'),
+        headers: {
+          "Authorization": "Bearer ${User.token}",
+          "Access-Control-Allow-Origin": "$url/*"
+        });
+    if (photo.statusCode != 200) {
+      toastError(context: context, text: photo.body);
+    } else {
+      toastSuccess(context: context, text: photo.body);
+    }
+    await getProfile(context);
+    emit(DeletePhoto());
+  }
+
   Future editProfile({
     required BuildContext context,
     String? username,
@@ -575,12 +605,10 @@ class CubitManager extends Cubit<MainStateManager> {
     print('edit profile opened $username');
     print('loloa ${User.currentUser!.id}');
 
-    var request =
-        http.MultipartRequest('PATCH', Uri.parse('$url/edit/profile'));
+    var request = http.MultipartRequest(
+        'PUT', Uri.parse('$url/edit/profile/${User.currentUser!.id}'));
     request.headers["Authorization"] = "Bearer ${User.token}";
     request.headers["Access-Control-Allow-Origin"] = "$url/*";
-
-    request.fields['nameId'] = User.currentUser!.id!;
 
     if (username != null) {
       request.fields['name'] = username;
@@ -607,7 +635,8 @@ class CubitManager extends Cubit<MainStateManager> {
       emit(EditUser());
       return user;
     } else {
-      throw Exception("Failed to load data ${response.reasonPhrase}");
+      throw Exception(
+          "Failed to load data ${response.reasonPhrase} ${response.statusCode}");
     }
   }
 
@@ -629,28 +658,22 @@ class CubitManager extends Cubit<MainStateManager> {
     }
   }
 
-  //date
-  DateTime selectedDate = DateTime.now();
   void onSelectedDate(date) {
     selectedDate = date;
     emit(ChangeDateState());
   }
 
-  String weekdayOfIndex = "";
   void getWeekday(index) {
     weekdayOfIndex = daysOfTraining[index];
     // print('$weekdayOfIndex of ${index}');
     emit(ChangeDateState());
   }
 
-  int currentDateIndex = 0;
   void changeIndex(index) {
     currentDateIndex = index;
     emit(ChangeDateState());
   }
 
-//stretches countdown
-  int timeLeft = 0;
   void countdownTimer(int seconds) {
     Duration duration = const Duration(seconds: 1);
     Timer.periodic(duration, (timer) {
@@ -663,8 +686,8 @@ class CubitManager extends Cubit<MainStateManager> {
   }
 
 //create workoutplan
-  Future<Map<String, dynamic>> createWorkoutPlan(
-      context, level, goal, trainingLocation) async {
+  Future<Map<String, dynamic>> createWorkoutPlan(context, requirements) async {
+    print(User.token);
     var workout = await http.post(
       Uri.parse('$url/wourkoutplan-recommendation'),
       headers: {
@@ -672,22 +695,32 @@ class CubitManager extends Cubit<MainStateManager> {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "$url/*"
       },
-      body: jsonEncode(<String, String>{
-        'level': level,
-        'goal': goal,
-        'training_location': trainingLocation,
+      body: jsonEncode(<String, dynamic>{
+        'level': requirements[0],
+        'goal': requirements[1],
+        'training_location': requirements[3],
+        'HWlist': {'height': requirements[4][0], 'weight': requirements[4][1]},
+        'workingOffDays': {
+          'Day1': requirements[2][0],
+          'Day2': requirements[2][1],
+          'Day3': requirements[2][2],
+          'Day4': requirements[2][3],
+          'Day5': requirements[2][4],
+          'Day6': requirements[2][5],
+          'Day7': requirements[2][6],
+        }
       }),
     );
-    print("create plan dodo");
     if (workout.statusCode == 200) {
       var data = json.decode(workout.body);
       getProfile(context);
       getWorkoutPlan();
-      // print("created workout plan $data");
+      print("created workout plan $data");
       emit(CreateWorkoutPlan());
       return data;
     } else {
-      throw Exception("Failed to load data ${workout.statusCode}");
+      throw Exception(
+          "Failed to load data ${workout.statusCode} ${workout.body}");
     }
   }
 

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -55,6 +56,7 @@ class Profile extends StatelessWidget {
                       builder: (_, snapshot) {
                         if (snapshot.hasData) {
                           var user = snapshot.data!;
+                          File imageData = File('');
                           return FutureBuilder(
                               future: getList(),
                               builder: (_, snapReqs) {
@@ -90,14 +92,25 @@ class Profile extends StatelessWidget {
                                                                   builder:
                                                                       (context) {
                                                                     return GestureDetector(
-                                                                      onTap: (){
-                                                                        
+                                                                      onTap:
+                                                                          () {
+                                                                        print(
+                                                                            'oppa');
+                                                                        User.getImageFromGallery()
+                                                                            .then((value) {
+                                                                          imageData =
+                                                                              value!;
+                                                                          print(
+                                                                              'saly $imageData');
+                                                                          userData.editProfile(
+                                                                              context: context,
+                                                                              imageData: imageData);
+                                                                        });
                                                                       },
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsets
-                                                                                .only(
-                                                                            top:
-                                                                                100.0),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(top: 100.0),
                                                                         child:
                                                                             Dialog(
                                                                           alignment:
@@ -119,10 +132,20 @@ class Profile extends StatelessWidget {
                                                                       context,
                                                                   builder:
                                                                       (context) {
-                                                                    return Dialog(
-                                                                      child: paragraphText(
-                                                                          text:
-                                                                              'remove photo'),
+                                                                    return GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        print(
+                                                                            'nona');
+                                                                        userData
+                                                                            .deletePhoto(context);
+                                                                      },
+                                                                      child:
+                                                                          Dialog(
+                                                                        child: paragraphText(
+                                                                            text:
+                                                                                'remove photo'),
+                                                                      ),
                                                                     );
                                                                   });
                                                             }
@@ -275,13 +298,15 @@ class Profile extends StatelessWidget {
                                                                                   padding: const EdgeInsets.all(20.0),
                                                                                   child: DefaultButton(
                                                                                     function: () async {
-                                                                                      userData.myAuth.setConfig(appEmail: 'omarHishamho@gmail.com', appName: 'Email Verification Poket Trainer', userEmail: User.currentUser!.email, otpLength: 6, otpType: OTPType.digitsOnly);
-                                                                                      if (await userData.myAuth.sendOTP() == true) {
-                                                                                        pageNavigator(context, OtpVerification(myauth: userData.myAuth, email: userData.emailController.text, name: userData.userController.text, password: userData.passController.text, fromEdit: true));
-                                                                                        toastInfo(context: context, text: "Email verification pending");
-                                                                                      } else {
-                                                                                        toastError(context: context, text: "Verification error!");
-                                                                                      }
+                                                                                      // userData.myAuth.setConfig(appEmail: 'omarHishamho@gmail.com', appName: 'Email Verification Poket Trainer', userEmail: User.currentUser!.email, otpLength: 6, otpType: OTPType.digitsOnly);
+                                                                                      // if (await userData.myAuth.sendOTP() == true) {
+                                                                                      //   pageNavigator(context, OtpVerification(myauth: userData.myAuth, email: userData.emailController.text, name: userData.userController.text, password: userData.passController.text, fromEdit: true));
+                                                                                      //   toastInfo(context: context, text: "Email verification pending");
+                                                                                      // } else {
+                                                                                      //   toastError(context: context, text: "Verification error!");
+                                                                                      // }
+                                                                                      print(userData.userController.text);
+                                                                                      userData.editProfile(context: context, username: userData.userController.text, email: userData.emailController.text, password: userData.passController.text);
                                                                                     },
                                                                                     text: "Save changes",
                                                                                   ),

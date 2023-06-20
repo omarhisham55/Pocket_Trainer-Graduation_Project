@@ -34,12 +34,11 @@ class GymHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.wait([getWorkoutPlan(), getList()]),
+        future: getWorkoutPlan(),
         builder: (_, snapshot) {
           if (snapshot.hasData) {
-            var data = snapshot.data![0] as Map;
-            print('zoma $data');
-            var reqs = snapshot.data![1] as List;
+            var data = snapshot.data as Map;
+            print('zoma ${data['Day2']}');
             return BlocProvider(
                 create: (_) => CubitManager(),
                 child: BlocConsumer<CubitManager, MainStateManager>(
@@ -249,7 +248,8 @@ class GymHome extends StatelessWidget {
                                     if (date.day == gym.selectedDate.day &&
                                         date.month == gym.selectedDate.month &&
                                         date.year == gym.selectedDate.year) {
-                                      return (reqs[2][index] == "Off Day")
+                                      return (data['Day${index + 1}'] ==
+                                              "dayOff")
                                           ? Column(
                                               children: [
                                                 Image.asset(MainImages.restDay),
@@ -517,7 +517,7 @@ class GymHome extends StatelessWidget {
                                                                                 7),
                                                                         paragraphText(
                                                                             text:
-                                                                                titles[0]),
+                                                                                titles[1]),
                                                                       ],
                                                                     ),
                                                                     Container(

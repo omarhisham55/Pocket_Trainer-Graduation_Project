@@ -1,9 +1,11 @@
 import 'package:final_packet_trainer/notification/notification_initialize.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/colors.dart';
+import '../data/gym_dialog_data.dart';
 import '../navigation/cubit/cubit.dart';
 import '../navigation/cubit/states.dart';
 
@@ -97,7 +99,18 @@ class Notifications extends StatelessWidget {
                   elevation: 0.0,
                   leading: IconButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      // Navigator.of(context).pop();
+                      showAnimatedDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (context) => StatefulBuilder(
+                            builder: (context, StateSetter setState) =>
+                                openDialogExperience(
+                                    context, CubitManager.get(_))),
+                        animationType: DialogTransitionType.sizeFade,
+                        curve: Curves.fastOutSlowIn,
+                        duration: const Duration(seconds: 1),
+                      );
                     },
                     icon: const Icon(Icons.arrow_back_rounded),
                   ),

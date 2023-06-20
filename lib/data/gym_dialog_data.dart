@@ -46,7 +46,7 @@ class GymDialogs {
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
     ]));
     data.add(GymDialogs(
-        title: ["Choose your training days"],
+        title: ["Choose your rest days"],
         content: ["S", "S", "M", "T", "W", "T", "F"]));
     data.add(GymDialogs(title: [
       "Workout tools"
@@ -290,10 +290,10 @@ Widget openDialogDate(BuildContext context, gym) => defaultDialog(
         popAndShowNext(context: context, dialog: openDialogGoal, cubit: gym);
       },
       nextDialog: () {
-        if (selectedDays.length < 3) {
+        if (selectedDays.length >= 3) {
           const snackBar = SnackBar(
             content: Text(
-              "Training days must be more than 2 days",
+              "Training days must be more than 4 days",
               style: TextStyle(fontSize: 14),
             ),
           );
@@ -301,9 +301,9 @@ Widget openDialogDate(BuildContext context, gym) => defaultDialog(
         } else {
           for (var day in allWeekdays) {
             if (selectedDays.contains(day)) {
-              daysOfTraining.add('Working Day');
+              daysOfTraining.add('0');
             } else {
-              daysOfTraining.add('Off Day');
+              daysOfTraining.add('1');
             }
           }
           requirements[2] = daysOfTraining;
@@ -518,10 +518,7 @@ Widget openDialogInjuries(BuildContext context, gym) => defaultDialog(
                   requirements.removeAt(5);
                   requirements.insert(5, selectedInjuries);
                   updateAllList(requirements);
-                  gym
-                      .createWorkoutPlan(context, requirements[0],
-                          requirements[1], requirements[3])
-                      .then((value) {
+                  gym.createWorkoutPlan(context, requirements).then((value) {
                     isExerciseTaken = true;
                     Navigator.pop(context, requirements);
                     gym.requirements(isExerciseTaken);
