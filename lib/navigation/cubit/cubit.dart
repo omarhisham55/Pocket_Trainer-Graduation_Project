@@ -419,11 +419,11 @@ class CubitManager extends Cubit<MainStateManager> {
     if (response.statusCode == 200) {
       print('Meal deleted from Nutrition Plan ${response.body}');
       print('Meal deleted from Nutrition Plan ${response.statusCode}');
+      emit(RemoveMealState());
     } else {
       throw Exception(
           'Failed to delete meal from Nutrition Plan ${response.statusCode}');
     }
-    emit(RemoveMealState());
   }
 
   void removeMeal(List selectedMeal, int index) {

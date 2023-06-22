@@ -334,7 +334,7 @@ class NutritionHome extends StatelessWidget {
                                                                       mealId: breakfast[
                                                                               i]
                                                                           [
-                                                                          '_id'])
+                                                                          'mealId'])
                                                                   .then(
                                                                       (value) {
                                                                 toastSuccess(
@@ -525,7 +525,7 @@ class NutritionHome extends StatelessWidget {
                                                                       mealId: lunch[
                                                                               i]
                                                                           [
-                                                                          '_id'])
+                                                                          'mealId'])
                                                                   .then(
                                                                       (value) {
                                                                 toastSuccess(
@@ -715,7 +715,7 @@ class NutritionHome extends StatelessWidget {
                                                                       mealId: dinner[
                                                                               i]
                                                                           [
-                                                                          '_id'])
+                                                                          'mealId'])
                                                                   .then(
                                                                       (value) {
                                                                 toastSuccess(
