@@ -65,10 +65,10 @@ class Exercise {
   }
 }
 
-String url = "http://192.168.1.97:3000";
+String urlxx = "http://192.168.1.97:3000";
 var accessControl = "http://192.168.1.97:3000/*";
 // Future<String> ipConnectionAddress2 = getIPAddress();
-String urlxx = "https://webservise-pockettrainer.onrender.com";
+String url = "https://webservise-pockettrainer.onrender.com";
 
 //get exercises
 Future<List> getChestExercises() async {
@@ -327,10 +327,13 @@ Future<Map<String, dynamic>> getWorkoutPlan() async {
 }
 
 Future replaceExercise(
-    {required BuildContext context, required String oldName, String? oldId}) async {
-  getList().then((value) async{
+    {required BuildContext context,
+    required String oldName,
+    String? oldId}) async {
+  getList().then((value) async {
     var replace = await http.get(
-      Uri.parse('$url/similar/exercises/$oldName/${value[3]}/${value[1]}/${value[0]}'),
+      Uri.parse(
+          '$url/similar/exercises/$oldName/${value[3]}/${value[1]}/${value[0]}'),
       headers: {
         "Authorization": "Bearer ${User.token}",
         "Content-Type": "application/json",

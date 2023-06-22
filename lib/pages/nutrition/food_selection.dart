@@ -14,7 +14,8 @@ class ChooseFood extends StatelessWidget {
   List selectedMeals;
   String typeofMeal;
 
-  ChooseFood({super.key, required this.selectedMeals, required this.typeofMeal});
+  ChooseFood(
+      {super.key, required this.selectedMeals, required this.typeofMeal});
 
   Set cloneList = {};
 
@@ -42,8 +43,7 @@ class ChooseFood extends StatelessWidget {
                       selectedMeals = [];
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.arrow_back)
-                ),
+                    icon: const Icon(Icons.arrow_back)),
                 centerTitle: true,
                 title: (nutrition.isSearchOpened)
                     ? TextField(
@@ -101,8 +101,6 @@ class ChooseFood extends StatelessWidget {
                                             carbs: searchList[index].carbs,
                                             fats: searchList[index].fats,
                                             protein: searchList[index].protein,
-                                            quantity:
-                                                searchList[index].quantity,
                                             image: searchList[index].image,
                                           ));
                                     },
@@ -111,13 +109,17 @@ class ChooseFood extends StatelessWidget {
                                         RoundCheckBox(
                                           onTap: (selected) {
                                             if (selected!) {
-                                              selectedMeals.add(searchList[index]);
+                                              selectedMeals
+                                                  .add(searchList[index]);
                                             } else {
-                                              selectedMeals.remove(searchList[index]);
+                                              selectedMeals
+                                                  .remove(searchList[index]);
                                             }
                                             cloneList = Set.from(selectedMeals);
-                                            print("selectedMeals in time $selectedMeals");
-                                            print("clone Meals in time $cloneList");
+                                            print(
+                                                "selectedMeals in time $selectedMeals");
+                                            print(
+                                                "clone Meals in time $cloneList");
                                           },
                                           size: 25,
                                         ),
@@ -133,8 +135,9 @@ class ChooseFood extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                              separatorBuilder: (context, index) => const Divider(),
-                          itemCount: searchList.length);
+                              separatorBuilder: (context, index) =>
+                                  const Divider(),
+                              itemCount: searchList.length);
                     } else if (snapshot.hasError) {
                       return Center(
                           child: titleText(

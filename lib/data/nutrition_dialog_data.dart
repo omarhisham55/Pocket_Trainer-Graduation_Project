@@ -19,7 +19,7 @@ class NutritionDialogs {
     data.add(NutritionDialogs(
         title: """How old are you""", content: [ageController.text]));
     data.add(
-        NutritionDialogs(title: """Are you vegan?""", content: ['yes', 'no']));
+        NutritionDialogs(title: """Are you vegan?""", content: ['no', 'yes']));
     data.add(NutritionDialogs(
         title: """What is your goal?""",
         content: ['Healthy', 'Weight Loss', 'Weight Gain']));

@@ -9,23 +9,37 @@ import '../../shared/styles/images.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class FoodDetails extends StatefulWidget {
-  final String? title;
-  final String? quantity;
-  final String? calories;
-  final String? protein;
-  final String? carbs;
-  final String? fats;
-  final String? image;
+  String? title;
+  num? calories;
+  num? protein;
+  num? fats;
+  num? iron;
+  num? calcium;
+  num? sodium;
+  num? potassium;
+  num? carbs;
+  num? fiber;
+  num? vitaminD;
+  num? sugar;
+  String? image;
+  String? ingredients;
 
-  const FoodDetails({
+  FoodDetails({
     Key? key,
     this.title,
     this.image,
-    this.quantity,
+    this.ingredients,
     this.calories,
     this.protein,
-    this.carbs,
     this.fats,
+    this.iron,
+    this.calcium,
+    this.sodium,
+    this.potassium,
+    this.carbs,
+    this.fiber,
+    this.vitaminD,
+    this.sugar,
   }) : super(key: key);
 
   @override
@@ -41,12 +55,15 @@ class _FoodDetailsState extends State<FoodDetails>
   int randomNumber = Random().nextInt(2);
 
   List<Color> colors = [
-    const Color(0xff4d504d),
-    const Color(0xff6b79a6),
-    const Color(0xffd6dcd6),
-    const Color(0xff779b73),
-    const Color(0xffa9dda5),
-    const Color(0xff9aaced),
+    Colors.red,
+    Colors.green,
+    Colors.blue,
+    Colors.orange,
+    Colors.purple,
+    Colors.pink,
+    Colors.yellow,
+    Colors.cyan,
+    Colors.indigo,
   ];
 
   @override
@@ -127,20 +144,6 @@ class _FoodDetailsState extends State<FoodDetails>
                                       Row(
                                         children: [
                                           subTitleText(
-                                            text: "Quantity",
-                                            color: TextColors.blackText,
-                                          ),
-                                          const Spacer(),
-                                          subTitleText(
-                                            text: "${widget.quantity} gram",
-                                            color: TextColors.blackText,
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          subTitleText(
                                             text: "Calories",
                                             color: TextColors.blackText,
                                           ),
@@ -213,16 +216,16 @@ class _FoodDetailsState extends State<FoodDetails>
     return List.generate(3, (i) {
       switch (i) {
         case 0:
-          String newProtein =
-              widget.protein!.substring(0, widget.protein!.length - 1);
-          return makeGroupData(0, double.parse(newProtein));
+          // String newProtein =
+          // widget.protein!.substring(0, widget.protein!.length - 1);
+          return makeGroupData(0, double.parse('protein'));
         case 1:
-          String newCarbs =
-              widget.carbs!.substring(0, widget.carbs!.length - 1);
-          return makeGroupData(1, double.parse(newCarbs));
+          // String newCarbs =
+          // widget.carbs!.substring(0, widget.carbs!.length - 1);
+          return makeGroupData(1, double.parse('carbs'));
         case 2:
-          String newFats = widget.fats!.substring(0, widget.fats!.length - 1);
-          return makeGroupData(2, double.parse(newFats));
+          // String newFats = widget.fats!.substring(0, widget.fats!.length - 1);
+          return makeGroupData(2, double.parse('fats'));
         default:
           throw Error();
       }
@@ -289,7 +292,7 @@ class _FoodDetailsState extends State<FoodDetails>
         )),
       ),
       borderData: FlBorderData(show: false),
-      barGroups: showingGroups(),
+      // barGroups: showingGroups(),
       gridData: FlGridData(show: true),
     );
   }
