@@ -31,7 +31,7 @@ class Camera extends StatelessWidget {
                     CameraImage? cameraImage;
                     String output = 'output';
                     return FutureBuilder(
-                        future: PoseDetectionModel().getVideoFeed(),
+                        future: PoseDetectionModel().getFrames(),
                         builder: (context, f) {
                           if (f.hasError) {
                             return Center(

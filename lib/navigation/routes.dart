@@ -10,7 +10,7 @@ import 'navigation.dart';
 Map<String, WidgetBuilder> routes = {
   "/": (_) => const Navigation(),
   "/login": (_) => const Login(),
-  "/splash": (_) => const SplashScreen(),
+  // "/splash": (_) => const SplashScreen(),
   // "/notification": (_) => const Notifications(),
   // "/PremiumPlans": (_) => const PremiumPlans(),
   // "/PaymentMethod": (_) => const PaymentMethod(),

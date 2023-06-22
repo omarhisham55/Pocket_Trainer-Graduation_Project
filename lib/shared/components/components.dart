@@ -386,7 +386,7 @@ Widget defaultDialog({
     );
 
 Widget dialogButton(
-        {required String buttonTitle,
+        {String? buttonTitle,
         required Function() function,
         double? borderRadius,
         double? borderWidth,
@@ -407,7 +407,7 @@ Widget dialogButton(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            subTitleText(text: buttonTitle),
+            subTitleText(text: buttonTitle ?? ""),
             const SizedBox(height: 10),
             paragraphText(text: buttonContent ?? "", textAlign: TextAlign.start)
           ],

@@ -22,7 +22,7 @@ class PoseDetectionModel {
   // }
 
   final String baseUrl = 'http://192.168.1.11:5000';
-  getVideoFeed() async {
+  Future getVideoFeed() async {
     print('zaza waiting for response');
     final response =
         await http.get(Uri.parse('$baseUrl/video_feed?exercise=push-ups'));
@@ -63,6 +63,7 @@ class PoseDetectionModel {
           CameraController(camera[0], ResolutionPreset.ultraHigh);
       try {
         await cameraController.initialize();
+        print("Initializing complete");
       } catch (e) {
         print(e);
       }
