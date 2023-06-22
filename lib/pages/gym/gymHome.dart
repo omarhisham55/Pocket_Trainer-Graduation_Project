@@ -217,10 +217,10 @@ class GymHome extends StatelessWidget {
                                                   const EdgeInsets.all(5.0),
                                               child: DefaultButton(
                                                 function: () async {
-                                                  noNavNavigator(
-                                                      context, const Camera());
+                                                  // noNavNavigator(
+                                                  //     context, const Camera());
                                                   // PoseDetectionModel()
-                                                  //     .getVideoFeed();
+                                                  //     .getFrames();
                                                   gym.exercisePanelController
                                                       .close();
                                                 },
