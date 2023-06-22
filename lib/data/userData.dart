@@ -86,9 +86,11 @@ class User {
         final user = jsonDecode(value.body);
         token = user["token"];
         print(token);
-        CubitManager.get(blocContest)
-            .getProfile(context)
-            .then((value) => CubitManager.get(blocContest).changeToNotEmpty());
+        CubitManager.get(blocContest).getProfile(context).then((value) {
+          print(value['NutritionPlan']);
+          CubitManager.get(blocContest).changeGymToNotEmpty();
+          CubitManager.get(blocContest).changeNutToNotEmpty();
+        });
       } else {
         toastError(context: context, text: value.body);
         throw Exception('Failed to get response: ${value.statusCode}');

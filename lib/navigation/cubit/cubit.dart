@@ -17,6 +17,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../data/nutrition_dialog_data.dart';
 import '../../data/offers.dart';
 import '../../data/userData.dart';
 import '../../main.dart';
@@ -320,12 +321,22 @@ class CubitManager extends Cubit<MainStateManager> {
     emit(Requirements());
   }
 
-  void changeToNotEmpty() {
+  void changeGymToNotEmpty() {
     if (User.currentUser!.workoutPlan!.values.isEmpty) {
       isWorkoutPlanEmpty = true;
     } else {
       isWorkoutPlanEmpty = false;
     }
+    emit(Requirements());
+  }
+
+  void changeNutToNotEmpty() {
+    if (User.currentUser!.nutritionPlan!.values.isEmpty) {
+      isNutritionPlanEmpty = true;
+    } else {
+      isNutritionPlanEmpty = false;
+    }
+    print(isNutritionPlanEmpty);
     emit(Requirements());
   }
 

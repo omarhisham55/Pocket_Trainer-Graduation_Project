@@ -30,7 +30,8 @@ class NutritionDialogs {
 List<int> dietNumbersListCount = [];
 
 //Nutrition Dialogs
-bool isDietTaken = false;
+bool isNutritionPlanEmpty = true;
+bool isDietTaken = (isNutritionPlanEmpty) ? false : true;
 List foodRequirements = ['', '', ''];
 
 TextEditingController ageController = TextEditingController();
