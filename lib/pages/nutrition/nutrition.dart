@@ -22,7 +22,6 @@ class Nutrition extends StatelessWidget {
         listener: (_, s) {},
         builder: (_, s) {
           CubitManager nutrition = CubitManager.get(_);
-          CubitManager gym = CubitManager.get(_);
           return Scaffold(
               appBar: (isDietTaken == false)
                   ? notificationAppBar(context, "Nutrition")
@@ -56,7 +55,7 @@ class Nutrition extends StatelessWidget {
                                           builder: (context) => StatefulBuilder(
                                               builder: (context,
                                                       StateSetter setState) =>
-                                                  openDialogAllergy(
+                                                  openDialogAge(
                                                       context, nutrition)),
                                           animationType:
                                               DialogTransitionType.sizeFade,

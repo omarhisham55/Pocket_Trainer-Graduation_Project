@@ -524,8 +524,10 @@ class CubitManager extends Cubit<MainStateManager> {
             : null.toString(),
         workoutPlan: user["workoutPlan"] ?? {},
         nutritionPlan: user["NutritionPlan"] ?? {},
+        requirements: user['ListOfRequirment'] ?? [],
       );
       // emit(GetUser());
+      print(User.currentUser);
       return user;
     } else {
       toastError(context: context, text: profile.body);
@@ -721,6 +723,39 @@ class CubitManager extends Cubit<MainStateManager> {
     } else {
       throw Exception(
           "Failed to load data ${workout.statusCode} ${workout.body}");
+    }
+  }
+
+  //create nutritionplan
+  Future<Map<String, dynamic>> createNutritionPlan(
+      context, requirements) async {
+    print(User.token);
+    print(User.currentUser!.requirements!['HWlist']['height']);
+    var nutrition = await http.post(
+      Uri.parse('$url/nutritionplan/recommendation'),
+      headers: {
+        "Authorization": "Bearer ${User.token}",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "$url/*"
+      },
+      body: jsonEncode(<String, dynamic>{
+        'age': requirements[0],
+        'veg_non_veg': requirements[1],
+        'goal': requirements[2],
+        'height': User.currentUser!.requirements!['HWlist']['height'],
+        'weight': User.currentUser!.requirements!['HWlist']['weight'],
+      }),
+    );
+    if (nutrition.statusCode == 200) {
+      var data = json.decode(nutrition.body);
+      getProfile(context);
+
+      print("created nutrition plan $data");
+      emit(CreateNutritionPlan());
+      return data;
+    } else {
+      throw Exception(
+          "Failed to load data ${nutrition.statusCode} ${nutrition.body}");
     }
   }
 

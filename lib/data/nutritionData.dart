@@ -7,37 +7,67 @@ import 'dart:convert';
 class NutritionData {
   String id;
   String name;
-  String calories;
-  String protein;
-  String fats;
-  String carbs;
-  String quantity;
+  int breakfast;
+  int lunch;
+  int dinner;
+  int isVegan;
+  num calories;
+  num protein;
+  num fats;
+  num iron;
+  num calcium;
+  num sodium;
+  num potassium;
+  num carbs;
+  num fiber;
+  num vitaminD;
+  num sugar;
   String image;
-  String typeofMeal;
+  String ingredients;
 
   NutritionData({
     required this.id,
     required this.name,
     required this.calories,
     required this.protein,
-    required this.carbs,
+    required this.breakfast,
     required this.fats,
-    required this.quantity,
+    required this.lunch,
+    required this.dinner,
+    required this.isVegan,
+    required this.calcium,
+    required this.sodium,
+    required this.potassium,
+    required this.iron,
+    required this.carbs,
+    required this.fiber,
+    required this.vitaminD,
+    required this.sugar,
     required this.image,
-    required this.typeofMeal,
+    required this.ingredients
   });
 
   factory NutritionData.fromJson(Map<String, dynamic> json) {
     return NutritionData(
       id: json["_id"].toString(),
-      name: json["name"].toString(),
-      calories: json["calories"].toString(),
-      protein: json["protein"].toString(),
-      carbs: json["carbs"].toString(),
-      fats: json["fats"].toString(),
-      quantity: json["quantity"].toString(),
+      name: json["Food_items"].toString(),
+      breakfast: json["Breakfast"],
+      lunch: json["Lunch"],
+      dinner: json["Dinner"],
+      isVegan: json["VegNovVeg"],
+      calories: json["Calories"],
+      protein: json["Proteins"],
+      fats: json["Fats"],
+      iron: json["Iron"],
+      calcium: json["Calcium"],
+      sodium: json["Sodium"],
+      potassium: json["Potassium"],
+      carbs: json["Carbohydrates"],
+      fiber: json["Fibre"],
+      vitaminD: json["VitaminD"],
+      sugar: json["Sugars"],
       image: json["imageUrl"].toString(),
-      typeofMeal: json["typeofMeal"].toString(),
+      ingredients: json["Ingredients"].toString()
     );
   }
 }

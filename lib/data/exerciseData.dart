@@ -65,10 +65,10 @@ class Exercise {
   }
 }
 
-String ipConnectionAddress = "192.168.1.53";
-var accessControl = "http://$ipConnectionAddress:3000/*";
+String url = "http://192.168.1.97:3000";
+var accessControl = "http://192.168.1.97:3000/*";
 // Future<String> ipConnectionAddress2 = getIPAddress();
-String url = "https://webservise-pockettrainer.onrender.com";
+String urlxx = "https://webservise-pockettrainer.onrender.com";
 
 //get exercises
 Future<List> getChestExercises() async {

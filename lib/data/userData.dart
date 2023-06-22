@@ -33,7 +33,7 @@ class User {
   String? urlPhotoContent;
   String? urlPhotoData;
   Map<String, dynamic>? workoutPlan;
-  List? requirements;
+  Map<String, dynamic>? requirements;
 
   static Future<String> signUp({
     required String username,
@@ -96,30 +96,30 @@ class User {
     });
   }
 
-  Future<Map<String, dynamic>> getProfile() async {
-    final profile = await http.get(Uri.parse('$url/profile'),
-        headers: {"Authorization": "Bearer ${User.token}"});
-    if (profile.statusCode == 200) {
-      var user = json.decode(profile.body);
-      currentUser = User(
-        id: user['_id'] ?? "",
-        name: user["name"] ?? "",
-        email: user["email"] ?? "",
-        password: user["password"] ?? "",
-        urlPhotoData: user["photo"] != null && user["photo"]["data"] != null
-            ? user["photo"]["data"]["data"].toString()
-            : null.toString(),
-        workoutPlan: user["workoutPlan"] ?? {},
-        nutritionPlan: user["NutritionPlan"] ?? {},
-        requirements: user['ListOfRequirment'] ?? [],
-      );
-      print(user);
-      print(currentUser);
-      return user;
-    } else {
-      throw Exception("Failed to load data");
-    }
-  }
+  // Future<Map<String, dynamic>> getProfile() async {
+  //   final profile = await http.get(Uri.parse('$url/profile'),
+  //       headers: {"Authorization": "Bearer ${User.token}"});
+  //   if (profile.statusCode == 200) {
+  //     var user = json.decode(profile.body);
+  //     currentUser = User(
+  //       id: user['_id'] ?? "",
+  //       name: user["name"] ?? "",
+  //       email: user["email"] ?? "",
+  //       password: user["password"] ?? "",
+  //       urlPhotoData: user["photo"] != null && user["photo"]["data"] != null
+  //           ? user["photo"]["data"]["data"].toString()
+  //           : null.toString(),
+  //       workoutPlan: user["workoutPlan"] ?? {},
+  //       nutritionPlan: user["NutritionPlan"] ?? {},
+  //       requirements: user['ListOfRequirment'] ?? [],
+  //     );
+  //     print(user);
+  //     print(currentUser);
+  //     return user;
+  //   } else {
+  //     throw Exception("Failed to load data");
+  //   }
+  // }
 
   static Future deleteProfile(context) async {
     final profile =
@@ -179,10 +179,7 @@ class User {
 
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
-      List<int>? imageBytes = await imageFile.readAsBytes();
-      print("sasha ${imageFile.path}");
-      print("bombom $imageFile");
-      print("bombom $imageBytes");
+      // List<int>? imageBytes = await imageFile.readAsBytes();
       return imageFile;
     }
 

@@ -1,6 +1,8 @@
+import 'package:final_packet_trainer/data/nutrition_dialog_data.dart';
 import 'package:final_packet_trainer/navigation/cubit/cubit.dart';
 import 'package:final_packet_trainer/shared/components/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../navigation/cubit/states.dart';
 import '/shared/components/components.dart';
@@ -16,15 +18,16 @@ class RecommendedProgramNutritionInfo extends StatelessWidget {
   final String? general;
   bool? fromHome = false;
 
-  RecommendedProgramNutritionInfo({Key? key,
-    this.calories,
-    this.protein,
-    this.carbs,
-    this.fats,
-    this.goal,
-    this.general,
-    this.fromHome
-  }) : super(key: key);
+  RecommendedProgramNutritionInfo(
+      {Key? key,
+      this.calories,
+      this.protein,
+      this.carbs,
+      this.fats,
+      this.goal,
+      this.general,
+      this.fromHome})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +79,8 @@ class RecommendedProgramNutritionInfo extends StatelessWidget {
                     margin: const EdgeInsets.only(top: 200),
                     decoration: const BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(30))),
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(30))),
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: SizedBox(
@@ -92,8 +95,7 @@ class RecommendedProgramNutritionInfo extends StatelessWidget {
                             Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     //calories
                                     Row(
@@ -186,13 +188,12 @@ class RecommendedProgramNutritionInfo extends StatelessWidget {
                                       children: [
                                         paragraphText(
                                           text:
-                                          "General instructions for the diet: ",
+                                              "General instructions for the diet: ",
                                           color: TextColors.blackText,
                                           fontWeight: FontWeight.w700,
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.all(
-                                              10.0),
+                                          padding: const EdgeInsets.all(10.0),
                                           child: paragraphText(
                                               text: generalData,
                                               color: Colors.green,
@@ -203,28 +204,47 @@ class RecommendedProgramNutritionInfo extends StatelessWidget {
                                       ],
                                     ),
                                   ],
-                                )
-                            ),
+                                )),
                           ],
                         ),
                       ),
                     ),
                   ),
                   //Set as default button
-                  Positioned(
-                    bottom: 50,
-                    left: width(context, .25),
-                    child: Visibility(
-                      visible: (isFromHome) ? false : true,
-                      child: DefaultButton(
-                          function: () {
-                            Navigator.pop(context);
-                          },
-                          width: width(context, .5),
-                          borderRadius: 30,
-                          text: 'Set as default'),
-                    ),
-                  )
+                  (fromHome ?? false)
+                      ? Positioned(
+                          bottom: 50,
+                          left: width(context, .25),
+                          child: DefaultButton(
+                              function: () {
+                                showAnimatedDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (context) => StatefulBuilder(
+                                      builder: (context,
+                                              StateSetter setState) =>
+                                          openDialogAge(
+                                              context, CubitManager.get(_))),
+                                  animationType: DialogTransitionType.sizeFade,
+                                  curve: Curves.fastOutSlowIn,
+                                  duration: const Duration(seconds: 1),
+                                );
+                              },
+                              width: width(context, .5),
+                              borderRadius: 30,
+                              text: 'Change plan'),
+                        )
+                      : Positioned(
+                          bottom: 50,
+                          left: width(context, .25),
+                          child: DefaultButton(
+                              function: () {
+                                Navigator.pop(context);
+                              },
+                              width: width(context, .5),
+                              borderRadius: 30,
+                              text: 'Set as default'),
+                        )
                 ],
               ),
             ),
